@@ -1,0 +1,39 @@
+.today { display: flex; flex-direction: column; gap: 40px; max-width: 860px; margin: 0 auto; }
+.banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px 12px 20px; }
+
+.hero { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 36px; align-items: center; padding-top: 12px; }
+.moon { width: 100%; height: auto; max-width: 220px; animation: glow 6s ease-in-out infinite alternate; }
+@keyframes glow { from { filter: drop-shadow(0 0 10px rgba(246, 238, 214, 0.15)); } to { filter: drop-shadow(0 0 26px rgba(246, 238, 214, 0.35)); } }
+.heroText { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.title { font-size: clamp(42px, 6.4vw, 72px); margin: 0; }
+.line { font-size: 19px; margin: 0; max-width: 34ch; }
+.meta { color: var(--haze); margin: 0; }
+@media (max-width: 620px) {
+  .hero { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 16px; }
+  .moon { max-width: 170px; }
+  .line { margin: 0 auto; }
+}
+
+.lists { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px) { .lists { grid-template-columns: 1fr; } }
+.list { padding: 20px 22px; }
+.list ul { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-family: var(--display); font-size: 20px; }
+
+.section { display: flex; flex-direction: column; gap: 14px; }
+.h2 { font-size: 32px; margin: 0; }
+.muted { color: var(--haze); margin: 0; }
+
+.transits { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.transit { display: grid; grid-template-columns: 80px minmax(0, 1fr) auto; gap: 14px; align-items: start; padding: 16px 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); }
+.tGlyphs { font-size: 17px; white-space: nowrap; }
+.tMain { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tTitle { font-weight: 450; }
+.tLine { color: var(--haze); font-size: 14.5px; }
+.orb { color: var(--haze); padding-top: 2px; }
+
+.sky { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 10px; }
+.skyItem { display: grid; grid-template-columns: 28px 1fr; grid-template-rows: auto auto auto; column-gap: 10px; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); }
+.skyGlyph { grid-row: span 3; font-size: 22px; line-height: 1.3; }
+.skyName { font-weight: 450; }
+.skySign { color: var(--haze); font-size: 14px; }
+.skyItem :global(.mono) { color: var(--haze); }

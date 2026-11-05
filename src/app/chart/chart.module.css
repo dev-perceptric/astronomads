@@ -1,0 +1,70 @@
+.layout { display: flex; flex-direction: column; gap: 36px; }
+.message { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 40px; }
+
+.banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px 12px 20px; }
+
+.head { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
+.name { font-size: clamp(44px, 7vw, 76px); margin: 0; }
+.birth { color: var(--haze); margin: 0; }
+.bigThree { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+.big { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 22px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); min-width: 120px; }
+.bigSign { font-family: var(--display); font-size: 20px; }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: center; }
+.wheelWrap { min-width: 0; }
+.side { padding: 22px; min-height: 260px; }
+@media (max-width: 900px) {
+  .stage { grid-template-columns: 1fr; }
+  .side { min-height: 0; }
+}
+
+.overview { display: flex; flex-direction: column; gap: 14px; }
+.overviewText { margin: 0; color: var(--haze); }
+.overviewText strong { font-weight: 500; text-transform: capitalize; }
+.elements { display: flex; flex-direction: column; gap: 9px; }
+.elRow { display: grid; grid-template-columns: 56px 1fr 40px; gap: 10px; align-items: center; font-size: 13.5px; }
+.elName { text-transform: capitalize; color: var(--haze); }
+.elBar { height: 6px; border-radius: 999px; background: rgba(236, 232, 255, 0.08); overflow: hidden; }
+.elBar span { display: block; height: 100%; border-radius: 999px; transition: width 0.6s var(--ease); }
+.hint { margin: 0; font-size: 13px; color: var(--faint); }
+
+.detail { display: flex; flex-direction: column; gap: 10px; }
+.detail p { margin: 0; }
+.detailHead { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+.detailOrb { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: #19142f; font-size: 22px; box-shadow: 0 0 26px rgba(246, 238, 214, 0.3); }
+.detailTitle { font-size: 24px; }
+.close { background: none; border: 0; color: var(--haze); font-size: 22px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.close:hover { color: var(--mist); }
+.detailAspects { list-style: none; margin: 4px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; font-size: 14px; text-transform: none; }
+
+.section { display: flex; flex-direction: column; gap: 14px; }
+.h2 { font-size: 32px; margin: 0; }
+.muted { color: var(--haze); margin: 0; }
+
+.placements, .aspects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 10px; }
+.placement, .aspect {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.placement { cursor: pointer; }
+.placement:hover, .placement[aria-pressed='true'] { border-color: var(--lilac); background: var(--panel-strong); }
+.pGlyph { font-size: 24px; line-height: 1.2; text-align: center; }
+.aGlyphs { font-size: 15px; line-height: 1.6; white-space: nowrap; }
+.aspect { grid-template-columns: 74px minmax(0, 1fr) auto; }
+.pMain, .aMain { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pTitle { font-weight: 450; text-transform: none; }
+.pTitle::first-letter { text-transform: uppercase; }
+.pLine { color: var(--haze); font-size: 14px; }
+.pMeta { color: var(--haze); white-space: nowrap; padding-top: 2px; }
+.retro { margin-left: 8px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rose); }
+
+.saveRow { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; }
