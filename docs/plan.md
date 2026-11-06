@@ -18,6 +18,8 @@
 | Sign and Learn pages for SEO | Next |
 | Celebrity charts | After the birth time data is settled |
 
+Publishing plan, sky events and tool launch months for December 2026 to December 2027: `docs/content-calendar.md`.
+
 ## Build order
 
 | Week | Work |
