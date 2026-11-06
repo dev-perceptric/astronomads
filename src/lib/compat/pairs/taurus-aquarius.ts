@@ -10,7 +10,7 @@ export const PAIR: PairCopy = {
       paras: [
         "The spark often begins with curiosity. Aquarius is intrigued by the calm, unhurried way Taurus moves through the world, and Taurus is fascinated by the strange and clever thoughts Aquarius shares over coffee. Early dates may feel like a pleasant puzzle. Taurus suggests a favorite restaurant, and Aquarius suggests a science museum at night. Both enjoy the surprise of finding someone so unlike their usual type.",
         "Venus gives Taurus a love language of touch and steady presence, while the air element gives Aquarius a love language of ideas and friendship. Taurus feels loved when its partner stays close on a slow Sunday. Aquarius feels loved when its partner respects its independence and joins its odd projects. Once both see these as two forms of care, affection flows more easily between them.",
-        "Long term, this romance grows best when friendship sits at its center. Aquarius needs a partner who is also a best friend, and Taurus can be exactly that: loyal, patient and honest. Taurus needs a partner who stays, and Aquarius, a fixed sign, is far more constant than its free spirit suggests. Once committed, both tend to stay for good, through many seasons of change.",
+        "Long term, this romance grows best when friendship sits at its center. Aquarius needs a partner who is also a best friend, and Taurus can be exactly that, a patient and honest companion. Taurus needs a partner who stays, and Aquarius, a fixed sign, is far more constant than its free spirit suggests. Once committed, both tend to stay for good, through many seasons of change.",
       ],
     },
     {
@@ -24,7 +24,7 @@ export const PAIR: PairCopy = {
     {
       id: 'communication',
       paras: [
-        "Aquarius loves to talk about big ideas, the future and how the world could improve. Taurus prefers practical talk about real life, like the garden, the budget or the weekend plans. Both can learn from the other. Aquarius brings new angles that help Taurus see beyond its routine, and Taurus brings common sense that helps Aquarius turn its ideas into something real and useful.",
+        "Aquarius loves to talk about big ideas and how the world could improve. Taurus prefers practical talk about real life, like the garden, the budget or the weekend plans. Both can learn from the other. Aquarius brings new angles that help Taurus see beyond its routine, and Taurus brings common sense that helps Aquarius turn its ideas into something real and useful.",
         "Disagreements can turn into long standoffs, since both are fixed signs who rarely change their minds. Picture a fight about money. Aquarius wants to donate to a cause or invest in a new tech idea, while Taurus wants to put the money into the house or a safe savings account. A shared plan helps, with a set amount for each partner's values and a clear goal for the rest.",
         "Respect is the key to every talk. Aquarius can sometimes seem detached during conflict, and Taurus may feel unheard. Taurus can sometimes dig in, and Aquarius may feel controlled. A simple rule helps both: each person speaks fully, then the other repeats what they heard before answering. This slows things down and helps both feel understood, even when they still disagree.",
       ],
@@ -32,41 +32,41 @@ export const PAIR: PairCopy = {
     {
       id: 'friendship',
       paras: [
-        "As friends, Taurus and Aquarius make an interesting pair. Aquarius brings unusual ideas, new friends and invitations to community events or workshops. Taurus brings good food, a cozy home and a calm voice when Aquarius gets carried away. Their friendship often feels like a mix of comfort and surprise, and both enjoy what the other adds to their life.",
-        "Loyalty runs deep for both. Once these two become friends, they tend to stay friends for years. Aquarius will defend Taurus in any group, and Taurus will help Aquarius with practical tasks, like moving house or fixing a budget. They may not always agree, yet they respect each other's honesty and value the friendship highly.",
-        "Plans can be a challenge, since Taurus likes routine and Aquarius likes new things. A simple rhythm works well: one month Aquarius picks the activity, like a lecture or a festival, and the next month Taurus picks, like a favorite restaurant or a garden visit. Both get to share their world, and the friendship stays fresh.",
+        "As friends, Taurus and Aquarius make an interesting pair. Aquarius brings unusual ideas and invitations to community events or late night talks at the library. Taurus brings good food and a calm voice when Aquarius gets carried away by a new plan. Their friendship often feels like a mix of comfort and surprise, and each one enjoys what the other adds to an ordinary week.",
+        "Loyalty runs deep for both. Once these two become friends, they tend to stay friends for years. Aquarius will defend Taurus in any group, and Taurus will help Aquarius with practical tasks, like moving house or sorting out a budget. They often see the world in very different ways, yet each respects the other's honesty, and both value the friendship highly enough to work through any rough patch.",
+        "Plans can be a challenge, since Taurus likes routine and Aquarius likes new things. A simple rhythm works well. One month Aquarius picks the activity, like a public lecture or a music festival, and the next month Taurus picks, like a favorite restaurant or a garden visit. Both get to share their world, and the friendship stays fresh without either friend feeling pushed too far.",
       ],
     },
     {
       id: 'work',
       paras: [
         "At work, Aquarius brings innovation and big picture thinking, and Taurus brings practical skill and patience. Aquarius may see a new way to solve an old problem, and Taurus knows how to build it so it lasts. Together they can create something both original and reliable. They suit fields like technology, design, sustainable business or community projects, where fresh ideas need careful execution.",
-        "Two fixed signs can clash over methods. Aquarius may want to try a new system, while Taurus prefers the proven way. Clear roles help a lot. Aquarius can lead the research and new ideas, and Taurus can lead the planning and budget. When each respects the other's expertise, they become a strong and balanced team.",
-        "Communication at work matters. Aquarius may jump ahead to the next big idea, and Taurus may want to finish the current task first. Regular check ins and shared goals keep them on the same page. With time, they learn to trust each other's strengths and build projects that are both creative and solid.",
+        "Two fixed signs can clash over methods. Aquarius may want to try a new system, while Taurus prefers the proven way that has worked for years. Clear roles help a lot. Aquarius can lead the research and the new ideas, and Taurus can lead the planning and the budget. When each respects the other's expertise, they become a strong and balanced team that others want to join.",
+        "Communication at work matters. Aquarius may jump ahead to the next big idea, and Taurus may want to finish the current task first. Regular check ins and shared goals keep them on the same page, especially on long projects. With time, they learn to trust each other's strengths. The projects they build together tend to be creative and solid, a rare mix that clients notice and remember.",
       ],
     },
     {
       id: 'family',
       paras: [
-        "Meeting the family can be an adventure. Aquarius may surprise relatives with unusual opinions or interesting stories, while Taurus wins them over with calm manners and a homemade dish. Parents may see Aquarius as the free spirit and Taurus as the steady one. Over time, families often come to love the balance this pair brings to gatherings.",
-        "At home, Taurus wants comfort, a good kitchen and a peaceful routine. Aquarius wants space for its projects, books and friends who drop by. A home with a cozy living room for Taurus and a creative workspace for Aquarius can suit them both. They may also enjoy hosting friends from many walks of life.",
-        "As parents, they offer a child both tradition and freedom. Taurus provides routine, comfort and steady care, and Aquarius encourages independence, curiosity and original thinking. A child in this home learns to feel safe and think freely. The parents may need to agree on rules, since Aquarius may be relaxed and Taurus may prefer clear structure.",
+        "Meeting the family can be an adventure. Aquarius may surprise relatives with unusual opinions or stories from its latest project, while Taurus wins them over with calm manners and a homemade dish. Parents may see Aquarius as the free spirit and Taurus as the steady one. Over time, families often come to love the balance this pair brings to birthdays and holiday gatherings alike.",
+        "At home, Taurus wants comfort and a peaceful routine around a good kitchen. Aquarius wants space for its projects and for friends who drop by without warning. A home with a cozy living room for Taurus and a creative workspace for Aquarius can suit them both. They may also enjoy hosting friends from many walks of life, with Taurus cooking and Aquarius leading the conversation late into the night.",
+        "As parents, they offer a child both tradition and freedom. Taurus provides routine and steady care, and Aquarius encourages independence and original thinking. A child in this home learns to feel safe and to think freely at the same time. The parents may need to agree on rules early, since Aquarius may be relaxed about bedtimes while Taurus prefers a clear structure that holds every night.",
       ],
     },
     {
       id: 'challenges',
       paras: [
-        "The main challenge is stubbornness. Two fixed signs in a square can both refuse to budge. A small issue, like whether to try a new holiday spot or return to the usual one, can become a long debate. Both partners benefit from choosing their battles and remembering that compromise is a form of care.",
-        "Different needs can also cause tension. Taurus needs security and closeness, while Aquarius needs freedom and space. Taurus may feel that Aquarius is distant, and Aquarius may feel that Taurus is too possessive. Naming these needs openly, and finding a balance, helps both partners feel respected.",
-        "Change is a common theme. Aquarius often wants to try new things, and Taurus often wants to keep things as they are. When change comes, both need patience. Making changes step by step, with time for Taurus to adjust and room for Aquarius to explore, keeps the relationship steady and fair.",
+        "The main challenge is stubbornness. Two fixed signs in a square can both refuse to budge at the same moment. A small issue, like whether to try a new holiday spot or return to the usual one, can become a long debate that lasts for weeks. Both partners benefit from choosing their battles with care and remembering that compromise is a form of love that makes the bond stronger.",
+        "Different needs can also cause tension. Taurus needs security and closeness, while Aquarius needs freedom and space to think. Taurus may feel that Aquarius is distant on busy days, and Aquarius may feel that Taurus holds on too tightly. Naming these needs openly, and finding a balance that suits both, helps each partner feel respected. Neither need is wrong, and both can be met with a little planning.",
+        "Change is a common theme. Aquarius often wants to try new things, and Taurus often wants to keep life as it is. When change comes, such as a new job or a move to a new city, both need patience. Making changes step by step, with time for Taurus to adjust and room for Aquarius to explore, keeps the relationship steady and fair for both partners.",
       ],
     },
     {
       id: 'making-it-work',
       paras: [
-        "Build on friendship. Aquarius values a partner who is also a best friend, and Taurus values loyalty above all. Spend time on shared interests, like a community project, a garden or a hobby that mixes old and new. Respect each other's differences, and celebrate the way each partner makes the other's life richer.",
-        "Balance freedom and closeness. Aquarius can make time for cozy evenings at home, and Taurus can give Aquarius room for its own projects and friends. Talk openly about needs, and try new things together in small steps. A weekly date and a monthly adventure can keep both partners happy.",
-        "Keep in mind that the Sun is one part of a birth chart. A Taurus with an Aquarius Moon, or an Aquarius with Venus in Taurus, may find this pairing easier. A full two-chart reading that looks at the Moon, Venus, Mars and rising signs gives the personal answer for you two.",
+        "Build on friendship. Aquarius values a partner who is also a best friend, and Taurus values loyalty above almost everything else. Spend time on shared interests, like a community project or a hobby that mixes old and new, such as restoring furniture with modern colors. Respect each other's differences, and celebrate the way each partner makes the other's life richer and more interesting.",
+        "Balance freedom and closeness. Aquarius can make time for cozy evenings at home, and Taurus can give Aquarius room for its own projects and friends. Talk openly about needs, and try new things together in small steps that feel safe for Taurus. A weekly date and a monthly adventure can keep both partners happy, with one night that never changes and one that always does.",
+        "Keep in mind that the Sun is one part of a birth chart. A Taurus with an Aquarius Moon, or an Aquarius with Venus in Taurus, may find this pairing easier than the Sun signs suggest. A full two-chart reading that looks at the Moon, Venus, Mars and rising signs gives the personal answer for you two, and it shows where your common ground is widest.",
       ],
     },
   ],
@@ -79,7 +79,7 @@ export const PAIR: PairCopy = {
   ],
   challenges: [
     "Two fixed signs who both resist change",
-    "Closeness versus freedom",
+    "Balancing closeness with a need for freedom",
     "Different views on spending money",
     "Long standoffs during arguments",
   ],
@@ -100,11 +100,11 @@ export const PAIR: PairCopy = {
     },
     {
       q: 'Who leads in a Taurus and Aquarius relationship?',
-      a: "Both signs are fixed and like some control, so leadership needs to be shared. Aquarius often leads on new ideas and social plans, and Taurus often leads on money, home and daily routines. Clear roles help both partners feel respected and keep power struggles to a minimum.",
+      a: "Both signs are fixed and like some control, so leadership needs to be shared. Aquarius often leads on new ideas and social plans, and Taurus often leads on money and daily routines. Clear roles help both partners feel respected and keep power struggles to a minimum.",
     },
     {
       q: 'Why are Taurus and Aquarius attracted to each other?',
-      a: "Aquarius is drawn to Taurus's calm confidence and grounded warmth. Taurus is drawn to Aquarius's originality, intelligence and independence. Each sees in the other a quality it lacks. Their shared loyalty and strong principles also add to the attraction.",
+      a: "Aquarius is drawn to Taurus's calm confidence and grounded warmth, which feel like a safe place to land. Taurus is drawn to Aquarius's originality and independent mind. Each sees in the other a quality it would like more of. Their shared loyalty and strong principles also add to the attraction, and over time that respect deepens.",
     },
     {
       q: 'Is Taurus and Aquarius a good match for marriage?',

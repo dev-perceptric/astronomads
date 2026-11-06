@@ -95,7 +95,7 @@ export const FRIEND_CONTACT: Record<string, Record<Harmony, string>> = {
   "moon-pluto": {
     blend: "Your friend can read you to the bone, and that kind of closeness asks for real care. Keep every secret safe and give each other privacy, since trust is the core of this friendship.",
     ease: "This is the friend who stays when life gets messy, and rough patches often bring you nearer. When one of you is struggling, simply showing up with food and staying a while means more than any clever words.",
-    tension: "Intense feelings can stir up jealousy, such as worry about new friends or old rivals. When you feel unsure, say so calmly, and let your friend reassure you instead of reading signs into small things.",
+    tension: "Intense feelings can stir up jealousy, such as worry about new friends or old rivals. When you feel unsure, say so calmly and ask your friend directly, then take their answer at face value.",
   },
   "mercury-mercury": {
     blend: "You two think along the same tracks, so a shared look can say a whole sentence. A trivia night or a group chat about a shared hobby can become pure fun for you two.",
@@ -170,7 +170,7 @@ export const FRIEND_CONTACT: Record<string, Record<Harmony, string>> = {
   "venus-pluto": {
     blend: "This friendship can feel intense and magnetic, and one of you may be strongly drawn to the other. Keep it healthy by leaving room for other friends and by sharing choices about plans.",
     ease: "Deep loyalty can form here, and this friendship can change both of you for the better over time. Share the things you truly value, and you may find a friend for the long haul.",
-    tension: "You may feel a pang when your friend spends time with others, and that pang can grow if left alone. Say so openly when you feel left out, and trust your friend's word instead of watching for signs in every message.",
+    tension: "You may feel a pang when your friend spends time with others, and that pang can grow if left alone. Say so openly when you feel left out, and take your friend's word as the final answer on how they feel.",
   },
   "mars-mars": {
     blend: "You and your friend share the same drive, so you push each other hard in a good way. Train for something together, like a race or a big hike, and channel that shared fire into a real goal.",
@@ -198,7 +198,7 @@ export const FRIEND_CONTACT: Record<string, Record<Harmony, string>> = {
     tension: "One of you may feel let down by the other's vague plans, while the other feels pushed. Keep goals clear and simple, and talk openly when energy or motivation fades on either side.",
   },
   "mars-pluto": {
-    blend: "Strong energy meets deep drive here, and this friendship can feel very powerful. Aim that force at a shared challenge, like a tough race or a big project, instead of at each other.",
+    blend: "Strong energy meets deep drive here, and this friendship can feel very powerful. Aim that force outward at a shared challenge, like a tough race or a big project, and enjoy being on the same side.",
     ease: "You can push each other to grow in brave ways, and the friendship gives both of you strength. Take on a goal that scares you a little, and back each other through it step by step.",
     tension: "Power struggles can show up here, and arguments may feel intense. Keep debates fair, step away when tempers rise, and remember that you both want this friendship to stay strong.",
   },
@@ -225,7 +225,7 @@ export const FRIEND_CONTACT: Record<string, Record<Harmony, string>> = {
   "jupiter-pluto": {
     blend: "This contact can make your friendship feel powerful and full of purpose. Aim that shared drive at something big, like a fundraiser or a business idea, and keep each other honest along the way.",
     ease: "You can help each other grow in deep, lasting ways, and big changes feel less scary side by side. Talk about the goals that matter most to you, and back each other through the hard parts.",
-    tension: "Big ambitions may clash here, and one of you may try to steer the other. Respect each other's goals, and share the lead on group plans so both of you feel heard.",
+    tension: "Big ambitions may clash here, and either friend can start steering the other. Respect each other's goals, and share the lead on group plans so both of you feel heard.",
   },
   "saturn-saturn": {
     blend: "You and your friend likely see duty and timing in a similar way, which is common for people close in age. Lean on each other through the same life stages, like first jobs or new homes.",
@@ -303,7 +303,7 @@ export const FRIEND_THEME: Record<FriendTheme, { title: string; low: string; mid
   },
   support: {
     title: "Support",
-    low: "You and your friend may show support in different ways, so help can sometimes miss the mark. Ask each other directly what helps on a hard day, and offer exactly that. Clear requests make it much easier to be there for each other when it matters.",
+    low: "You and your friend may show support in different ways, so help can sometimes miss the mark. Ask each other directly what you find comforting when life gets rough, and offer exactly that. Clear requests make it much easier to be there for each other when it matters.",
     mid: "You and your friend can count on each other in many situations, with some areas still finding their rhythm. Check in during stressful weeks, and remember the kind of help your friend liked last time. Small acts of care add up over the years.",
     high: "Support flows naturally between you and your friend, and each of you tends to sense what the other needs. Keep that gift alive by checking in during calm times too, so care runs both ways and never feels like a one sided job.",
   },
