@@ -53,3 +53,16 @@
 .degree { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
 .minute { font-size: 12px; font-weight: 500; baseline-shift: 30%; }
 .retro { font-size: 12px; font-weight: 700; baseline-shift: 30%; }
+
+/* Brand finish (Night and Marble) */
+.brand { font-family: var(--mono, 'Geist Mono', ui-monospace, monospace); }
+.brand .rim { stroke-width: 2.2; }
+.rimEngraved { fill: none; stroke: var(--foreground); stroke-width: 0.8; stroke-opacity: 0.55; }
+.brand .signSector { fill-opacity: 0.05; }
+.signDot { fill-opacity: 0.55; }
+.coreStars circle { fill: var(--foreground); fill-opacity: 0.22; }
+.centerStar { fill: var(--foreground); }
+.brand .houseNum, .brand .houseNumSmall { font-family: 'Geist Mono', ui-monospace, monospace; font-weight: 500; }
+.brand .angleText { font-family: 'Cinzel', 'Trajan Pro', serif; font-weight: 600; letter-spacing: 0.02em; }
+.brand .mcRing + .angleText { font-size: 17px; }
+.brand .degree { font-family: 'Geist Mono', ui-monospace, monospace; font-weight: 600; letter-spacing: -0.04em; }

@@ -1,0 +1,120 @@
+/* Night and Marble: shared layer for the brand pages (homepage, chart). See docs/brand.md.
+   Each section is either .nm-void or .nm-marble; both set the full token set, so shared components
+   (forms, wheel, glyphs) read correctly inside them whatever the visitor's theme is. */
+.nm-root {
+  --void: #000000;
+  --marble: #ffffff;
+  --astral: #6a62f7;
+  --astral-ink: #4b42e0;
+  --stone: #a6a6a6;
+  --ash: #5e5e5e;
+  --glass: rgba(255, 255, 255, 0.5);
+  --serif: 'EB Garamond', 'Iowan Old Style', Georgia, serif;
+  --roman: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+  --gutter: clamp(20px, 2.5vw, 32px);
+  background: var(--void);
+  color: var(--marble);
+  font-family: var(--mono);
+  min-height: 100%;
+}
+
+.nm-void {
+  background: var(--void);
+  color: var(--marble);
+  --background: #000000; --foreground: #ffffff; --card: #000000; --card-foreground: #ffffff;
+  --secondary: #141414; --muted-foreground: #a6a6a6; --faint-foreground: #7a7a7a;
+  --border: #2a2a2a; --border-strong: #3a3a3a; --destructive: oklch(70% 0.17 20);
+  --rule: rgba(255, 255, 255, 0.2);
+  --p-sun: oklch(78% 0.16 55); --p-moon: oklch(88% 0.14 92); --p-mercury: oklch(74% 0.16 300); --p-venus: oklch(78% 0.16 350);
+  --p-mars: oklch(72% 0.19 27); --p-jupiter: oklch(80% 0.12 205); --p-saturn: oklch(70% 0.16 30); --p-uranus: oklch(68% 0.14 20);
+  --p-neptune: oklch(76% 0.11 190); --p-pluto: oklch(72% 0.19 5);
+  --el-fire: oklch(72% 0.19 27); --el-earth: oklch(78% 0.1 85); --el-air: oklch(78% 0.1 175); --el-water: oklch(72% 0.15 265);
+  --asp-ease: oklch(72% 0.15 265); --asp-soft: oklch(80% 0.1 220); --asp-hard: oklch(72% 0.19 27); --asp-blend: oklch(78% 0.14 145);
+  --bg: #000000; --ink: #ffffff; --text: #ffffff; --muted: #a6a6a6; --faint: #7a7a7a; --line: #2a2a2a; --line-strong: #3a3a3a;
+  --paper: #141414; --accent: #ffffff; --accent-ink: #ffffff; --accent-soft: #141414; --error: oklch(70% 0.17 20);
+  color-scheme: dark;
+}
+
+.nm-marble {
+  background: var(--marble);
+  color: var(--void);
+  --background: #ffffff; --foreground: #000000; --card: #ffffff; --card-foreground: #000000;
+  --secondary: #f2f2f2; --muted-foreground: #5e5e5e; --faint-foreground: #8a8a8a;
+  --border: #e2e2e2; --border-strong: #cfcfcf; --destructive: oklch(57% 0.17 20);
+  --rule: rgba(0, 0, 0, 0.14);
+  --p-sun: oklch(68% 0.19 50); --p-moon: oklch(72% 0.16 88); --p-mercury: oklch(50% 0.22 300); --p-venus: oklch(60% 0.21 350);
+  --p-mars: oklch(57% 0.22 27); --p-jupiter: oklch(60% 0.14 205); --p-saturn: oklch(48% 0.19 25); --p-uranus: oklch(40% 0.14 20);
+  --p-neptune: oklch(48% 0.09 190); --p-pluto: oklch(54% 0.23 5);
+  --el-fire: oklch(57% 0.22 27); --el-earth: oklch(52% 0.1 85); --el-air: oklch(50% 0.1 175); --el-water: oklch(45% 0.22 265);
+  --asp-ease: oklch(45% 0.22 265); --asp-soft: oklch(62% 0.12 220); --asp-hard: oklch(57% 0.22 27); --asp-blend: oklch(55% 0.15 145);
+  --bg: #ffffff; --ink: #000000; --text: #000000; --muted: #5e5e5e; --faint: #8a8a8a; --line: #e2e2e2; --line-strong: #cfcfcf;
+  --paper: #f2f2f2; --accent: #000000; --accent-ink: #000000; --accent-soft: #f2f2f2; --error: oklch(57% 0.17 20);
+  color-scheme: light;
+}
+
+.nm-section {
+  position: relative;
+  padding-block: clamp(72px, 9vw, 120px);
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  overflow: hidden;
+}
+
+.nm-label { font-family: var(--mono); font-size: 13px; letter-spacing: -0.02em; text-transform: uppercase; margin: 0 0 16px; }
+.nm-title { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 4vw, 48px); line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 48px; color: inherit; text-wrap: balance; }
+.nm-body { font-family: var(--mono); font-size: 17px; line-height: 1.3; letter-spacing: -0.02em; margin: 0; max-width: 60ch; }
+
+/* Bracket frame */
+.nm-bracket { position: relative; padding: 20px 22px; }
+.nm-bracket::before, .nm-bracket::after { content: ''; position: absolute; top: 0; bottom: 0; width: 8px; border: 2px solid currentColor; pointer-events: none; }
+.nm-bracket::before { left: 0; border-right: 0; }
+.nm-bracket::after { right: 0; border-left: 0; }
+
+/* Buttons */
+.nm-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 22px; border-radius: 999px; border: 0;
+  font-family: var(--mono); font-size: 12px; letter-spacing: -0.02em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.nm-btn:active { transform: scale(0.98); }
+.nm-btn:disabled { opacity: 0.6; cursor: default; }
+.nm-btn-primary { background: var(--astral); color: var(--marble); }
+.nm-btn-primary:hover { background: var(--astral-ink); color: var(--marble); }
+.nm-btn-glass { background: rgba(255, 255, 255, 0.15); color: var(--marble); backdrop-filter: blur(7.5px); -webkit-backdrop-filter: blur(7.5px); }
+.nm-btn-glass:hover { background: rgba(255, 255, 255, 0.25); }
+.nm-btn-outline { background: transparent; color: currentColor; box-shadow: inset 0 0 0 1px currentColor; }
+
+/* Floating glass navigation */
+.nm-nav {
+  position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 40;
+  display: flex; gap: 4px; padding: 6px; border-radius: 24px;
+  background: var(--glass); backdrop-filter: blur(7.5px); -webkit-backdrop-filter: blur(7.5px);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  max-width: calc(100vw - 24px); overflow-x: auto; scrollbar-width: none;
+}
+.nm-nav a {
+  display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border-radius: 30px;
+  font-family: var(--mono); font-size: 12px; letter-spacing: -0.02em; text-transform: uppercase;
+  color: var(--void); text-decoration: none; white-space: nowrap; transition: background-color 0.2s;
+}
+.nm-nav a:hover { background: rgba(255, 255, 255, 0.35); }
+.nm-nav a[aria-current='page'] { background: rgba(255, 255, 255, 0.6); }
+.nm-nav a.nm-nav-cta { background: var(--astral); color: var(--marble); }
+.nm-nav a.nm-nav-cta:hover { background: var(--astral-ink); }
+@media (max-width: 420px) { .nm-nav a { padding: 0 11px; } }
+
+/* Signature footer */
+.nm-signature { padding-block: 140px 120px; }
+.nm-signature-field { position: absolute; inset: 0; width: 100%; height: 100%; }
+.nm-signature-inner { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; }
+.nm-signature-mark svg { width: 100%; height: auto; display: block; }
+.nm-foot-links { display: flex; gap: 10px 28px; flex-wrap: wrap; margin-top: 24px; font-size: 12px; letter-spacing: -0.02em; }
+.nm-foot-links a { color: var(--marble); text-decoration: none; }
+.nm-foot-links a:hover { text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nm-nav a, .nm-btn { transition: none; }
+}

@@ -104,38 +104,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Signature */}
-      <footer className={`${s.section} ${s.void} ${s.signature}`}>
-        <Stipple kind="field" tone="astral" className={s.signatureField} />
-        <div className={s.signatureInner}>
-          <p className={s.small}>Astronomads © 2026</p>
-          <Logo kind="wordmark" fg="#fff" ground="#000" className={s.signatureMark} title="Astronomads" />
-          <div className={s.footLinks}>
-            <Link href="/chart">My chart</Link>
-            <Link href="/today">Today</Link>
-            <Link href="/brand">Brand</Link>
-            <span>
-              City data © <a href="https://www.geonames.org" target="_blank" rel="noreferrer">GeoNames</a> (CC BY 4.0)
-            </span>
-          </div>
-        </div>
-      </footer>
-
-      {/* Floating glass navigation */}
-      <nav className={s.floatNav} aria-label="Main">
-        <a href="#top" className={`${s.navItem} ${s.navCurrent}`}>
-          Home
-        </a>
-        <Link href="/chart" className={s.navItem}>
-          My chart
-        </Link>
-        <Link href="/today" className={s.navItem}>
-          Today
-        </Link>
-        <a href="#start" className={`${s.navItem} ${s.navCta}`}>
-          New chart
-        </a>
-      </nav>
     </div>
   );
 }

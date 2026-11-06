@@ -27,11 +27,14 @@ type Props = {
   name?: string;
   selected?: BodyKey | null;
   onSelect?: (body: BodyKey | null) => void;
+  /** 'brand' adds the Night and Marble finish: dotted signs, engraved rim, star field, carved angle labels */
+  variant?: 'classic' | 'brand';
 };
 
 type Outer = { key: PointKey; lon: number };
 
-export default function ChartWheel({ chart, name, selected = null, onSelect }: Props) {
+export default function ChartWheel({ chart, name, selected = null, onSelect, variant = 'classic' }: Props) {
+  const brand = variant === 'brand';
   const [hovered, setHovered] = useState<BodyKey | null>(null);
   const focus = hovered ?? selected;
   const base = chart.asc ?? 0;
@@ -56,6 +59,9 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
 
   const lonOf = (k: PointKey) => outer.find((o) => o.key === k)!.lon;
 
+  // Brand finish: dot textures, fixed in the sky (by longitude), so they turn with the chart.
+  const texture = useMemo(() => (brand ? makeTexture() : null), [brand]);
+
   const aspectLines = chart.aspects.filter((a) => a.def.kind !== 'conjunction' || a.orb < 3);
 
   const sun = chart.placements.find((p) => p.body === 'sun')!;
@@ -67,9 +73,10 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
   ].join(' ');
 
   return (
-    <svg className={s.wheel} viewBox="-420 -420 840 840" role="img" aria-label={label}>
+    <svg className={`${s.wheel} ${brand ? s.brand : ''}`} viewBox="-420 -420 840 840" role="img" aria-label={label}>
       {/* Wheel body */}
       <circle r={R.wheel} className={s.wheelFill} />
+      {brand && <circle r={R.wheel + 7} className={s.rimEngraved} />}
 
       {/* Dense degree scale, between the rim and the signs */}
       <g className={s.ticks}>
@@ -87,8 +94,13 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
           return (
             <g key={sign.key}>
               <path d={sector(pt, R.zodiacIn, R.scaleIn, start, start + 30)} fill={ELEMENT_COLORS[sign.element]} className={s.signSector} />
+              {texture &&
+                texture.signs[i].map(([lon, r, size], k) => {
+                  const [x, y] = pt(r, lon);
+                  return <circle key={k} cx={f(x)} cy={f(y)} r={size} fill={ELEMENT_COLORS[sign.element]} className={s.signDot} />;
+                })}
               <line {...seg(R.zodiacIn, R.scaleIn, start)} className={s.signDivider} />
-              <GlyphAt name={sign.key as SignKey} x={gx} y={gy} size={38} color={ELEMENT_COLORS[sign.element]} weight={2.6} />
+              <GlyphAt name={sign.key as SignKey} x={gx} y={gy} size={38} color={ELEMENT_COLORS[sign.element]} weight={2.6} halo={brand ? 'var(--card)' : undefined} />
             </g>
           );
         })}
@@ -137,6 +149,14 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
 
       {/* Aspect disc */}
       <circle r={R.core} className={s.core} />
+      {texture && (
+        <g className={s.coreStars}>
+          {texture.core.map(([lon, r, size], k) => {
+            const [x, y] = pt(r, lon);
+            return <circle key={k} cx={f(x)} cy={f(y)} r={size} />;
+          })}
+        </g>
+      )}
       <g>
         {aspectLines.map((a) => {
           const [x1, y1] = pt(R.core, lonOf(a.a));
@@ -162,6 +182,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
           const color = o.key === 'asc' || o.key === 'mc' ? 'var(--foreground)' : bodyByKey(o.key).color;
           return <circle key={o.key} cx={f(x)} cy={f(y)} r={3.6} fill={color} className={s.anchor} />;
         })}
+        {brand && <path d={star(0, 0, 10, 2.2)} className={s.centerStar} />}
       </g>
 
       {/* Points outside the wheel */}
@@ -284,3 +305,37 @@ function spreadOut(points: Outer[], gap: number): Map<PointKey, number> {
   return new Map(items.map((i) => [i.key, norm(i.shown)]));
 }
 
+
+/** A four-point star, like the one in the logo. */
+function star(x: number, y: number, k: number, w: number) {
+  const pts = [[0, -k], [w, -w], [k, 0], [w, w], [0, k], [-w, w], [-k, 0], [-w, -w]];
+  return pts.map(([px, py], i) => `${i ? 'L' : 'M'}${(x + px).toFixed(2)} ${(y + py).toFixed(2)}`).join(' ') + ' Z';
+}
+
+/**
+ * Dot textures for the brand finish, as [longitude, radius, dot size]:
+ * a stipple inside each sign (kept clear of the sign symbol) and a faint star field in the aspect disc.
+ */
+function makeTexture() {
+  let seed = 4242;
+  const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  const glyphR = (R.scaleIn + R.zodiacIn) / 2;
+  const signs: [number, number, number][][] = [];
+  for (let i = 0; i < 12; i++) {
+    const dots: [number, number, number][] = [];
+    while (dots.length < 46) {
+      const lon = i * 30 + 1.2 + rand() * 27.6;
+      const r = R.zodiacIn + 4 + rand() * (R.scaleIn - R.zodiacIn - 8);
+      // Keep a clear circle around the sign symbol.
+      const dl = ((lon - (i * 30 + 15)) * Math.PI) / 180;
+      const dx = r * Math.cos(dl) - glyphR;
+      const dy = r * Math.sin(dl);
+      if (Math.hypot(dx, dy) < 27) continue;
+      dots.push([lon, r, 0.7 + rand() * 0.9]);
+    }
+    signs.push(dots);
+  }
+  const core: [number, number, number][] = [];
+  for (let i = 0; i < 70; i++) core.push([rand() * 360, Math.sqrt(rand()) * (R.core - 10), 0.5 + rand() * 0.8]);
+  return { signs, core };
+}

@@ -21,7 +21,7 @@ An astrology site: free birth charts, a daily sky, compatibility and astrocartog
 - `data/celebs/top5500.csv` is the working list (Pantheon 2025, CC BY-SA 4.0).
 
 ## Rule: one look
-- The brand is Night and Marble (`docs/brand.md`). The homepage (`src/app/(site)/`) already uses it; the tool pages under `src/app/(app)/` still use the neutral system below until they move over. Use `Logo` for the logo, never typed text.
+- The brand is Night and Marble (`docs/brand.md`). The homepage and the birth chart (`src/app/(site)/`, with `site.css`, `FloatingNav` and `SiteFooter` shared in its layout) already use it, and the chart wheel takes `variant="brand"` there; the pages under `src/app/(app)/` still use the neutral system below until they move over. Use `Logo` for the logo, never typed text.
 - Neutral oklch tokens in `globals.css`, light by default with a dark theme (`data-theme` plus the system setting, switched by `ThemeToggle`). Never a raw hex in components: chart colors come from `--p-*`, `--el-*` and `--asp-*`.
 - Geist for text and headings (bold, tight tracking), Geist Mono for eyebrows, tables and degrees, Noto Sans Symbols for glyphs. Eyebrows read `01 · label`.
 - Primary buttons are filled with the foreground color, 44px tall, `rounded 8px`. Cards are 16px rounded with a soft border and shadow. One warm accent, `--peak`, used sparingly.
