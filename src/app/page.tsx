@@ -19,8 +19,8 @@ export default function Home() {
           <b>01</b> · free birth chart
         </p>
         <h1 className={`display ${s.title}`} style={{ ['--reveal-delay' as string]: '150ms' }}>
-          <span className={s.dim}>{words('The sky has a map.', 0)}</span>
-          <span>{words('Yours has a name.', 5)}</span>
+          <span className={s.dim}>{words('Every sky is different.', 0)}</span>
+          <span>{words('Read yours to the minute.', 4)}</span>
         </h1>
         <p className={`${s.lede} pretty fade-up`} style={{ ['--fade-delay' as string]: '600ms' }}>
           Every planet placed where it stood the minute you were born, with your houses, aspects and what each one means.
