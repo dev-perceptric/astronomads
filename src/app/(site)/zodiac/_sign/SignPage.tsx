@@ -18,26 +18,19 @@ import LiveSky from './LiveSky';
 import Toc from './Toc';
 import s from './zodiac.module.css';
 
-/**
- * Fully built at deploy time (the famous-people list is read from the repo then). The live parts,
- * what is in the sign today and the next season, are worked out in the visitor's browser.
+/*
+ * One page per sign, each in its own folder (zodiac/aries/page.tsx and so on), all rendered by this
+ * component. Plain folders on purpose: Hostinger can't serve script files from a folder named with
+ * brackets, like [sign], so a dynamic route breaks in the browser there.
  */
-export const dynamic = 'force-static';
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return Object.keys(SIGN_COPY).map((sign) => ({ sign }));
-}
-
-type Props = { params: Promise<{ sign: string }> };
 
 const cap = (t: string) => t[0].toUpperCase() + t.slice(1);
 /** "21 March" to "21 Mar" */
 const short = (d: string) => d.replace(/^(\d+ \w{3})\w*$/, '$1');
 const POINTS = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto', 'nnode', 'snode', 'asc', 'mc'] as const;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const f = signBySlug((await params).sign);
+export function signMetadata(slug: string): Metadata {
+  const f = signBySlug(slug);
   if (!f) return {};
   const title = `${f.name} Zodiac Sign: Dates, Traits, Love and Compatibility`;
   const description = `${f.name} (${f.usual[0]} to ${f.usual[1]}): the ${f.element} sign ruled by ${f.ruler}. Personality, strengths, love, work, compatibility with every sign, famous ${f.name} people, and where ${f.name} is in the sky right now.`;
@@ -50,8 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function SignPage({ params }: Props) {
-  const f = signBySlug((await params).sign);
+export default function SignPage({ slug }: { slug: string }) {
+  const f = signBySlug(slug);
   const copy = f ? SIGN_COPY[f.key] : undefined;
   if (!f || !copy) notFound();
 

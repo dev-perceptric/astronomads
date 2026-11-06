@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { SIGN_COPY } from './copy';
 import { famousBySign } from './famous';
@@ -29,6 +31,12 @@ describe('sign pages', () => {
       for (const t of all) expect(breaksRules(t), `${key}: ${t}`).toBe(false);
       expect(Object.keys(copy!.matches)).toHaveLength(12);
       expect(copy!.sections.length).toBeGreaterThanOrEqual(6);
+    }
+  });
+
+  it('gives every written sign its own plain page folder (no [brackets], which Hostinger cannot serve)', () => {
+    for (const key of Object.keys(SIGN_COPY)) {
+      expect(existsSync(path.join(process.cwd(), `src/app/(site)/zodiac/${key}/page.tsx`)), key).toBe(true);
     }
   });
 
