@@ -29,6 +29,7 @@
 .cusp { stroke: var(--foreground); stroke-width: 1; }
 .cuspMark { fill: var(--foreground); }
 .houseNum { font-family: var(--sans); font-size: 15px; font-weight: 700; fill: var(--foreground); }
+.houseNumSmall { font-family: var(--sans); font-size: 11px; font-weight: 700; fill: var(--foreground); }
 
 /* Angles */
 .axis { stroke: var(--foreground); stroke-width: 2.4; }

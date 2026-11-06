@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react';
 import type { Chart, PointKey } from '@/lib/astro/chart';
 import { formatDegree } from '@/lib/astro/chart';
 import { ELEMENT_COLORS, SIGNS, bodyByKey, norm, type BodyKey } from '@/lib/astro/constants';
-import { placeSignSymbols } from '@/lib/astro/layout';
 import { GlyphAt, type SignKey } from './Glyph';
 import s from './ChartWheel.module.css';
 
@@ -17,10 +16,10 @@ const R = {
   glyph: 340, // planet symbol
   leaderEnd: 318,
   wheel: 290, // heavy outer circle
-  houseIn: 272, // band for house numbers
-  scaleIn: 250, // dense degree scale
-  zodiacIn: 182, // sign ring
-  core: 160, // aspect disc
+  scaleIn: 266, // dense degree scale between the rim and the signs
+  zodiacIn: 200, // sign ring: nothing ever crosses it
+  houseNum: 175, // house band: cusp lines and house numbers live only here
+  core: 150, // aspect disc
 };
 
 type Props = {
@@ -57,13 +56,6 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
 
   const lonOf = (k: PointKey) => outer.find((o) => o.key === k)!.lon;
 
-  // Every line that crosses the sign ring: house cusps and the four angles.
-  const crossing = useMemo(() => {
-    const list = [...(chart.houses ?? [])];
-    if (chart.asc !== null && chart.mc !== null) list.push(chart.asc, norm(chart.asc + 180), chart.mc, norm(chart.mc + 180));
-    return list;
-  }, [chart]);
-  const signSpots = useMemo(() => placeSignSymbols(crossing, (R.scaleIn + R.zodiacIn) / 2), [crossing]);
   const aspectLines = chart.aspects.filter((a) => a.def.kind !== 'conjunction' || a.orb < 3);
 
   const sun = chart.placements.find((p) => p.body === 'sun')!;
@@ -79,42 +71,43 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
       {/* Wheel body */}
       <circle r={R.wheel} className={s.wheelFill} />
 
-      {/* Sign ring tint and dividers (symbols are drawn after the house lines, clear of them) */}
+      {/* Dense degree scale, between the rim and the signs */}
+      <g className={s.ticks}>
+        {Array.from({ length: 360 }, (_, d) => {
+          const len = d % 30 === 0 ? 24 : d % 10 === 0 ? 13 : d % 5 === 0 ? 9 : 5;
+          return <line key={d} {...seg(R.scaleIn, R.scaleIn + len, d)} className={d % 5 === 0 ? s.tickMajor : undefined} />;
+        })}
+      </g>
+
+      {/* Sign ring: closed band, no house or axis line ever enters it */}
       <g>
         {SIGNS.map((sign, i) => {
           const start = i * 30;
+          const [gx, gy] = pt((R.scaleIn + R.zodiacIn) / 2, start + 15);
           return (
             <g key={sign.key}>
               <path d={sector(pt, R.zodiacIn, R.scaleIn, start, start + 30)} fill={ELEMENT_COLORS[sign.element]} className={s.signSector} />
               <line {...seg(R.zodiacIn, R.scaleIn, start)} className={s.signDivider} />
+              <GlyphAt name={sign.key as SignKey} x={gx} y={gy} size={38} color={ELEMENT_COLORS[sign.element]} weight={2.6} />
             </g>
           );
         })}
       </g>
-
-      {/* Dense degree scale */}
-      <g className={s.ticks}>
-        {Array.from({ length: 360 }, (_, d) => {
-          const len = d % 30 === 0 ? 22 : d % 10 === 0 ? 13 : d % 5 === 0 ? 9 : 5;
-          return <line key={d} {...seg(R.houseIn, R.houseIn - len, d)} className={d % 5 === 0 ? s.tickMajor : undefined} />;
-        })}
-      </g>
-      <circle r={R.houseIn} className={s.ringThin} />
-      <circle r={R.scaleIn} className={s.ringThin} />
+      <circle r={R.scaleIn} className={s.ring} />
       <circle r={R.zodiacIn} className={s.ring} />
 
-      {/* Houses: cusp lines through the sign ring, numbers just after each cusp, triangles on the rim */}
+      {/* House band: cusp lines and numbers stay between the sign ring and the aspect disc */}
       {chart.houses && (
         <g>
           {chart.houses.map((cusp, i) => {
             const isAngle = i % 3 === 0;
             const width = norm(chart.houses![(i + 1) % 12] - cusp);
-            const [nx, ny] = pt((R.wheel + R.houseIn) / 2, cusp + width / 2);
+            const [nx, ny] = pt(R.houseNum, cusp + width / 2);
             return (
               <g key={i}>
-                {!isAngle && <line {...seg(R.houseIn, R.core, cusp)} className={s.cusp} />}
-                <path d={triangle(pt, R.houseIn, cusp, isAngle ? 9 : 5.5)} className={s.cuspMark} />
-                <text x={f(nx)} y={f(ny)} dominantBaseline="central" textAnchor="middle" className={s.houseNum}>
+                {!isAngle && <line {...seg(R.zodiacIn, R.core, cusp)} className={s.cusp} />}
+                <path d={triangle(pt, R.zodiacIn, cusp, isAngle ? 8 : 5)} className={s.cuspMark} />
+                <text x={f(nx)} y={f(ny)} dominantBaseline="central" textAnchor="middle" className={width < 9 ? s.houseNumSmall : s.houseNum}>
                   {i + 1}
                 </text>
               </g>
@@ -123,23 +116,22 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
         </g>
       )}
 
-      {/* Angles: heavy axes across the wheel */}
+      {/* Angles: heavy axes, drawn in the scale band and the house band, stopping at the sign ring */}
       {chart.asc !== null && chart.mc !== null && (
         <g>
-          <line {...seg(R.wheel, R.core, chart.asc)} className={s.axis} />
-          <line {...seg(R.wheel, R.core, chart.asc + 180)} className={s.axisSoft} />
-          <line {...seg(R.wheel, R.core, chart.mc)} className={s.axis} />
-          <line {...seg(R.wheel, R.core, chart.mc + 180)} className={s.axisSoft} />
+          {[
+            { lon: chart.asc, cls: s.axis },
+            { lon: chart.asc + 180, cls: s.axisSoft },
+            { lon: chart.mc, cls: s.axis },
+            { lon: chart.mc + 180, cls: s.axisSoft },
+          ].map(({ lon, cls }, i) => (
+            <g key={i}>
+              <line {...seg(R.wheel, R.scaleIn, lon)} className={cls} />
+              <line {...seg(R.zodiacIn, R.core, lon)} className={cls} />
+            </g>
+          ))}
         </g>
       )}
-
-      {/* Sign symbols, each moved within its sign to the spot farthest from every house and axis line */}
-      <g>
-        {signSpots.map(({ key, lon, size, color }) => {
-          const [gx, gy] = pt((R.scaleIn + R.zodiacIn) / 2, lon);
-          return <GlyphAt key={key} name={key as SignKey} x={gx} y={gy} size={size} color={color} weight={2.6} halo="var(--card)" />;
-        })}
-      </g>
 
       <circle r={R.wheel} className={s.rim} />
 
