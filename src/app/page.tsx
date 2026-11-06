@@ -6,16 +6,16 @@ export default function Home() {
   return (
     <div className={s.home}>
       <section className={s.intro}>
-        <p className="eyebrow">Birth chart</p>
-        <h1 className={`display ${s.title}`}>The sky you were born under, drawn in light.</h1>
-        <p className={s.lede}>Enter the moment you arrived. We place every planet exactly where it stood and trace the constellation only your chart makes.</p>
+        <p className="eyebrow">Free birth chart</p>
+        <h1 className={`display ${s.title}`}>
+          Your birth chart, <em>calculated to the minute.</em>
+        </h1>
+        <p className={s.lede}>Every planet placed where it stood the moment you were born, with your houses, aspects and what each placement means.</p>
         <BirthForm />
       </section>
-      <section className={s.preview} aria-label="Example chart">
+      <section className={`card ${s.preview}`} aria-label="Example chart">
         <ExampleWheel />
-        <p className={s.caption}>
-          <span className="eyebrow">Example</span> Nova, born 20 March 1996, 06:40, Lisbon
-        </p>
+        <p className={s.caption}>Example: Nova, born 20 March 1996 at 06:40 in Lisbon</p>
       </section>
     </div>
   );

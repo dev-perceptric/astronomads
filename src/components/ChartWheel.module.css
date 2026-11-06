@@ -1,37 +1,34 @@
 .wheel {
   width: 100%;
   height: auto;
-  max-width: 640px;
+  max-width: 620px;
   aspect-ratio: 1;
   display: block;
   margin: 0 auto;
   overflow: visible;
+  animation: appear 0.6s var(--ease) both;
 }
+@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
 
-.rings circle { stroke: rgba(236, 232, 255, 0.42); stroke-width: 0.9; }
-.draw { stroke-dasharray: 1; stroke-dashoffset: 0; animation: draw 1.6s var(--ease) both; }
-@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.ringStrong { fill: none; stroke: var(--ink); stroke-width: 1.3; }
+.core { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1; }
+.divider { stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.55; }
+.signGlyph { font-size: 24px; }
+.ticks line { stroke: var(--ink); stroke-width: 0.7; stroke-opacity: 0.45; }
 
-.ticks line { stroke: #ece8ff; stroke-width: 0.6; }
-.divider { stroke: rgba(236, 232, 255, 0.3); stroke-width: 0.8; }
-.signGlyph { font-size: 21px; }
+.houses line { stroke: var(--muted); stroke-width: 0.8; stroke-opacity: 0.55; }
+.houseNum { font-family: var(--mono); font-size: 11px; fill: var(--faint); }
 
-.houses line { stroke: rgba(236, 232, 255, 0.18); stroke-width: 0.8; stroke-dasharray: 2 4; }
-.houseNum { font-family: var(--mono); font-size: 9.5px; fill: var(--faint); }
+.angles line { stroke: var(--ink); }
+.angles text { font-family: var(--mono); font-size: 11.5px; font-weight: 500; fill: var(--muted); }
+.angles .angleMain { fill: var(--ink); font-size: 13px; }
 
-.angles line { stroke: rgba(246, 238, 214, 0.55); stroke-width: 1.1; }
-.angles text { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; fill: var(--pearl); }
+.aspect { transition: stroke-opacity 0.2s; }
 
-.threads path { animation: fade 1.2s var(--ease) both; transition: stroke-opacity 0.25s var(--ease); }
-.star { animation: fade 1s var(--ease) both; }
-
-.planet { cursor: pointer; animation: rise 0.9s var(--ease) both; transition: opacity 0.25s var(--ease); outline: none; }
-.planet:focus-visible circle:nth-of-type(2) { stroke: var(--lilac); stroke-width: 2; }
-.planetGlyph { fill: #19142f; }
-.degree { font-family: var(--mono); font-size: 10px; fill: var(--haze); }
-
-.elementStar { animation: fade 1.4s var(--ease) 0.6s both; }
-
-@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes rise { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
-.dimmable { transition: opacity 0.25s var(--ease); }
+.planet { cursor: pointer; transition: opacity 0.2s; outline: none; }
+.planet:focus-visible .hit { stroke: var(--accent); stroke-width: 2; }
+.hit { fill: #fff; fill-opacity: 0; }
+.planet:hover .hit, .planet[aria-pressed='true'] .hit { fill: var(--accent-soft); fill-opacity: 1; }
+.leader { stroke: var(--line-strong); stroke-width: 0.8; }
+.planetGlyph { paint-order: stroke; stroke: #fff; stroke-width: 4px; }
+.degree { font-family: var(--mono); font-size: 11px; fill: var(--text); paint-order: stroke; stroke: #fff; stroke-width: 3px; }

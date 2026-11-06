@@ -53,10 +53,10 @@ export default function TodayView() {
   return (
     <div className={s.today}>
       {isExample && (
-        <div className={`panel ${s.banner}`}>
-          <span>Showing the example chart. Draw yours to make this day personal.</span>
+        <div className={s.banner}>
+          <span>Showing the example chart. Calculate yours to make this day personal.</span>
           <Link className="btn btn-primary" href="/">
-            Draw my chart
+            Calculate my chart
           </Link>
         </div>
       )}
@@ -76,7 +76,7 @@ export default function TodayView() {
       </section>
 
       <section className={s.lists}>
-        <div className={`panel ${s.list}`}>
+        <div className={`card ${s.list}`}>
           <p className="eyebrow">Lean into</p>
           <ul>
             {day.leanInto.map((x) => (
@@ -84,7 +84,7 @@ export default function TodayView() {
             ))}
           </ul>
         </div>
-        <div className={`panel ${s.list}`}>
+        <div className={`card ${s.list}`}>
           <p className="eyebrow">Let go of</p>
           <ul>
             {day.letGo.map((x) => (
@@ -105,7 +105,7 @@ export default function TodayView() {
                 <span className={`glyph ${s.tGlyphs}`}>
                   <span style={{ color: bodyByKey(t.transit).color }}>{bodyByKey(t.transit).glyph}</span>{' '}
                   <span style={{ color: t.color }}>{t.glyph}</span>{' '}
-                  {t.natal === 'asc' ? 'AC' : t.natal === 'mc' ? 'MC' : bodyByKey(t.natal as BodyKey).glyph}
+                  {t.natal === 'asc' || t.natal === 'mc' ? <span className={s.angleTag}>{t.natal === 'asc' ? 'AC' : 'MC'}</span> : bodyByKey(t.natal as BodyKey).glyph}
                 </span>
                 <span className={s.tMain}>
                   <span className={s.tTitle}>
@@ -137,7 +137,7 @@ export default function TodayView() {
                 </span>
                 <span className="mono">
                   {formatDegree(p.lon)}
-                  {p.retrograde ? ' r' : ''}
+                  {p.retrograde && <span className={s.retro}> ℞</span>}
                 </span>
               </li>
             );
@@ -162,17 +162,13 @@ function MoonGlyph({ angle }: { angle: number }) {
   return (
     <svg className={s.moon} viewBox="-120 -120 240 240" role="img" aria-label="Tonight’s Moon">
       <defs>
-        <radialGradient id="moonGlow">
-          <stop offset="50%" stopColor="#f6eed6" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="#f6eed6" stopOpacity="0" />
-        </radialGradient>
         <radialGradient id="moonLit" cx="40%" cy="38%">
-          <stop offset="0%" stopColor="#fffaf0" />
-          <stop offset="100%" stopColor="#e6dcff" />
+          <stop offset="0%" stopColor="#fffdf5" />
+          <stop offset="100%" stopColor="#efe6c8" />
         </radialGradient>
       </defs>
-      <circle r={118} fill="url(#moonGlow)" />
-      <circle r={r} fill="#1d1940" stroke="rgba(236,232,255,0.18)" />
+      <circle r={r + 10} fill="none" stroke="var(--line)" />
+      <circle r={r} fill="#232a58" />
       <path d={d} fill="url(#moonLit)" />
     </svg>
   );

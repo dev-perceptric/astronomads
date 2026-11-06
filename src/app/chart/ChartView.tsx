@@ -5,8 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import ChartWheel from '@/components/ChartWheel';
 import { useChart, useProfileFromUrl } from '@/components/useChart';
-import { formatDegree, type Chart, type PointKey } from '@/lib/astro/chart';
-import { ELEMENT_COLORS, SIGNS, bodyByKey, type BodyKey, type Element } from '@/lib/astro/constants';
+import { findAspect, formatDegree, type Chart, type PointKey } from '@/lib/astro/chart';
+import { ELEMENT_COLORS, SIGNS, bodyByKey, type BodyKey, type Element, type Mode } from '@/lib/astro/constants';
 import { HOUSE_REALM, natalAspectLine, placementLine } from '@/lib/astro/readings';
 import { utcOffsetLabel } from '@/lib/astro/time';
 import { saveProfile, type BirthProfile } from '@/lib/profile';
@@ -14,6 +14,7 @@ import s from './chart.module.css';
 
 const pointName = (k: PointKey) => (k === 'asc' ? 'Ascendant' : k === 'mc' ? 'Midheaven' : bodyByKey(k).name);
 const pointGlyph = (k: PointKey) => (k === 'asc' ? 'AC' : k === 'mc' ? 'MC' : bodyByKey(k).glyph);
+const pointColor = (k: PointKey) => (k === 'asc' || k === 'mc' ? 'var(--ink)' : bodyByKey(k).color);
 
 export default function ChartView() {
   const params = useSearchParams();
@@ -47,99 +48,201 @@ export default function ChartView() {
 
   const sun = chart.placements.find((p) => p.body === 'sun')!;
   const moon = chart.placements.find((p) => p.body === 'moon')!;
-  const rising = chart.asc !== null ? SIGNS[Math.floor(chart.asc / 30)] : null;
+  const ascSign = chart.asc !== null ? Math.floor(chart.asc / 30) : null;
 
   return (
     <div className={s.layout}>
       {state.isExample && (
-        <div className={`panel ${s.banner}`}>
+        <div className={s.banner}>
           <span>This is an example chart.</span>
           <Link className="btn btn-primary" href="/">
-            Draw yours
+            Calculate yours
           </Link>
         </div>
       )}
 
       <header className={s.head}>
-        <p className="eyebrow">Birth chart</p>
-        <h1 className={`display ${s.name}`}>{profile.name}</h1>
-        <p className={`mono ${s.birth}`}>{birthLine(profile, chart)}</p>
-        <div className={s.bigThree}>
+        <div className={s.headText}>
+          <p className="eyebrow">Birth chart</p>
+          <h1 className={`display ${s.name}`}>{profile.name}</h1>
+          <p className={s.birth}>{birthLine(profile, chart)}</p>
+        </div>
+        <dl className={s.bigThree}>
           <BigOne label="Sun" sign={sun.sign} />
           <BigOne label="Moon" sign={moon.sign} />
-          {rising ? <BigOne label="Rising" sign={SIGNS.indexOf(rising)} /> : <div className={s.big}><span className="eyebrow">Rising</span><span className={s.bigSign}>Needs birth time</span></div>}
-        </div>
+          {ascSign !== null ? (
+            <BigOne label="Ascendant" sign={ascSign} />
+          ) : (
+            <div className={s.big}>
+              <dt className="eyebrow">Ascendant</dt>
+              <dd className={s.bigNone}>Needs birth time</dd>
+            </div>
+          )}
+        </dl>
       </header>
 
-      <div className={s.stage}>
-        <div className={s.wheelWrap}>
+      <div className={s.top}>
+        <section className={`card ${s.wheelCard}`} aria-label="Chart wheel">
           <ChartWheel chart={chart} name={profile.name} selected={selected} onSelect={setSelected} />
-        </div>
-        <aside className={`panel ${s.side}`} aria-live="polite">
-          {selected ? <PlanetDetail chart={chart} body={selected} onClose={() => setSelected(null)} /> : <Overview chart={chart} />}
-        </aside>
+          <Legend />
+        </section>
+
+        <section className="card" aria-labelledby="positions">
+          <div className="card-head">
+            <h2 id="positions" className="card-title">
+              Planet positions
+            </h2>
+            {!chart.timeKnown && <span className={s.note}>Noon chart, houses hidden</span>}
+          </div>
+          <div className="table-scroll">
+            <table className={`table ${s.positions}`}>
+              <thead>
+                <tr>
+                  <th>Planet</th>
+                  <th>Sign</th>
+                  <th>Position</th>
+                  {chart.timeKnown && <th>House</th>}
+                </tr>
+              </thead>
+              <tbody>
+                {chart.placements.map((p) => {
+                  const b = bodyByKey(p.body);
+                  const sg = SIGNS[p.sign];
+                  return (
+                    <tr key={p.body} className={selected === p.body ? s.rowOn : undefined} onClick={() => setSelected(selected === p.body ? null : p.body)}>
+                      <td>
+                        <span className={s.cellGlyph} style={{ color: b.color }}>
+                          <span className="glyph">{b.glyph}</span>
+                        </span>
+                        {b.name}
+                      </td>
+                      <td>
+                        <span className={s.cellGlyph} style={{ color: ELEMENT_COLORS[sg.element] }}>
+                          <span className="glyph">{sg.glyph}</span>
+                        </span>
+                        {sg.name}
+                      </td>
+                      <td className="mono">
+                        {formatDegree(p.lon)}
+                        {p.retrograde && <span className={s.retro}> ℞</span>}
+                      </td>
+                      {chart.timeKnown && <td className="mono">{p.house}</td>}
+                    </tr>
+                  );
+                })}
+                {chart.asc !== null && chart.mc !== null && (
+                  <>
+                    <AngleRow label="Ascendant" lon={chart.asc} house="1" />
+                    <AngleRow label="Midheaven" lon={chart.mc} house="10" />
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
 
-      <section className={s.section}>
-        <h2 className={`display ${s.h2}`}>Placements</h2>
-        <ul className={s.placements}>
+      <div className={s.grid2}>
+        <section className="card" aria-labelledby="balance">
+          <div className="card-head">
+            <h2 id="balance" className="card-title">
+              Elements and modes
+            </h2>
+          </div>
+          <Balance chart={chart} />
+        </section>
+        <section className="card" aria-labelledby="grid">
+          <div className="card-head">
+            <h2 id="grid" className="card-title">
+              Aspect grid
+            </h2>
+          </div>
+          <AspectGrid chart={chart} />
+        </section>
+      </div>
+
+      <section className={s.section} aria-labelledby="reading">
+        <h2 id="reading" className={`display ${s.h2}`}>
+          Your planets
+        </h2>
+        <div className={s.readings}>
           {chart.placements.map((p) => {
             const b = bodyByKey(p.body);
+            const sg = SIGNS[p.sign];
             return (
-              <li key={p.body}>
-                <button className={s.placement} onClick={() => setSelected(p.body)} aria-pressed={selected === p.body}>
-                  <span className={`glyph ${s.pGlyph}`} style={{ color: b.color }}>
+              <article key={p.body} className={`card ${s.reading} ${selected === p.body ? s.readingOn : ''}`}>
+                <h3 className={s.readingTitle}>
+                  <span className="glyph" style={{ color: b.color }}>
                     {b.glyph}
-                  </span>
-                  <span className={s.pMain}>
-                    <span className={s.pTitle}>
-                      {b.name} in {SIGNS[p.sign].name}
-                      {p.retrograde && <span className={s.retro}>retrograde</span>}
-                    </span>
-                    <span className={s.pLine}>{placementLine(p.body, p.sign)}</span>
-                  </span>
-                  <span className={`mono ${s.pMeta}`}>
-                    {formatDegree(p.lon)}
-                    {p.house && <span> · H{p.house}</span>}
-                  </span>
-                </button>
-              </li>
+                  </span>{' '}
+                  {b.name} in {sg.name}
+                  {p.retrograde && <span className={s.retroTag}>Retrograde</span>}
+                </h3>
+                <p className={s.readingMeta}>
+                  <span className="mono">{formatDegree(p.lon)}</span> {sg.name}
+                  {p.house && (
+                    <>
+                      {' '}
+                      · House {p.house}, {HOUSE_REALM[p.house - 1]}
+                    </>
+                  )}
+                </p>
+                <p className={s.readingText}>{placementLine(p.body, p.sign)}</p>
+              </article>
             );
           })}
-        </ul>
+        </div>
       </section>
 
-      <section className={s.section}>
-        <h2 className={`display ${s.h2}`}>Aspects</h2>
+      <section className="card" aria-labelledby="aspects">
+        <div className="card-head">
+          <h2 id="aspects" className="card-title">
+            Aspects
+          </h2>
+          <span className={s.note}>Tightest first</span>
+        </div>
         {chart.aspects.length === 0 ? (
-          <p className={s.muted}>No close aspects.</p>
+          <p className={s.empty}>No close aspects.</p>
         ) : (
-          <ul className={s.aspects}>
-            {chart.aspects.slice(0, 14).map((a) => (
-              <li key={`${a.a}-${a.b}`} className={s.aspect}>
-                <span className={`glyph ${s.aGlyphs}`}>
-                  {pointGlyph(a.a)} <span style={{ color: a.def.color }}>{a.def.glyph}</span> {pointGlyph(a.b)}
-                </span>
-                <span className={s.aMain}>
-                  <span className={s.pTitle}>
-                    {pointName(a.a)} {a.def.kind} {pointName(a.b)}
-                  </span>
-                  <span className={s.pLine}>{natalAspectLine(a.a, a.def.kind, a.b)}</span>
-                </span>
-                <span className={`mono ${s.pMeta}`}>{a.orb.toFixed(1)}°</span>
-              </li>
-            ))}
-          </ul>
+          <div className="table-scroll">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Orb</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                {chart.aspects.map((a) => (
+                  <tr key={`${a.a}-${a.b}`}>
+                    <td className={s.aspectCell}>
+                      <span className={a.a === 'asc' || a.a === 'mc' ? s.angleTag : 'glyph'} style={{ color: pointColor(a.a) }}>
+                        {pointGlyph(a.a)}
+                      </span>{' '}
+                      <span className="glyph" style={{ color: a.def.color }}>
+                        {a.def.glyph}
+                      </span>{' '}
+                      <span className={a.b === 'asc' || a.b === 'mc' ? s.angleTag : 'glyph'} style={{ color: pointColor(a.b) }}>
+                        {pointGlyph(a.b)}
+                      </span>
+                      <span className={s.aspectName}>
+                        {pointName(a.a)} {a.def.kind} {pointName(a.b)}
+                      </span>
+                    </td>
+                    <td className="mono">{a.orb.toFixed(1)}°</td>
+                    <td className={s.meaning}>{natalAspectLine(a.a, a.def.kind, a.b)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
 
       {!state.isExample && !state.isSaved && (
         <div className={s.saveRow}>
-          <button
-            className="btn"
-            onClick={() => setSaved(saveProfile(profile) ? 'saved' : 'failed')}
-            disabled={saved === 'saved'}
-          >
+          <button className="btn btn-primary" onClick={() => setSaved(saveProfile(profile) ? 'saved' : 'failed')} disabled={saved === 'saved'}>
             {saved === 'saved' ? 'Saved as my chart' : 'Save as my chart'}
           </button>
           {saved === 'failed' && <p className="error">This browser blocked saving. Allow site data and try again.</p>}
@@ -151,94 +254,128 @@ export default function ChartView() {
 
 function birthLine(p: BirthProfile, chart: Chart) {
   const [y, m, d] = p.date.split('-').map(Number);
-  const date = new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
-  const time = p.time ? `${p.time} (${utcOffsetLabel(chart.utc, p.city.timeZone)})` : 'time unknown';
-  return `${date} · ${time} · ${[p.city.name, p.city.country].filter(Boolean).join(', ')}`;
+  const date = new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const time = p.time ? `at ${p.time} (${utcOffsetLabel(chart.utc, p.city.timeZone)})` : 'time unknown';
+  return `Born ${date}, ${time}, in ${[p.city.name, p.city.region !== p.city.name ? p.city.region : '', p.city.country].filter(Boolean).join(', ')}`;
 }
 
 function BigOne({ label, sign }: { label: string; sign: number }) {
   const sg = SIGNS[sign];
   return (
     <div className={s.big}>
-      <span className="eyebrow">{label}</span>
-      <span className={s.bigSign}>
+      <dt className="eyebrow">{label}</dt>
+      <dd className={s.bigSign}>
         <span className="glyph" style={{ color: ELEMENT_COLORS[sg.element] }}>
           {sg.glyph}
         </span>{' '}
         {sg.name}
-      </span>
+      </dd>
     </div>
   );
 }
 
-function Overview({ chart }: { chart: Chart }) {
-  const total = Object.values(chart.elements).reduce((a, b) => a + b, 0) || 1;
-  const entries = Object.entries(chart.elements) as [Element, number][];
-  const top = [...entries].sort((a, b) => b[1] - a[1])[0][0];
+function AngleRow({ label, lon, house }: { label: string; lon: number; house: string }) {
+  const sg = SIGNS[Math.floor(lon / 30)];
   return (
-    <div className={s.overview}>
-      <p className="eyebrow">Your constellation</p>
-      <p className={s.overviewText}>
-        The threads in the center are your aspects, drawn as light. The star at the heart leans toward your strongest element, <strong style={{ color: ELEMENT_COLORS[top] }}>{top}</strong>.
-      </p>
-      <div className={s.elements}>
-        {entries.map(([el, n]) => (
-          <div key={el} className={s.elRow}>
-            <span className={s.elName}>{el}</span>
-            <span className={s.elBar}>
-              <span style={{ width: `${(n / total) * 100}%`, background: ELEMENT_COLORS[el] }} />
-            </span>
-            <span className="mono">{Math.round((n / total) * 100)}%</span>
-          </div>
-        ))}
-      </div>
-      <p className={s.hint}>Tap a planet to read it.</p>
-    </div>
-  );
-}
-
-function PlanetDetail({ chart, body, onClose }: { chart: Chart; body: BodyKey; onClose: () => void }) {
-  const p = chart.placements.find((x) => x.body === body)!;
-  const b = bodyByKey(body);
-  const related = chart.aspects.filter((a) => a.a === body || a.b === body);
-  return (
-    <div className={s.detail}>
-      <div className={s.detailHead}>
-        <span className={`glyph ${s.detailOrb}`} style={{ background: `radial-gradient(circle, #fff 0%, ${b.color} 60%)` }}>
-          {b.glyph}
+    <tr className={s.angleRow}>
+      <td>
+        <span className={s.cellGlyph}>{label === 'Ascendant' ? 'AC' : 'MC'}</span>
+        {label}
+      </td>
+      <td>
+        <span className={s.cellGlyph} style={{ color: ELEMENT_COLORS[sg.element] }}>
+          <span className="glyph">{sg.glyph}</span>
         </span>
-        <div>
-          <p className="eyebrow">{b.name}</p>
-          <p className={`display ${s.detailTitle}`}>
-            in {SIGNS[p.sign].name} <span className="mono">{formatDegree(p.lon)}</span>
-          </p>
-        </div>
-        <button className={s.close} onClick={onClose} aria-label="Close">
-          ×
-        </button>
+        {sg.name}
+      </td>
+      <td className="mono">{formatDegree(lon)}</td>
+      <td className="mono">{house}</td>
+    </tr>
+  );
+}
+
+function Legend() {
+  return (
+    <ul className={s.legend}>
+      <li>
+        <span className={s.swatch} style={{ background: '#2a6cc9' }} /> Trine
+      </li>
+      <li>
+        <span className={`${s.swatch} ${s.dashed}`} style={{ borderColor: '#2f9a6a' }} /> Sextile
+      </li>
+      <li>
+        <span className={s.swatch} style={{ background: '#d2452f' }} /> Square, opposition
+      </li>
+    </ul>
+  );
+}
+
+function Balance({ chart }: { chart: Chart }) {
+  const modes: Record<Mode, number> = { cardinal: 0, fixed: 0, mutable: 0 };
+  for (const p of chart.placements) modes[SIGNS[p.sign].mode] += p.body === 'sun' || p.body === 'moon' ? 2 : 1;
+  if (chart.asc !== null) modes[SIGNS[Math.floor(chart.asc / 30)].mode] += 2;
+  const total = Object.values(chart.elements).reduce((a, b) => a + b, 0) || 1;
+  const els = Object.entries(chart.elements) as [Element, number][];
+  const mds = Object.entries(modes) as [Mode, number][];
+  const topEl = [...els].sort((a, b) => b[1] - a[1])[0][0];
+  const topMd = [...mds].sort((a, b) => b[1] - a[1])[0][0];
+  const row = (name: string, n: number, color: string, top: boolean) => (
+    <div key={name} className={s.balRow}>
+      <span className={`${s.balName} ${top ? s.balTop : ''}`}>{name}</span>
+      <span className={s.balBar}>
+        <span style={{ width: `${(n / total) * 100}%`, background: color }} />
+      </span>
+      <span className="mono">{Math.round((n / total) * 100)}%</span>
+    </div>
+  );
+  return (
+    <div className={s.balance}>
+      <div className={s.balGroup}>
+        <p className="eyebrow">Elements</p>
+        {els.map(([el, n]) => row(el, n, ELEMENT_COLORS[el], el === topEl))}
       </div>
-      <p>{placementLine(body, p.sign)}</p>
-      {p.house && (
-        <p className={s.muted}>
-          House {p.house}: {HOUSE_REALM[p.house - 1]}
-        </p>
-      )}
-      {p.retrograde && <p className={s.muted}>Retrograde: this energy turns inward before it shows.</p>}
-      {related.length > 0 && (
-        <ul className={s.detailAspects}>
-          {related.map((a) => {
-            const other = a.a === body ? a.b : a.a;
-            return (
-              <li key={`${a.a}-${a.b}`}>
-                <span className="glyph" style={{ color: a.def.color }}>
-                  {a.def.glyph}
-                </span>{' '}
-                {a.def.kind} {pointName(other)} <span className="mono">{a.orb.toFixed(1)}°</span>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      <div className={s.balGroup}>
+        <p className="eyebrow">Modes</p>
+        {mds.map(([m, n]) => row(m, n, 'var(--accent)', m === topMd))}
+      </div>
+      <p className={s.balSummary}>
+        Strongest: <strong>{topEl}</strong> and <strong>{topMd}</strong>. Sun and Moon count double{chart.asc !== null ? ', and so does the Ascendant' : ''}.
+      </p>
+    </div>
+  );
+}
+
+function AspectGrid({ chart }: { chart: Chart }) {
+  const points: { key: PointKey; lon: number }[] = chart.placements.map((p) => ({ key: p.body, lon: p.lon }));
+  if (chart.asc !== null && chart.mc !== null) points.push({ key: 'asc', lon: chart.asc }, { key: 'mc', lon: chart.mc });
+  return (
+    <div className="table-scroll">
+      <table className={s.grid} aria-label="Aspects between every pair of planets">
+        <tbody>
+          {points.map((row, i) => (
+            <tr key={row.key}>
+              {points.slice(0, i).map((col) => {
+                const hit = row.key === 'mc' && col.key === 'asc' ? null : findAspect(row.lon, col.lon);
+                return (
+                  <td key={col.key} title={hit ? `${pointName(row.key)} ${hit.def.kind} ${pointName(col.key)}, orb ${hit.orb.toFixed(1)}°` : undefined}>
+                    {hit && (
+                      <>
+                        <span className="glyph" style={{ color: hit.def.color }}>
+                          {hit.def.glyph}
+                        </span>
+                        <span className={s.gridOrb}>{hit.orb.toFixed(0)}°</span>
+                      </>
+                    )}
+                  </td>
+                );
+              })}
+              <th scope="row" style={{ color: pointColor(row.key) }}>
+                {row.key === 'asc' || row.key === 'mc' ? pointGlyph(row.key) : <span className="glyph">{pointGlyph(row.key)}</span>}
+              </th>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

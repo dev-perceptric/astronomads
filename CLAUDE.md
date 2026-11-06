@@ -21,7 +21,9 @@ An astrology site: free birth charts, a daily sky, compatibility and astrocartog
 - `data/celebs/top5500.csv` is the working list (Pantheon 2025, CC BY-SA 4.0).
 
 ## Rule: one look
-- One night-sky world: tokens in `globals.css`, Bodoni Moda italic for display, Jost for text, DM Mono for degrees, Noto Sans Symbols for glyphs.
+- A light reference site: white page, dark readable text, tokens in `globals.css`. One deep blue (`--accent`) for links and actions, a gold star in the wordmark.
+- Bodoni Moda for headings, Jost for text (16px), DM Mono for degrees, Noto Sans Symbols for glyphs.
+- Data goes in clean tables and white cards with thin borders. The chart wheel is drawn on white: element-tinted sign band, colored planet glyphs, straight aspect lines (blue trine, green dashed sextile, red square and opposition).
 - Planet and sign glyphs carry U+FE0E so phones never show emoji.
-- Motion is slow and soft, and everything stops under `prefers-reduced-motion`.
+- Motion stays minimal and stops under `prefers-reduced-motion`.
 - No browser pop-ups (`alert`, `confirm`, `prompt`).
