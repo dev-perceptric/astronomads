@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { SIGN_COPY } from './copy';
+import { SECTION_TITLES, sectionTitle } from './copy/types';
 import { famousBySign } from './famous';
 import { SIGN_FACTS, relation } from './signs';
 
@@ -27,10 +28,15 @@ describe('sign pages', () => {
 
   it('has complete copy that follows the copy rules', () => {
     for (const [key, copy] of Object.entries(SIGN_COPY)) {
-      const all = [copy!.essence, copy!.intro, copy!.quote, ...copy!.sections.flatMap((s) => [s.title, ...s.paras]), ...Object.values(copy!.matches), ...copy!.faq.flatMap((f) => [f.q, f.a])];
+      const all = [copy!.essence, copy!.intro, copy!.quote, ...copy!.sections.flatMap((s) => [sectionTitle(s, key), ...s.paras]), ...Object.values(copy!.matches), ...copy!.faq.flatMap((f) => [f.q, f.a])];
       for (const t of all) expect(breaksRules(t), `${key}: ${t}`).toBe(false);
       expect(Object.keys(copy!.matches)).toHaveLength(12);
       expect(copy!.sections.length).toBeGreaterThanOrEqual(6);
+      // Every heading carries the sign's name, for search.
+      for (const sec of copy!.sections) {
+        expect(sec.title ?? SECTION_TITLES[sec.id], `${key}: ${sec.id} needs a heading`).toBeTruthy();
+        expect(sectionTitle(sec, 'Aries')).toContain('Aries');
+      }
     }
   });
 

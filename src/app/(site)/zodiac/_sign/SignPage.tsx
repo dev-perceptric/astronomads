@@ -9,6 +9,7 @@ import { sunSeason } from '@/lib/astro/ingress';
 import { IN_SIGN, POINT_INFO, firstSentence, ordinal } from '@/lib/astro/interpretations';
 import { pointColor, pointName } from '@/lib/astro/points';
 import { SIGN_COPY } from '@/lib/zodiac/copy';
+import { sectionTitle } from '@/lib/zodiac/copy/types';
 import { famousBySign } from '@/lib/zodiac/famous';
 import { SIGN_FACTS, relation, signBySlug } from '@/lib/zodiac/signs';
 import CompatWheel from './CompatWheel';
@@ -57,7 +58,7 @@ export default function SignPage({ slug }: { slug: string }) {
   const famous = famousBySign()[f.index].slice(0, 12);
   const prev = SIGN_FACTS[(f.index + 11) % 12];
   const next = SIGN_FACTS[(f.index + 1) % 12];
-  const toc = [{ id: 'overview', title: 'Overview' }, ...copy.sections.map((x) => ({ id: x.id, title: x.title }))];
+  const toc = [{ id: 'overview', title: `${f.name} overview` }, ...copy.sections.map((x) => ({ id: x.id, title: sectionTitle(x, f.name) }))];
   const quoteAfter = Math.max(0, copy.sections.findIndex((x) => x.id === 'strengths'));
   const site = process.env.SITE_URL || 'https://astronomads.com';
 
@@ -229,7 +230,7 @@ export default function SignPage({ slug }: { slug: string }) {
           <article className={s.article}>
             <p className="nm-label">03 The sign</p>
             <h2 id="overview" className={s.articleTitle}>
-              {f.name}, {f.symbol.toLowerCase()}
+              {f.name} zodiac sign: {f.symbol.toLowerCase()}
             </h2>
             <p className={s.intro}>{copy.intro}</p>
             <ul className={s.keywords} aria-label="Keywords">
@@ -240,7 +241,7 @@ export default function SignPage({ slug }: { slug: string }) {
             {copy.sections.map((sec, i) => (
               <div key={sec.id}>
                 <h3 id={sec.id} className={s.sectionTitle}>
-                  {sec.title}
+                  {sectionTitle(sec, f.name)}
                 </h3>
                 {sec.paras.map((p, j) => (
                   <p key={j} className={s.para}>
@@ -272,7 +273,7 @@ export default function SignPage({ slug }: { slug: string }) {
       {/* Through every planet */}
       <section className={`nm-section nm-void ${s.points}`}>
         <p className="nm-label">04 {f.name} in your chart</p>
-        <h2 className="nm-title">Your planets in {f.name}</h2>
+        <h2 className="nm-title">Planets in {f.name}</h2>
         <p className={s.leadDark}>Every planet can sit in {f.name}. Here is what each one means there. Open a card to read it all.</p>
         <div className={s.pointGrid}>
           {POINTS.map((k) => {
@@ -305,7 +306,7 @@ export default function SignPage({ slug }: { slug: string }) {
       {/* Compatibility */}
       <section className={`nm-section nm-marble ${s.compat}`}>
         <p className="nm-label">05 Compatibility</p>
-        <h2 className="nm-title">{f.name} with every sign</h2>
+        <h2 className="nm-title">{f.name} compatibility with every sign</h2>
         <div className={s.compatGrid}>
           <div className={s.compatArt}>
             <CompatWheel sign={f.index} />
@@ -343,14 +344,14 @@ export default function SignPage({ slug }: { slug: string }) {
       {/* Live sky */}
       <section className={`nm-section nm-void ${s.sky}`}>
         <p className="nm-label">06 Live</p>
-        <h2 className="nm-title">{f.name} in the sky right now</h2>
+        <h2 className="nm-title">{f.name} in the sky today</h2>
         <LiveSky sign={f.index} />
       </section>
 
       {/* Famous */}
       <section className={`nm-section nm-marble ${s.famous}`}>
         <p className="nm-label">07 Famous {f.name}</p>
-        <h2 className="nm-title">Born with the Sun in {f.name}</h2>
+        <h2 className="nm-title">Famous {f.name} people</h2>
         <ol className={s.famousGrid}>
           {famous.map((p, i) => (
             <li key={p.name} className={s.person}>
@@ -373,7 +374,7 @@ export default function SignPage({ slug }: { slug: string }) {
       {/* FAQ */}
       <section className={`nm-section nm-marble ${s.faq}`}>
         <p className="nm-label">08 Questions</p>
-        <h2 className="nm-title">About {f.name}</h2>
+        <h2 className="nm-title">{f.name} questions</h2>
         <div className={s.faqList}>
           {copy.faq.map((q) => (
             <details key={q.q} className={s.faqItem}>
