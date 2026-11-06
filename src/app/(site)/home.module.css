@@ -71,11 +71,11 @@
   --border: #e2e2e2;
   --border-strong: #cfcfcf;
   --destructive: oklch(57% 0.17 20);
-  --p-sun: oklch(68% 0.19 50); --p-moon: oklch(76% 0.16 88); --p-mercury: oklch(50% 0.22 300); --p-venus: oklch(63% 0.21 350);
-  --p-mars: oklch(57% 0.22 27); --p-jupiter: oklch(64% 0.14 205); --p-saturn: oklch(48% 0.19 25); --p-uranus: oklch(40% 0.14 20);
-  --p-neptune: oklch(48% 0.09 190); --p-pluto: oklch(54% 0.23 5);
-  --el-fire: oklch(57% 0.22 27); --el-earth: oklch(52% 0.1 85); --el-air: oklch(50% 0.1 175); --el-water: oklch(45% 0.22 265);
-  --asp-ease: oklch(45% 0.22 265); --asp-soft: oklch(62% 0.12 220); --asp-hard: oklch(57% 0.22 27); --asp-blend: oklch(55% 0.15 145);
+  --p-sun: #f97c04; --p-moon: #f9cc4c; --p-mercury: #7a2cf2; --p-venus: #f972c6;
+  --p-mars: #f9061f; --p-jupiter: #1cc2c2; --p-saturn: #f9061f; --p-uranus: #800404;
+  --p-neptune: #0c6464; --p-pluto: #f9061f;
+  --el-fire: #f00a20; --el-earth: #7a6212; --el-air: #1c6a72; --el-water: #0404c8;
+  --asp-ease: #1a1ad0; --asp-soft: #3fb0e0; --asp-hard: #f00a20; --asp-blend: #19a82a;
   /* The older alias names resolve at :root, so they are set again here to follow the light values */
   --bg: #ffffff; --ink: #000000; --text: #000000; --muted: #5e5e5e; --faint: #8a8a8a;
   --line: #e2e2e2; --line-strong: #cfcfcf; --paper: #f2f2f2; --accent: #000000; --accent-ink: #000000; --accent-soft: #f2f2f2;

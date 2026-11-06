@@ -1,68 +1,68 @@
+/* The Astronomads astrolabe (Night and Marble). All color comes from the section's tokens, so it
+   reads on Void and on Marble. */
 .wheel {
   width: 100%;
   height: auto;
-  max-width: 720px;
+  max-width: 760px;
   aspect-ratio: 1;
   display: block;
   margin: 0 auto;
   overflow: visible;
-  font-family: var(--sans);
-  animation: appear 0.6s var(--ease-emerge) both;
+  font-family: var(--mono, 'Geist Mono', ui-monospace, monospace);
+  animation: appear 0.8s var(--ease-emerge) both;
 }
-@keyframes appear { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes appear { from { opacity: 0; transform: scale(0.985) rotate(-2deg); } to { opacity: 1; transform: none; } }
 
-/* Wheel body and rings */
-.wheelFill { fill: var(--card); }
-.rim { fill: none; stroke: var(--foreground); stroke-width: 2.6; }
-.ring { fill: none; stroke: var(--foreground); stroke-width: 1.6; }
-.ringThin { fill: none; stroke: var(--foreground); stroke-width: 1; }
-
-/* Sign ring */
-.signSector { fill-opacity: 0.06; }
-.signDivider { stroke: var(--foreground); stroke-width: 1.2; }
+/* Body, border and rings */
+.body { fill: var(--card); }
+.hair { fill: none; stroke: var(--foreground); stroke-width: 0.8; stroke-opacity: 0.6; }
+.rim { fill: none; stroke: var(--foreground); stroke-width: 2.2; }
+.ring { fill: none; stroke: var(--foreground); stroke-width: 1.4; }
 
 /* Degree scale */
-.ticks line { stroke: var(--foreground); stroke-width: 0.8; }
-.ticks .tickMajor { stroke-width: 1.3; }
+.degDot { fill: var(--foreground); fill-opacity: 0.7; }
+.tick { stroke: var(--foreground); stroke-width: 1; }
+.tickSign { stroke: var(--foreground); stroke-width: 1.4; }
+
+/* Sign ring */
+.signTint { fill-opacity: 0.07; }
+.signDivider { stroke: var(--foreground); stroke-width: 0.9; stroke-opacity: 0.7; }
+.signName { font-family: var(--mono, 'Geist Mono', ui-monospace, monospace); font-size: 11px; letter-spacing: 0.32em; fill: var(--muted-foreground); }
 
 /* Houses */
-.cusp { stroke: var(--foreground); stroke-width: 1; }
-.cuspMark { fill: var(--foreground); }
-.houseNum { font-family: var(--sans); font-size: 15px; font-weight: 700; fill: var(--foreground); }
-.houseNumSmall { font-family: var(--sans); font-size: 11px; font-weight: 700; fill: var(--foreground); }
+.cusp { stroke: var(--foreground); stroke-width: 0.8; stroke-opacity: 0.55; }
+.cuspStar { fill: var(--foreground); }
+.houseNum { font-family: var(--serif, 'EB Garamond', Georgia, serif); font-size: 17px; fill: var(--foreground); }
+.houseNumSmall { font-family: var(--serif, 'EB Garamond', Georgia, serif); font-size: 12px; fill: var(--foreground); }
 
 /* Angles */
-.axis { stroke: var(--foreground); stroke-width: 2.4; }
-.axisSoft { stroke: var(--foreground); stroke-width: 1.6; }
+.axis { stroke: var(--foreground); stroke-width: 2; }
+.axisSoft { stroke: var(--foreground); stroke-width: 1; stroke-opacity: 0.7; }
+.axisHead { fill: var(--foreground); }
 
 /* Aspect disc */
-.core { fill: var(--card); stroke: var(--foreground); stroke-width: 1.6; }
+.core { fill: var(--card); stroke: var(--foreground); stroke-width: 1.4; }
+.orbit { fill: none; stroke: var(--foreground); stroke-width: 0.6; stroke-opacity: 0.18; stroke-dasharray: 1 4; }
+.coreStars circle { fill: var(--foreground); fill-opacity: 0.22; }
 .aspect { transition: stroke-opacity 0.2s; }
 .anchor { stroke: var(--card); stroke-width: 1.4; }
+.centerRing { fill: var(--card); stroke: var(--foreground); stroke-width: 1.2; }
+.centerStar { fill: var(--foreground); }
 
 /* Points outside the wheel */
 .planet { cursor: pointer; transition: opacity 0.2s; outline: none; }
 .point { transition: opacity 0.2s; }
-.hit { fill: transparent; stroke: transparent; stroke-width: 1.4; transition: fill 0.2s, stroke 0.2s; }
-.planet:hover .hit, .planet[aria-pressed='true'] .hit { fill: var(--secondary); }
-.planet:focus-visible .hit { stroke: var(--foreground); stroke-width: 2; }
-.leader { stroke-width: 1.2; stroke-opacity: 0.9; }
-.angleText { font-family: var(--sans); font-size: 26px; font-weight: 600; letter-spacing: -0.04em; fill: var(--foreground); }
-.mcRing { fill: var(--card); stroke: var(--foreground); stroke-width: 2; }
-.mcRing + .angleText { font-size: 19px; }
-.degree { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
-.minute { font-size: 12px; font-weight: 500; baseline-shift: 30%; }
-.retro { font-size: 12px; font-weight: 700; baseline-shift: 30%; }
+.hit { fill: transparent; stroke: transparent; stroke-width: 1.5; transition: stroke 0.2s; }
+.planet:hover .hit, .planet[aria-pressed='true'] .hit { fill: var(--secondary); stroke: var(--foreground); stroke-opacity: 0.5; }
+.planet:focus-visible .hit { stroke: var(--foreground); stroke-width: 2.5; }
+.angleRing { fill: var(--card); stroke: var(--foreground); stroke-width: 1.4; }
+.leader { stroke-width: 1; stroke-opacity: 0.85; }
+.angleText { font-family: var(--roman, 'Cinzel', serif); font-size: 15px; font-weight: 600; letter-spacing: 0.04em; fill: var(--foreground); }
+.degree { font-size: 18px; font-weight: 600; letter-spacing: -0.04em; }
+.minute { font-size: 11px; font-weight: 500; baseline-shift: 30%; }
+.retro { font-size: 11px; font-weight: 700; baseline-shift: 30%; }
 
-/* Brand finish (Night and Marble) */
-.brand { font-family: var(--mono, 'Geist Mono', ui-monospace, monospace); }
-.brand .rim { stroke-width: 2.2; }
-.rimEngraved { fill: none; stroke: var(--foreground); stroke-width: 0.8; stroke-opacity: 0.55; }
-.brand .signSector { fill-opacity: 0.05; }
-.signDot { fill-opacity: 0.55; }
-.coreStars circle { fill: var(--foreground); fill-opacity: 0.22; }
-.centerStar { fill: var(--foreground); }
-.brand .houseNum, .brand .houseNumSmall { font-family: 'Geist Mono', ui-monospace, monospace; font-weight: 500; }
-.brand .angleText { font-family: 'Cinzel', 'Trajan Pro', serif; font-weight: 600; letter-spacing: 0.02em; }
-.brand .mcRing + .angleText { font-size: 17px; }
-.brand .degree { font-family: 'Geist Mono', ui-monospace, monospace; font-weight: 600; letter-spacing: -0.04em; }
+@media (prefers-reduced-motion: reduce) {
+  .wheel { animation: none; }
+  .planet, .point, .hit, .aspect { transition: none; }
+}

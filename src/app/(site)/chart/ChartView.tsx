@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import ChartWheel from '@/components/ChartWheel';
 import { Glyph, type GlyphName, type SignKey } from '@/components/Glyph';
+import { Glyph3D } from '@/components/Glyph3D';
 import Stipple from '@/components/Stipple';
 import { useChart, useProfileFromUrl } from '@/components/useChart';
 import { findAspect, formatDegree, type Chart, type PointKey } from '@/lib/astro/chart';
@@ -91,7 +92,7 @@ export default function ChartView() {
         <h2 className="nm-title">Your sky at the minute you arrived</h2>
         <div className={s.wheelGrid}>
           <div className={s.wheelCol}>
-            <ChartWheel chart={chart} name={profile.name} selected={selected} onSelect={setSelected} variant="brand" />
+            <ChartWheel chart={chart} name={profile.name} selected={selected} onSelect={setSelected} />
           </div>
           <div className={s.ledgerCol}>
             <div className={s.ledgerHead}>
@@ -105,7 +106,7 @@ export default function ChartView() {
                 return (
                   <li key={p.body}>
                     <button className={s.ledgerRow} onClick={() => select(p.body)} aria-pressed={selected === p.body}>
-                      <Glyph name={p.body} size={22} color={b.color} weight={1.9} />
+                      <Glyph3D name={p.body} size={30} color={b.color} ground="dark" depth={3} />
                       <span className={s.ledgerName}>{b.name}</span>
                       <span className={s.ledgerSign}>
                         <Glyph name={sg.key as SignKey} size={16} color={ELEMENT_COLORS[sg.element]} weight={1.8} />
@@ -157,7 +158,7 @@ export default function ChartView() {
             return (
               <button key={p.body} className={`nm-bracket ${s.planetCard} ${selected === p.body ? s.planetOn : ''}`} onClick={() => select(p.body)}>
                 <span className={s.planetGlyph}>
-                  <Glyph name={p.body} size={46} color={b.color} weight={1.9} />
+                  <Glyph3D name={p.body} size={72} color={b.color} ground="light" />
                 </span>
                 <span className={s.planetTitle}>
                   {b.name} in {sg.name}
@@ -258,7 +259,7 @@ function Focus({ chart, body, onClose }: { chart: Chart; body: BodyKey; onClose:
   return (
     <div className={`nm-bracket ${s.focus}`}>
       <div className={s.focusHead}>
-        <Glyph name={body} size={36} color={b.color} weight={1.9} />
+        <Glyph3D name={body} size={52} color={b.color} ground="dark" />
         <div>
           <p className={s.focusTitle}>
             {b.name} in {SIGNS[p.sign].name}
