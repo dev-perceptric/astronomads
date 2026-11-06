@@ -38,6 +38,9 @@ export default function AccountView() {
 
 function SignIn({ google, onDone }: { google: boolean; onDone: () => void }) {
   const [mode, setMode] = useState<'in' | 'up' | 'forgot'>('in');
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('mode') === 'up') setMode('up');
+  }, []);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -350,7 +353,7 @@ function MyReports() {
   }, []);
   if (!orders.length) return null;
   return (
-    <section className={`nm-section nm-marble ${s.profiles}`} style={{ minHeight: 0, paddingTop: 0 }}>
+    <section id="reports" className={`nm-section nm-marble ${s.profiles}`} style={{ minHeight: 0, paddingTop: 0, scrollMarginTop: 100 }}>
       <p className="nm-label">Reports</p>
       <h2 className="nm-title">My reports</h2>
       <ul className={s.list}>
