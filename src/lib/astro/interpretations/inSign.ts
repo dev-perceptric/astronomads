@@ -1,10 +1,11 @@
 import type { PointKey } from '../chart';
+import type { NodeKey } from '../constants';
 
 /**
  * What each point means in each sign. Index 0 is Aries, 11 is Pisces.
  * Original Astronomads copy.
  */
-export const IN_SIGN: Record<PointKey, string[]> = {
+export const IN_SIGN: Record<Exclude<PointKey, NodeKey>, string[]> = {
   sun: [
     "You feel most like yourself when you are first through the door, starting the project or saying the bold thing out loud. That spark gets people moving, though it helps to finish one task before racing to the next, like wrapping up a call before opening a new tab.",
     "Your sense of self grows slowly and holds firm, built on comfort you can touch and routines you trust. People lean on your steadiness, and your gift shows when you cook the same good meal for friends every Sunday and make them feel at home.",

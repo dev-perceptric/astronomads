@@ -4,13 +4,13 @@ import { useEffect, useRef } from 'react';
 import { Glyph, type GlyphName } from '@/components/Glyph';
 import { Glyph3D } from '@/components/Glyph3D';
 import { formatDegree, type Chart, type PointKey } from '@/lib/astro/chart';
-import { SIGNS, bodyByKey, type BodyKey } from '@/lib/astro/constants';
-import { IN_HOUSE, IN_SIGN, POINT_INFO, aspectReading, isAngle, ordinal, pointName, pointPosition, readingOrder } from '@/lib/astro/interpretations';
+import { SIGNS, type BodyKey, type NodeKey } from '@/lib/astro/constants';
+import { IN_HOUSE, IN_SIGN, POINT_INFO, aspectReading, isAngle, ordinal, pointColor, pointName, pointPosition, readingOrder } from '@/lib/astro/interpretations';
 import { HOUSE_REALM } from '@/lib/astro/readings';
 import s from './reading.module.css';
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-const colorOf = (k: PointKey) => (isAngle(k) ? 'var(--foreground)' : bodyByKey(k).color);
+const colorOf = pointColor;
 
 /**
  * The reading for one placement, in a panel that slides in from the right (a bottom sheet on phones).
@@ -89,7 +89,7 @@ export default function ReadingSheet({ chart, point, onClose, onPick }: { chart:
             {angle ? (
               <span className={s.angleMark}>{point === 'asc' ? 'AC' : 'MC'}</span>
             ) : (
-              <Glyph3D name={point as BodyKey} size={68} color={colorOf(point)} ground="light" />
+              <Glyph3D name={point as BodyKey | NodeKey} size={68} color={colorOf(point)} ground="light" />
             )}
             <h2 id="reading-title" className={s.title}>
               {title}
@@ -125,7 +125,7 @@ export default function ReadingSheet({ chart, point, onClose, onPick }: { chart:
                 03 {name} in the {ordinal(pos.house!)} house
               </p>
               <p className={s.realm}>{HOUSE_REALM[pos.house! - 1]}</p>
-              <p className={s.text}>{IN_HOUSE[point as BodyKey][pos.house! - 1]}</p>
+              <p className={s.text}>{IN_HOUSE[point as BodyKey | NodeKey][pos.house! - 1]}</p>
             </section>
           )}
 

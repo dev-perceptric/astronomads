@@ -28,7 +28,7 @@
   --rule: rgba(255, 255, 255, 0.2);
   --p-sun: #f97c04; --p-moon: #f9cc4c; --p-mercury: #7a2cf2; --p-venus: #f972c6;
   --p-mars: #f9061f; --p-jupiter: #1cc2c2; --p-saturn: #f9061f; --p-uranus: #800404;
-  --p-neptune: #0c6464; --p-pluto: #f9061f;
+  --p-neptune: #0c6464; --p-pluto: #f9061f; --p-node: #a6a6a6;
   --el-fire: #f00a20; --el-earth: #7a6212; --el-air: #1c6a72; --el-water: #0404c8;
   --asp-ease: #1a1ad0; --asp-soft: #3fb0e0; --asp-hard: #f00a20; --asp-blend: #19a82a;
   --bg: #000000; --ink: #ffffff; --text: #ffffff; --muted: #a6a6a6; --faint: #7a7a7a; --line: #2a2a2a; --line-strong: #3a3a3a;
@@ -45,7 +45,7 @@
   --rule: rgba(0, 0, 0, 0.14);
   --p-sun: #f97c04; --p-moon: #f9cc4c; --p-mercury: #7a2cf2; --p-venus: #f972c6;
   --p-mars: #f9061f; --p-jupiter: #1cc2c2; --p-saturn: #f9061f; --p-uranus: #800404;
-  --p-neptune: #0c6464; --p-pluto: #f9061f;
+  --p-neptune: #0c6464; --p-pluto: #f9061f; --p-node: #5e5e5e;
   --el-fire: #f00a20; --el-earth: #7a6212; --el-air: #1c6a72; --el-water: #0404c8;
   --asp-ease: #1a1ad0; --asp-soft: #3fb0e0; --asp-hard: #f00a20; --asp-blend: #19a82a;
   --bg: #ffffff; --ink: #000000; --text: #000000; --muted: #5e5e5e; --faint: #8a8a8a; --line: #e2e2e2; --line-strong: #cfcfcf;

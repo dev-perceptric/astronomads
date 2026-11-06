@@ -39,6 +39,16 @@ export type BodyKey =
   | 'neptune'
   | 'pluto';
 
+/** The Moon's true nodes: North (ascending) and South (descending), always opposite each other. */
+export type NodeKey = 'nnode' | 'snode';
+
+export const NODES: { key: NodeKey; name: string; color: string; weight: number }[] = [
+  { key: 'nnode', name: 'North Node', color: 'var(--p-node)', weight: 0.9 },
+  { key: 'snode', name: 'South Node', color: 'var(--p-node)', weight: 0.9 },
+];
+export const nodeByKey = (key: NodeKey) => NODES.find((n) => n.key === key)!;
+export const isNode = (key: string): key is NodeKey => key === 'nnode' || key === 'snode';
+
 export type Body = {
   key: BodyKey;
   name: string;

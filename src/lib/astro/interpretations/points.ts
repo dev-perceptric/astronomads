@@ -1,4 +1,5 @@
 import type { PointKey } from '../chart';
+import type { NodeKey } from '../constants';
 
 export type PointInfo = {
   /** Short role, e.g. "Your core self" */
@@ -10,7 +11,7 @@ export type PointInfo = {
 };
 
 /** What each point stands for. Original Astronomads copy. */
-export const POINT_INFO: Record<PointKey, PointInfo> = {
+export const POINT_INFO: Record<Exclude<PointKey, NodeKey>, PointInfo> = {
   sun: {
     role: 'Your core self',
     keywords: ['identity', 'vitality', 'purpose', 'will'],

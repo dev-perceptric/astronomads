@@ -3,7 +3,8 @@
 import { useId, useMemo, useState } from 'react';
 import type { Chart, PointKey } from '@/lib/astro/chart';
 import { formatDegree } from '@/lib/astro/chart';
-import { ELEMENT_COLORS, SIGNS, bodyByKey, norm, type BodyKey } from '@/lib/astro/constants';
+import { ELEMENT_COLORS, SIGNS, norm, type BodyKey } from '@/lib/astro/constants';
+import { pointColor, pointName as nameOf, pointWeight } from '@/lib/astro/points';
 import { GlyphAt, type SignKey } from './Glyph';
 import { Glyph3DAt } from './Glyph3D';
 import s from './ChartWheel.module.css';
@@ -59,9 +60,10 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
     return { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2) };
   };
 
-  // Everything drawn outside the wheel: planets, plus the Ascendant and Midheaven when the time is known.
+  // Everything drawn outside the wheel: planets, the nodes, plus the Ascendant and Midheaven when the time is known.
   const outer: Outer[] = useMemo(() => {
     const list: Outer[] = chart.placements.map((p) => ({ key: p.body, lon: p.lon }));
+    for (const n of chart.nodes) list.push({ key: n.key, lon: n.lon });
     if (chart.asc !== null && chart.mc !== null) list.push({ key: 'asc', lon: chart.asc }, { key: 'mc', lon: chart.mc });
     return list;
   }, [chart]);
@@ -216,7 +218,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
         })}
         {outer.map((o) => {
           const [x, y] = pt(R.core, o.lon);
-          const color = o.key === 'asc' || o.key === 'mc' ? 'var(--foreground)' : bodyByKey(o.key).color;
+          const color = pointColor(o.key);
           return <circle key={o.key} cx={f(x)} cy={f(y)} r={3.4} fill={color} className={s.anchor} />;
         })}
       </g>
@@ -229,8 +231,9 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
         {outer.map((o) => {
           const shown = spread.get(o.key) ?? o.lon;
           const isAngle = o.key === 'asc' || o.key === 'mc';
-          const placement = isAngle ? null : chart.placements.find((p) => p.body === o.key)!;
-          const color = isAngle ? 'var(--foreground)' : bodyByKey(o.key as BodyKey).color;
+          const placement = chart.placements.find((p) => p.body === o.key) ?? null;
+          const house = placement?.house ?? chart.nodes.find((n) => n.key === o.key)?.house ?? null;
+          const color = pointColor(o.key);
           const [ex, ey] = pt(R.frame + 1, o.lon);
           const [gx, gy] = pt(R.glyph, shown);
           // Leader stops short of the symbol.
@@ -246,9 +249,9 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
             min = 0;
           }
           const dim = focus && focus !== o.key;
-          const pointName = isAngle ? (o.key === 'asc' ? 'Ascendant' : 'Midheaven') : bodyByKey(o.key as BodyKey).name;
-          const desc = `${pointName} in ${SIGNS[Math.floor(norm(o.lon) / 30)].name} ${formatDegree(o.lon)}${placement?.house ? `, house ${placement.house}` : ''}${placement?.retrograde ? ', retrograde' : ''}`;
-          const body = o.key as BodyKey;
+          const pointName = nameOf(o.key);
+          const desc = `${pointName} in ${SIGNS[Math.floor(norm(o.lon) / 30)].name} ${formatDegree(o.lon)}${!isAngle && house ? `, house ${house}` : ''}${placement?.retrograde ? ', retrograde' : ''}`;
+          const body = o.key as Exclude<PointKey, 'asc' | 'mc'>;
           const key = o.key;
           return (
             <g
@@ -285,7 +288,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
                   </text>
                 </g>
               ) : (
-                <Glyph3DAt name={body} x={f(gx) - 1} y={f(gy) - 1.5} size={48 * Math.min(1.06, Math.max(0.92, bodyByKey(body).weight))} color={color} ground={ground} weight={1.55} />
+                <Glyph3DAt name={body} x={f(gx) - 1} y={f(gy) - 1.5} size={48 * Math.min(1.06, Math.max(0.92, pointWeight(body)))} color={color} ground={ground} weight={1.55} />
               )}
               <text x={f(lx)} y={f(ly)} dominantBaseline="central" textAnchor="middle" className={s.degree} fill={color}>
                 {deg}°<tspan className={s.minute}>{String(min).padStart(2, '0')}′</tspan>

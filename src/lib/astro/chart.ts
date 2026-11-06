@@ -1,5 +1,5 @@
 import * as Astronomy from 'astronomy-engine';
-import { ASPECTS, BODIES, SIGNS, norm, type AspectDef, type BodyKey, type Element } from './constants';
+import { ASPECTS, BODIES, SIGNS, isNode, norm, type AspectDef, type BodyKey, type Element, type NodeKey } from './constants';
 import { localToUtc } from './time';
 
 const DEG = Math.PI / 180;
@@ -22,7 +22,15 @@ export type Placement = {
   retrograde: boolean;
 };
 
-export type PointKey = BodyKey | 'asc' | 'mc';
+/** A lunar node's place in the chart. */
+export type NodePlacement = {
+  key: NodeKey;
+  lon: number;
+  sign: number; // 0..11
+  house: number | null; // 1..12
+};
+
+export type PointKey = BodyKey | NodeKey | 'asc' | 'mc';
 
 export type Aspect = {
   a: PointKey;
@@ -35,6 +43,8 @@ export type Chart = {
   utc: Date;
   timeKnown: boolean;
   placements: Placement[];
+  /** True North and South Node */
+  nodes: NodePlacement[];
   asc: number | null;
   mc: number | null;
   /** House cusps 1 to 12 */
@@ -135,6 +145,24 @@ export function findAspect(a: number, b: number, orbScale = 1): { def: AspectDef
   return null;
 }
 
+/** The nodes only take conjunctions, within this orb. */
+export const NODE_ORB = 5;
+
+/**
+ * The Moon's true (osculating) North Node: where the Moon's orbit, at this moment, crosses the
+ * ecliptic of date going north. Matches Swiss Ephemeris TRUE_NODE within about 0.01°.
+ */
+export function trueNode(date: Date): number {
+  const st = Astronomy.GeoMoonState(date);
+  const rot = Astronomy.Rotation_EQJ_ECT(date);
+  const r = Astronomy.RotateVector(rot, new Astronomy.Vector(st.x, st.y, st.z, st.t));
+  const v = Astronomy.RotateVector(rot, new Astronomy.Vector(st.vx, st.vy, st.vz, st.t));
+  // The orbit's pole is r × v; the ascending node lies along (ecliptic pole) × (orbit pole).
+  const hx = r.y * v.z - r.z * v.y;
+  const hy = r.z * v.x - r.x * v.z;
+  return norm(Math.atan2(hx, -hy) / DEG);
+}
+
 export function positionsAt(date: Date): { body: BodyKey; lon: number; retrograde: boolean }[] {
   const later = new Date(date.getTime() + 12 * 3600 * 1000);
   return BODIES.map((b) => {
@@ -181,7 +209,16 @@ export function computeChart(input: BirthInput): Chart {
     return { body, lon, sign, degree, minute, house, retrograde };
   });
 
+  const north = trueNode(utc);
+  const nodes: NodePlacement[] = (
+    [
+      ['nnode', north],
+      ['snode', norm(north + 180)],
+    ] as const
+  ).map(([key, lon]) => ({ key, lon, sign: Math.floor(lon / 30), house: houses ? houseOf(lon, houses) : null }));
+
   const points: { key: PointKey; lon: number }[] = placements.map((p) => ({ key: p.body, lon: p.lon }));
+  for (const n of nodes) points.push({ key: n.key, lon: n.lon });
   if (asc !== null && mc !== null) points.push({ key: 'asc', lon: asc }, { key: 'mc', lon: mc });
 
   const aspects: Aspect[] = [];
@@ -189,7 +226,11 @@ export function computeChart(input: BirthInput): Chart {
     for (let j = i + 1; j < points.length; j++) {
       // The Ascendant and Midheaven are angles of one frame, never aspected to each other.
       if (points[i].key === 'asc' && points[j].key === 'mc') continue;
+      const withNode = isNode(points[i].key) || isNode(points[j].key);
+      // The two nodes are always opposite; a node only counts when something sits right on it.
+      if (isNode(points[i].key) && isNode(points[j].key)) continue;
       const hit = findAspect(points[i].lon, points[j].lon);
+      if (withNode && (!hit || hit.def.kind !== 'conjunction' || hit.orb > NODE_ORB)) continue;
       if (hit) aspects.push({ a: points[i].key, b: points[j].key, ...hit });
     }
   }
@@ -202,7 +243,7 @@ export function computeChart(input: BirthInput): Chart {
   }
   if (asc !== null) elements[SIGNS[Math.floor(asc / 30)].element] += 2;
 
-  return { utc, timeKnown, placements, asc, mc, houses, houseSystem, aspects, elements };
+  return { utc, timeKnown, placements, nodes, asc, mc, houses, houseSystem, aspects, elements };
 }
 
 export function moonPhase(date: Date): { angle: number; name: string; illumination: number } {

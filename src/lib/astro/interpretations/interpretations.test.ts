@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { computeChart, type PointKey } from '../chart';
 import { BODIES } from '../constants';
-import { ANGLE_ASPECT, IN_HOUSE, IN_SIGN, POINT_INFO, aspectReading, firstSentence, ordinal, readingOrder } from '.';
+import { ANGLE_ASPECT, IN_HOUSE, IN_SIGN, NODE_ANGLE, NODE_CONTACT, POINT_INFO, aspectReading, firstSentence, ordinal, readingOrder } from '.';
 
-const POINTS: PointKey[] = [...BODIES.map((b) => b.key), 'asc', 'mc'];
+const POINTS: PointKey[] = [...BODIES.map((b) => b.key), 'nnode', 'snode', 'asc', 'mc'];
 const words = (t: string) => t.trim().split(/\s+/).length;
 /** Copy rules from the brand voice: no dashes, no "quietly", no "not X, Y" turns. */
 const breaksRules = (t: string) => /[—–]|\bquietly\b|\bnot\b|n't\b/i.test(t);
@@ -30,14 +30,27 @@ describe('interpretations', () => {
     }
   });
 
-  it('has a reading for every planet in every house', () => {
-    for (const b of BODIES) {
-      expect(IN_HOUSE[b.key]).toHaveLength(12);
-      for (const t of IN_HOUSE[b.key]) {
+  it('has a reading for every planet and node in every house', () => {
+    for (const k of [...BODIES.map((b) => b.key), 'nnode', 'snode'] as const) {
+      expect(IN_HOUSE[k]).toHaveLength(12);
+      for (const t of IN_HOUSE[k]) {
         expect(words(t)).toBeGreaterThanOrEqual(20);
         expect(breaksRules(t)).toBe(false);
       }
-      expect(new Set(IN_HOUSE[b.key]).size).toBe(12);
+      expect(new Set(IN_HOUSE[k]).size).toBe(12);
+    }
+  });
+
+  it('has a reading for every planet and angle sitting on a node', () => {
+    for (const node of ['nnode', 'snode'] as const) {
+      for (const b of BODIES) {
+        expect(words(NODE_CONTACT[b.key][node])).toBeGreaterThanOrEqual(20);
+        expect(breaksRules(NODE_CONTACT[b.key][node])).toBe(false);
+      }
+      for (const angle of ['asc', 'mc'] as const) {
+        expect(words(NODE_ANGLE[node][angle])).toBeGreaterThanOrEqual(20);
+        expect(breaksRules(NODE_ANGLE[node][angle])).toBe(false);
+      }
     }
   });
 
@@ -57,7 +70,7 @@ describe('interpretations', () => {
     const chart = computeChart({ date: '1961-08-04', time: '19:24', lat: 21.3069, lon: -157.8583, timeZone: 'Pacific/Honolulu' });
     const toAngle = chart.aspects.filter((a) => a.a === 'asc' || a.b === 'asc' || a.a === 'mc' || a.b === 'mc');
     expect(toAngle.length).toBeGreaterThan(0);
-    for (const a of toAngle) {
+    for (const a of toAngle.filter((x) => !['nnode', 'snode'].includes(x.a) && !['nnode', 'snode'].includes(x.b))) {
       const angle = a.a === 'asc' || a.a === 'mc' ? a.a : (a.b as 'asc' | 'mc');
       const body = (angle === a.a ? a.b : a.a) as keyof typeof ANGLE_ASPECT;
       expect(aspectReading(a)).toBe(ANGLE_ASPECT[body][angle][a.def.tone]);

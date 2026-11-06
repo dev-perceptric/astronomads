@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeChart, findAspect, moonPhase, separation } from './chart';
+import { computeChart, findAspect, moonPhase, separation, trueNode } from './chart';
 import { SIGNS } from './constants';
 import { localToUtc } from './time';
 
@@ -136,5 +136,33 @@ describe('aspects', () => {
 describe('moonPhase', () => {
   it('names the full moon of 28 Jan 2021, 19:16 UTC', () => {
     expect(moonPhase(new Date('2021-01-28T19:16:00Z')).name).toBe('Full Moon');
+  });
+});
+
+describe('trueNode', () => {
+  // Swiss Ephemeris TRUE_NODE (pyswisseph 2.10), UT.
+  const reference: [string, number][] = [
+    ['1961-08-05T05:24:00Z', 147.2995], // Obama, 27°18′ Leo
+    ['1996-03-20T05:40:00Z', 197.1233],
+    ['2000-01-01T12:00:00Z', 123.9529],
+    ['1980-06-15T00:00:00Z', 141.6613],
+    ['2024-11-06T00:00:00Z', 5.9337],
+  ];
+  it.each(reference)('matches Swiss Ephemeris at %s within 0.05°', (iso, lon) => {
+    expect(separation(trueNode(new Date(iso)), lon)).toBeLessThan(0.05);
+  });
+
+  it('puts the South Node opposite, and lets the nodes take only conjunctions', () => {
+    const c = computeChart({ date: '1961-08-04', time: '19:24', lat: 21.3069, lon: -157.8583, timeZone: 'Pacific/Honolulu' });
+    const [north, south] = c.nodes;
+    expect(north.key).toBe('nnode');
+    expect(separation(north.lon, south.lon)).toBeCloseTo(180, 6);
+    expect(signName(north.lon)).toBe('Leo');
+    for (const a of c.aspects) {
+      if (['nnode', 'snode'].includes(a.a) || ['nnode', 'snode'].includes(a.b)) {
+        expect(a.def.kind).toBe('conjunction');
+        expect(a.orb).toBeLessThanOrEqual(5);
+      }
+    }
   });
 });

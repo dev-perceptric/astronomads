@@ -8,8 +8,9 @@ import { Glyph, type GlyphName, type SignKey } from '@/components/Glyph';
 import { Glyph3D } from '@/components/Glyph3D';
 import Stipple from '@/components/Stipple';
 import { useChart, useProfileFromUrl } from '@/components/useChart';
-import { findAspect, formatDegree, type Chart, type PointKey } from '@/lib/astro/chart';
-import { ELEMENT_COLORS, SIGNS, bodyByKey, type Element, type Mode } from '@/lib/astro/constants';
+import { formatDegree, type Chart, type PointKey } from '@/lib/astro/chart';
+import { ELEMENT_COLORS, SIGNS, bodyByKey, nodeByKey, type Element, type Mode } from '@/lib/astro/constants';
+import { pointColor, pointName } from '@/lib/astro/points';
 import { IN_SIGN, aspectReading, firstSentence } from '@/lib/astro/interpretations';
 import { HOUSE_REALM } from '@/lib/astro/readings';
 import { utcOffsetLabel } from '@/lib/astro/time';
@@ -17,8 +18,6 @@ import { saveProfile, type BirthProfile } from '@/lib/profile';
 import ReadingSheet from './ReadingSheet';
 import s from './chart.module.css';
 
-const pointName = (k: PointKey) => (k === 'asc' ? 'Ascendant' : k === 'mc' ? 'Midheaven' : bodyByKey(k).name);
-const pointColor = (k: PointKey) => (k === 'asc' || k === 'mc' ? 'currentColor' : bodyByKey(k).color);
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 
 export default function ChartView() {
@@ -122,6 +121,23 @@ export default function ChartView() {
                   </li>
                 );
               })}
+              {chart.nodes.map((n) => {
+                const sg = SIGNS[n.sign];
+                return (
+                  <li key={n.key}>
+                    <button className={s.ledgerRow} onClick={() => setOpen(n.key)} aria-haspopup="dialog" aria-pressed={open === n.key}>
+                      <Glyph3D name={n.key} size={30} color={pointColor(n.key)} ground="light" />
+                      <span className={s.ledgerName}>{nodeByKey(n.key).name}</span>
+                      <span className={s.ledgerSign}>
+                        <Glyph name={sg.key as SignKey} size={16} color={ELEMENT_COLORS[sg.element]} weight={1.8} />
+                        {sg.name}
+                      </span>
+                      <span className={s.ledgerDeg}>{formatDegree(n.lon)}</span>
+                      <span className={s.ledgerHouse}>{n.house ? ROMAN[n.house - 1] : ''}</span>
+                    </button>
+                  </li>
+                );
+              })}
               {chart.asc !== null && chart.mc !== null && (
                 <>
                   <AngleRow label="Ascendant" glyph="asc" lon={chart.asc} house="I" onOpen={() => setOpen('asc')} on={open === 'asc'} />
@@ -169,6 +185,25 @@ export default function ChartView() {
                   {p.retrograde ? ' · Retrograde' : ''}
                 </span>
                 <span className={s.planetText}>{firstSentence(IN_SIGN[p.body][p.sign])}</span>
+                <span className={s.readMore}>Read more</span>
+              </button>
+            );
+          })}
+          {chart.nodes.map((n) => {
+            const sg = SIGNS[n.sign];
+            return (
+              <button key={n.key} className={`nm-bracket ${s.planetCard} ${open === n.key ? s.planetOn : ''}`} onClick={() => setOpen(n.key)} aria-haspopup="dialog">
+                <span className={s.planetGlyph}>
+                  <Glyph3D name={n.key} size={72} color={pointColor(n.key)} ground="light" />
+                </span>
+                <span className={s.planetTitle}>
+                  {nodeByKey(n.key).name} in {sg.name}
+                </span>
+                <span className={s.planetMeta}>
+                  {formatDegree(n.lon)} {sg.name}
+                  {n.house ? ` · House ${ROMAN[n.house - 1]}, ${HOUSE_REALM[n.house - 1]}` : ''}
+                </span>
+                <span className={s.planetText}>{firstSentence(IN_SIGN[n.key][n.sign])}</span>
                 <span className={s.readMore}>Read more</span>
               </button>
             );
@@ -300,18 +335,20 @@ function Balance({ chart }: { chart: Chart }) {
 }
 
 function AspectTable({ chart }: { chart: Chart }) {
-  const points: { key: PointKey; lon: number }[] = chart.placements.map((p) => ({ key: p.body, lon: p.lon }));
-  if (chart.asc !== null && chart.mc !== null) points.push({ key: 'asc', lon: chart.asc }, { key: 'mc', lon: chart.mc });
+  const points: PointKey[] = chart.placements.map((p) => p.body);
+  for (const n of chart.nodes) points.push(n.key);
+  if (chart.asc !== null && chart.mc !== null) points.push('asc', 'mc');
+  const between = (x: PointKey, y: PointKey) => chart.aspects.find((a) => (a.a === x && a.b === y) || (a.a === y && a.b === x)) ?? null;
   return (
     <div className={s.gridWrap}>
       <table className={s.grid} aria-label="Aspects between every pair of planets">
         <tbody>
           {points.map((row, i) => (
-            <tr key={row.key}>
+            <tr key={row}>
               {points.slice(0, i).map((col) => {
-                const hit = row.key === 'mc' && col.key === 'asc' ? null : findAspect(row.lon, col.lon);
+                const hit = between(row, col);
                 return (
-                  <td key={col.key} title={hit ? `${pointName(row.key)} ${hit.def.kind} ${pointName(col.key)}, orb ${hit.orb.toFixed(1)}°` : undefined}>
+                  <td key={col} title={hit ? `${pointName(row)} ${hit.def.kind} ${pointName(col)}, orb ${hit.orb.toFixed(1)}°` : undefined}>
                     {hit && (
                       <>
                         <Glyph name={hit.def.kind} size={15} color={hit.def.color} weight={2} className={s.gridGlyph} />
@@ -322,7 +359,7 @@ function AspectTable({ chart }: { chart: Chart }) {
                 );
               })}
               <th scope="row">
-                <Glyph name={row.key as GlyphName} size={18} color={pointColor(row.key)} weight={1.9} />
+                <Glyph name={row as GlyphName} size={18} color={pointColor(row)} weight={1.9} />
               </th>
             </tr>
           ))}

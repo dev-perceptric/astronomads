@@ -1,10 +1,10 @@
-import type { AspectKind, BodyKey } from '@/lib/astro/constants';
+import type { AspectKind, BodyKey, NodeKey } from '@/lib/astro/constants';
 
 /**
  * Astronomads' own symbol set, drawn on a 24×24 grid with round 1.6 strokes.
  * One family for planets, signs, aspects and angles, so every symbol shares weight and proportion.
  */
-export type GlyphName = BodyKey | SignKey | AspectKind | 'asc' | 'mc';
+export type GlyphName = BodyKey | NodeKey | SignKey | AspectKind | 'asc' | 'mc';
 export type SignKey =
   | 'aries'
   | 'taurus'
@@ -39,6 +39,9 @@ export const SHAPES: Record<GlyphName, Shape> = {
   uranus: { d: 'M6 3.4V13.6M18 3.4V13.6M6 8.5H18M12 3.4V15.8', circles: [[12, 18.7, 2.6]], dots: [[12, 18.7, 0.9]] },
   neptune: { d: 'M5.2 6.6C5.2 11 8.2 13.4 12 13.4C15.8 13.4 18.8 11 18.8 6.6M12 5.2V21.8M8.6 18.2H15.4', f: 'M5.2 2.8 3.3 6.6H7.1ZM18.8 2.8 16.9 6.6H20.7ZM12 1.6 10.1 5.4H13.9Z' },
   pluto: { d: 'M5.8 3.8C5.8 7.3 8.6 9.9 12 9.9C15.4 9.9 18.2 7.3 18.2 3.8M12 9.9V21.8M8.6 17.2H15.4', dots: [[12, 4.6, 2.4]] },
+  // Lunar nodes: a horseshoe with a small ring at each foot; the South Node is the North turned over
+  nnode: { d: 'M7 16V11.6A5 5 0 0 1 17 11.6V16', circles: [[7, 18.3, 2.2], [17, 18.3, 2.2]] },
+  snode: { d: 'M7 8V12.4A5 5 0 0 0 17 12.4V8', circles: [[7, 5.7, 2.2], [17, 5.7, 2.2]] },
 
   // Signs
   aries: { d: 'M12 21V9.4C12 4.6 4 3.2 4 8.2C4 10 5.2 11.2 6.6 11.2M12 9.4C12 4.6 20 3.2 20 8.2C20 10 18.8 11.2 17.4 11.2' },

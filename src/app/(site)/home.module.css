@@ -73,7 +73,7 @@
   --destructive: oklch(57% 0.17 20);
   --p-sun: #f97c04; --p-moon: #f9cc4c; --p-mercury: #7a2cf2; --p-venus: #f972c6;
   --p-mars: #f9061f; --p-jupiter: #1cc2c2; --p-saturn: #f9061f; --p-uranus: #800404;
-  --p-neptune: #0c6464; --p-pluto: #f9061f;
+  --p-neptune: #0c6464; --p-pluto: #f9061f; --p-node: #5e5e5e;
   --el-fire: #f00a20; --el-earth: #7a6212; --el-air: #1c6a72; --el-water: #0404c8;
   --asp-ease: #1a1ad0; --asp-soft: #3fb0e0; --asp-hard: #f00a20; --asp-blend: #19a82a;
   /* The older alias names resolve at :root, so they are set again here to follow the light values */

@@ -13,6 +13,8 @@ export const POINT_THEME: Record<PointKey, string> = {
   uranus: 'need for freedom',
   neptune: 'imagination',
   pluto: 'power to change',
+  nnode: 'direction of growth',
+  snode: 'comfort zone',
   asc: 'first impression',
   mc: 'public path',
 };
