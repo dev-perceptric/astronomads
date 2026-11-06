@@ -58,7 +58,7 @@ export default function SignPage({ slug }: { slug: string }) {
   const prev = SIGN_FACTS[(f.index + 11) % 12];
   const next = SIGN_FACTS[(f.index + 1) % 12];
   const toc = [{ id: 'overview', title: 'Overview' }, ...copy.sections.map((x) => ({ id: x.id, title: x.title }))];
-  const quoteAfter = Math.min(2, copy.sections.length - 1);
+  const quoteAfter = Math.max(0, copy.sections.findIndex((x) => x.id === 'strengths'));
   const site = process.env.SITE_URL || 'https://astronomads.com';
 
   const jsonLd = [
@@ -150,10 +150,68 @@ export default function SignPage({ slug }: { slug: string }) {
         </div>
       </section>
 
+      {/* At a glance */}
+      <section className={`nm-section nm-marble ${s.glance}`} aria-labelledby="glance-title">
+        <p className="nm-label">01 At a glance</p>
+        <h2 id="glance-title" className="nm-title">
+          {f.name} in one look
+        </h2>
+        <div className={s.glanceGrid}>
+          {(
+            [
+              ['Strengths', copy.traits.strengths],
+              ['Weaknesses', copy.traits.weaknesses],
+              ['Likes', copy.traits.likes],
+              ['Dislikes', copy.traits.dislikes],
+            ] as const
+          ).map(([label, items]) => (
+            <div key={label} className={s.glanceCol}>
+              <p className={s.glanceLabel}>{label}</p>
+              <ul>
+                {items.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <dl className={s.corr}>
+          <div>
+            <dt>Day</dt>
+            <dd>{f.day}</dd>
+          </div>
+          <div>
+            <dt>Metal</dt>
+            <dd>{f.metal}</dd>
+          </div>
+          <div>
+            <dt>Color</dt>
+            <dd>{f.color}</dd>
+          </div>
+          <div>
+            <dt>Stone</dt>
+            <dd>{f.stone}</dd>
+          </div>
+          <div>
+            <dt>Polarity</dt>
+            <dd>{f.polarity}</dd>
+          </div>
+          <div>
+            <dt>Best matches</dt>
+            <dd>
+              {SIGN_FACTS.filter((o) => relation(f.index, o.index).kind === 'trine' || o.key === f.opposite)
+                .map((o) => o.name)
+                .join(', ')}
+            </dd>
+          </div>
+        </dl>
+        <p className={s.corrNote}>Day and metal follow {f.ruler}, the ruling planet. Colors and stones are traditional and vary between sources.</p>
+      </section>
+
       {/* Sun check */}
       <section className={`nm-section nm-marble ${s.check}`} id="check">
         <div className={s.checkHead}>
-          <p className="nm-label">01 Your Sun</p>
+          <p className="nm-label">02 Your Sun</p>
           <h2 className="nm-title">Is your Sun in {f.name}?</h2>
           <p className={s.lead}>
             In {seasonYear} the Sun enters {f.name} on {fmt(season.start)} and leaves on {fmt(season.end)}. The edges move a little every year, so check your own birthday.
@@ -163,13 +221,13 @@ export default function SignPage({ slug }: { slug: string }) {
       </section>
 
       {/* The long read */}
-      <section className={`nm-section nm-marble ${s.read}`}>
+      <section className={`nm-section nm-marble ${s.read}`} style={{ ['--sign' as string]: color }}>
         <div className={s.readGrid}>
           <aside className={s.tocCol}>
             <Toc items={toc} />
           </aside>
           <article className={s.article}>
-            <p className="nm-label">02 The sign</p>
+            <p className="nm-label">03 The sign</p>
             <h2 id="overview" className={s.articleTitle}>
               {f.name}, {f.symbol.toLowerCase()}
             </h2>
@@ -189,6 +247,16 @@ export default function SignPage({ slug }: { slug: string }) {
                     {p}
                   </p>
                 ))}
+                {sec.list && (
+                  <div className={s.inlineList}>
+                    <p className={s.glanceLabel}>{sec.list.title}</p>
+                    <ul>
+                      {sec.list.items.map((x) => (
+                        <li key={x}>{x}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 {i === quoteAfter && (
                   <blockquote className={s.quote} style={{ ['--sign' as string]: color }}>
                     <Glyph name={f.key} size={26} color={color} weight={1.8} />
@@ -203,7 +271,7 @@ export default function SignPage({ slug }: { slug: string }) {
 
       {/* Through every planet */}
       <section className={`nm-section nm-void ${s.points}`}>
-        <p className="nm-label">03 {f.name} in your chart</p>
+        <p className="nm-label">04 {f.name} in your chart</p>
         <h2 className="nm-title">Your planets in {f.name}</h2>
         <p className={s.leadDark}>Every planet can sit in {f.name}. Here is what each one means there. Open a card to read it all.</p>
         <div className={s.pointGrid}>
@@ -236,7 +304,7 @@ export default function SignPage({ slug }: { slug: string }) {
 
       {/* Compatibility */}
       <section className={`nm-section nm-marble ${s.compat}`}>
-        <p className="nm-label">04 Compatibility</p>
+        <p className="nm-label">05 Compatibility</p>
         <h2 className="nm-title">{f.name} with every sign</h2>
         <div className={s.compatGrid}>
           <div className={s.compatArt}>
@@ -274,14 +342,14 @@ export default function SignPage({ slug }: { slug: string }) {
 
       {/* Live sky */}
       <section className={`nm-section nm-void ${s.sky}`}>
-        <p className="nm-label">05 Live</p>
+        <p className="nm-label">06 Live</p>
         <h2 className="nm-title">{f.name} in the sky right now</h2>
         <LiveSky sign={f.index} />
       </section>
 
       {/* Famous */}
       <section className={`nm-section nm-marble ${s.famous}`}>
-        <p className="nm-label">06 Famous {f.name}</p>
+        <p className="nm-label">07 Famous {f.name}</p>
         <h2 className="nm-title">Born with the Sun in {f.name}</h2>
         <ol className={s.famousGrid}>
           {famous.map((p, i) => (
@@ -304,7 +372,7 @@ export default function SignPage({ slug }: { slug: string }) {
 
       {/* FAQ */}
       <section className={`nm-section nm-marble ${s.faq}`}>
-        <p className="nm-label">07 Questions</p>
+        <p className="nm-label">08 Questions</p>
         <h2 className="nm-title">About {f.name}</h2>
         <div className={s.faqList}>
           {copy.faq.map((q) => (

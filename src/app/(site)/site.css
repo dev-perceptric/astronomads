@@ -59,6 +59,7 @@
   padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
   padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
   overflow: hidden;
+  overflow: clip; /* clips like hidden, but lets sticky parts (contents lists) stick */
 }
 
 .nm-label { font-family: var(--mono); font-size: 13px; letter-spacing: -0.02em; text-transform: uppercase; margin: 0 0 16px; }

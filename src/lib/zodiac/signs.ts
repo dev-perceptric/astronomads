@@ -18,6 +18,11 @@ export type SignFacts = {
   /** Usual dates; the exact moments change a little every year */
   usual: [string, string];
   keywords: string[];
+  /** Traditional correspondences. Day and metal follow the classic ruling planet; colors and stones vary between traditions. */
+  day: string;
+  metal: string;
+  color: string;
+  stone: string;
 };
 
 const F = (
@@ -32,7 +37,7 @@ const F = (
   body: string,
   usual: [string, string],
   keywords: string[],
-): Omit<SignFacts, 'index' | 'house' | 'polarity'> => ({ key, name, symbol, element, mode, ruler, modernRuler, opposite, body, usual, keywords });
+): Omit<SignFacts, 'index' | 'house' | 'polarity' | 'day' | 'metal' | 'color' | 'stone'> => ({ key, name, symbol, element, mode, ruler, modernRuler, opposite, body, usual, keywords });
 
 const LIST = [
   F('aries', 'Aries', 'The Ram', 'fire', 'cardinal', 'Mars', undefined, 'libra', 'Head and face', ['21 March', '19 April'], ['Courage', 'Firsts', 'Directness', 'Drive']),
@@ -49,7 +54,43 @@ const LIST = [
   F('pisces', 'Pisces', 'The Fish', 'water', 'mutable', 'Jupiter', 'Neptune', 'virgo', 'Feet', ['19 February', '20 March'], ['Imagination', 'Empathy', 'Dreams', 'Faith']),
 ];
 
-export const SIGN_FACTS: SignFacts[] = LIST.map((s, i) => ({ ...s, index: i, house: i + 1, polarity: i % 2 === 0 ? 'Active' : 'Receptive' }));
+/** Each classic planet's day of the week and metal, the old way. */
+const PLANET_DAY: Record<string, [string, string]> = {
+  Sun: ['Sunday', 'Gold'],
+  Moon: ['Monday', 'Silver'],
+  Mars: ['Tuesday', 'Iron'],
+  Mercury: ['Wednesday', 'Quicksilver'],
+  Jupiter: ['Thursday', 'Tin'],
+  Venus: ['Friday', 'Copper'],
+  Saturn: ['Saturday', 'Lead'],
+};
+
+/** Colors and stones most often given for each sign. Traditions differ, so pages call these traditional. */
+const COLOR_STONE: [string, string][] = [
+  ['Red', 'Bloodstone'],
+  ['Green', 'Emerald'],
+  ['Yellow', 'Agate'],
+  ['Silver and white', 'Moonstone'],
+  ['Gold', 'Ruby'],
+  ['Navy and earth tones', 'Sapphire'],
+  ['Pink and pale blue', 'Opal'],
+  ['Deep red and black', 'Topaz'],
+  ['Purple', 'Turquoise'],
+  ['Brown and charcoal', 'Garnet'],
+  ['Electric blue', 'Amethyst'],
+  ['Sea green', 'Aquamarine'],
+];
+
+export const SIGN_FACTS: SignFacts[] = LIST.map((s, i) => ({
+  ...s,
+  index: i,
+  house: i + 1,
+  polarity: i % 2 === 0 ? 'Active' : 'Receptive',
+  day: PLANET_DAY[s.ruler][0],
+  metal: PLANET_DAY[s.ruler][1],
+  color: COLOR_STONE[i][0],
+  stone: COLOR_STONE[i][1],
+}));
 export const signBySlug = (slug: string) => SIGN_FACTS.find((s) => s.key === slug) ?? null;
 
 export type Relation = { kind: 'same' | 'neighbor' | 'sextile' | 'square' | 'trine' | 'quincunx' | 'opposite'; label: string; tone: 'easy' | 'tense' | 'mixed' };
