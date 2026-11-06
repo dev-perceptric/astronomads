@@ -53,6 +53,10 @@ An astrology site: free birth charts, a daily sky, compatibility and astrocartog
 - Readings: `friendship.ts`, `work.ts`, `family.ts` (55 contacts each), `relationship.ts` (composite and Davison), `pairs.ts` (house overlays, big three match, day kinds, couple's year). `src/lib/compat/compat.test.ts` checks all of them and every pair page.
 - Celebrity match reads `public/data/celebs.json`, built by `node scripts/celebs-json.mjs` from the Pantheon list at noon UTC. Politicians, soldiers, royalty, religious figures and anyone filed under crime or extremism stay out of the pool.
 
+## Rule: Learn articles are scholarly and proven
+- Long reads live at `/learn/<slug>` (plain folders), written in `src/lib/learn/articles/` (type `Article`, listed in `src/lib/learn/index.ts`) and drawn by `learn/_article/ArticlePage.tsx` with our own SVG figures and live tools for the reader's chart. Every article names its sources; never copy or paraphrase another site's article.
+- House systems: `src/lib/astro/houses.ts` computes ten systems (Placidus, Koch, Porphyry, Regiomontanus, Campanus, Alcabitius, Equal, Whole sign, Meridian, Morinus). `houses.test.ts` checks every cusp against Swiss Ephemeris within 0.05° at four places. `learn.test.ts` checks depth, sources and the copy rules.
+
 ## Rule: accounts are safe and small
 - Accounts live in Hostinger MySQL (`src/lib/server/db.ts`, configured by `DB_*` or `DATABASE_URL`; tables are created on first use). Without a database the site still runs and `/account` shows "Accounts open soon".
 - Passwords are hashed with scrypt; sessions are random tokens in an httpOnly cookie, stored only as SHA-256 hashes. Reset links are one-use, last one hour, and are built from `SITE_URL`, never from the request.

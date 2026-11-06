@@ -1,0 +1,37 @@
+.figure { margin: 12px 0 36px; display: flex; flex-direction: column; gap: 12px; }
+.figure figcaption { font-size: 13px; line-height: 1.5; letter-spacing: -0.02em; color: var(--muted-foreground); max-width: 64ch; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 620px) { .pair { grid-template-columns: minmax(0, 1fr); } }
+.pair svg, .single { width: 100%; height: auto; display: block; padding: 12px; border-radius: 22px; background: var(--secondary); overflow: visible; }
+.single { max-width: 560px; }
+
+.ring { fill: none; stroke: var(--foreground); stroke-width: 1.4; }
+.axis { stroke: var(--foreground); stroke-width: 1.2; }
+.angle { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; fill: var(--foreground); }
+.num { font-family: var(--serif); font-size: 13px; fill: var(--muted-foreground); }
+.zone { font-family: var(--serif); font-size: 17px; fill: var(--foreground); paint-order: stroke; stroke: var(--secondary); stroke-width: 7px; stroke-linejoin: round; }
+.roman { font-family: var(--serif); font-size: 26px; fill: var(--foreground); }
+.small { font-family: var(--mono); font-size: 10px; letter-spacing: 0.02em; fill: var(--muted-foreground); }
+.fillA { fill: color-mix(in oklch, var(--astral) 16%, transparent); }
+.fillB { fill: color-mix(in oklch, var(--foreground) 5%, transparent); }
+.q1 { fill: color-mix(in oklch, var(--el-water) 12%, transparent); }
+.q2 { fill: color-mix(in oklch, var(--el-earth) 14%, transparent); }
+.q3 { fill: color-mix(in oklch, var(--el-air) 14%, transparent); }
+.q4 { fill: color-mix(in oklch, var(--el-fire) 10%, transparent); }
+.fillDay { fill: color-mix(in oklch, var(--p-sun) 14%, transparent); }
+.fillNight { fill: color-mix(in oklch, var(--el-water) 10%, transparent); }
+.sun { fill: var(--p-sun); }
+.arrow { fill: none; stroke: var(--foreground); stroke-width: 1.4; }
+.arrowHead { fill: var(--foreground); }
+.horizon { fill: color-mix(in oklch, var(--el-earth) 12%, transparent); stroke: var(--el-earth); stroke-width: 1.6; }
+.equator { fill: none; stroke: var(--asp-ease); stroke-width: 1.6; stroke-dasharray: 6 4; }
+.ecliptic { fill: none; stroke: var(--p-sun); stroke-width: 2; }
+.dot { fill: var(--foreground); }
+.labelEq { font-family: var(--mono); font-size: 10px; fill: var(--asp-ease); }
+.labelEc { font-family: var(--mono); font-size: 10px; fill: var(--p-sun); }
+.labelHz { font-family: var(--mono); font-size: 10px; fill: var(--el-earth); }
+
+.scroll { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; letter-spacing: -0.02em; }
+.table th { text-align: left; font-weight: 400; font-size: 11px; text-transform: uppercase; color: var(--muted-foreground); padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.table td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }

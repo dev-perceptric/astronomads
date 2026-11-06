@@ -1,0 +1,9 @@
+.meta { font-family: var(--mono); font-size: 12px; letter-spacing: -0.02em; text-transform: uppercase; color: var(--stone); margin: 4px 0 0; }
+.num { font-family: var(--mono); font-size: 14px; letter-spacing: 0; color: var(--astral); vertical-align: 0.6em; margin-right: 6px; }
+.dropcap::first-letter { float: left; font-size: 4.2em; line-height: 0.85; padding: 6px 10px 0 0; color: var(--astral); }
+.aside { margin: 4px 0 28px; padding: 18px 22px; border-left: 3px solid var(--astral); background: var(--secondary); border-radius: 0 16px 16px 0; }
+.aside p { font-family: var(--serif); font-size: 19px; line-height: 1.5; margin: 0; }
+.asideTitle { font-family: var(--mono) !important; font-size: 12px !important; letter-spacing: -0.02em; text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 6px !important; }
+.sources { margin: 0 0 20px; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; }
+.sources li { font-family: var(--serif); font-size: 17px; line-height: 1.45; }
+.credit { font-size: 13px; letter-spacing: -0.02em; color: var(--muted-foreground); margin: 0 0 20px; }

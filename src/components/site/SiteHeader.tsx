@@ -11,6 +11,7 @@ import { stations } from '@/lib/astro/timing';
 import { signOut, useAccount } from '@/lib/account';
 import { PRODUCTS, price } from '@/lib/reports/products';
 import { TOOLS, type ToolInfo } from '@/lib/tools/registry';
+import { ARTICLES } from '@/lib/learn';
 import { SIGN_FACTS } from '@/lib/zodiac/signs';
 
 type Section = 'tools' | 'learn' | 'shop';
@@ -31,7 +32,7 @@ const GROUPS: { key: ToolInfo['group']; title: string }[] = [
 /** Which menu a page belongs to, for the current marker. */
 function sectionOf(path: string): Section | null {
   if (path.startsWith('/reports')) return 'shop';
-  if (path.startsWith('/zodiac') || /^\/compatibility\/[a-z]+-and-[a-z]+/.test(path)) return 'learn';
+  if (path.startsWith('/zodiac') || path.startsWith('/learn') || /^\/compatibility\/[a-z]+-and-[a-z]+/.test(path)) return 'learn';
   if (path.startsWith('/tools') || path === '/compatibility' || path === '/chart' || path === '/today') return 'tools';
   return null;
 }
@@ -170,8 +171,14 @@ export default function SiteHeader() {
                   </Link>
                 ))}
               </div>
+              {ARTICLES.map((a) => (
+                <Link key={a.slug} href={`/learn/${a.slug}`}>
+                  {a.h1}
+                </Link>
+              ))}
               <Link href="/zodiac">All zodiac signs</Link>
               <Link href="/compatibility#signs">Sign compatibility</Link>
+              <Link href="/learn">All guides</Link>
             </SheetSection>
             <SheetSection title="Shop">
               {Object.values(PRODUCTS).map((p) => (
@@ -276,10 +283,24 @@ function LearnPanel() {
           ))}
         </ul>
         <div className="nm-mega-foot nm-mega-foot-inline">
-          <Link href="/zodiac">All zodiac signs</Link>
+          <Link href="/zodiac">All zodiac signs</Link> · <Link href="/learn">All guides</Link>
         </div>
       </div>
       <div>
+        <p className="nm-mega-label">Guides</p>
+        <ul style={{ marginBottom: 18 }}>
+          {ARTICLES.map((a) => (
+            <li key={a.slug}>
+              <Link href={`/learn/${a.slug}`} className="nm-mega-item">
+                <Glyph name={a.slug === 'house-systems' ? 'mc' : 'asc'} size={18} color="var(--astral)" weight={1.8} />
+                <span>
+                  <span className="nm-mega-name">{a.h1}</span>
+                  <span className="nm-mega-line">{a.minutes} minute read</span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
         <p className="nm-mega-label">Compatibility</p>
         <ul>
           <li>
@@ -293,9 +314,7 @@ function LearnPanel() {
           </li>
           {[
             ['aries', 'leo'],
-            ['taurus', 'virgo'],
             ['cancer', 'scorpio'],
-            ['libra', 'aquarius'],
           ].map(([a, b]) => (
             <li key={a + b}>
               <Link href={`/compatibility/${a}-and-${b}`} className="nm-mega-item nm-mega-pair">
