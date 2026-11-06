@@ -9,10 +9,12 @@ import { Glyph3D } from '@/components/Glyph3D';
 import Stipple from '@/components/Stipple';
 import { useChart, useProfileFromUrl } from '@/components/useChart';
 import { findAspect, formatDegree, type Chart, type PointKey } from '@/lib/astro/chart';
-import { ELEMENT_COLORS, SIGNS, bodyByKey, type BodyKey, type Element, type Mode } from '@/lib/astro/constants';
-import { HOUSE_REALM, natalAspectLine, placementLine } from '@/lib/astro/readings';
+import { ELEMENT_COLORS, SIGNS, bodyByKey, type Element, type Mode } from '@/lib/astro/constants';
+import { IN_SIGN, aspectReading, firstSentence } from '@/lib/astro/interpretations';
+import { HOUSE_REALM } from '@/lib/astro/readings';
 import { utcOffsetLabel } from '@/lib/astro/time';
 import { saveProfile, type BirthProfile } from '@/lib/profile';
+import ReadingSheet from './ReadingSheet';
 import s from './chart.module.css';
 
 const pointName = (k: PointKey) => (k === 'asc' ? 'Ascendant' : k === 'mc' ? 'Midheaven' : bodyByKey(k).name);
@@ -24,7 +26,7 @@ export default function ChartView() {
   const state = useProfileFromUrl(new URLSearchParams(params.toString()));
   const profile = state && 'profile' in state ? state.profile : null;
   const chart = useChart(profile);
-  const [selected, setSelected] = useState<BodyKey | null>(null);
+  const [open, setOpen] = useState<PointKey | null>(null);
   const [saved, setSaved] = useState<'idle' | 'saved' | 'failed'>('idle');
 
   if (!state) return <section className={`nm-section nm-void ${s.blank}`} />;
@@ -42,7 +44,6 @@ export default function ChartView() {
 
   const sun = chart.placements.find((p) => p.body === 'sun')!;
   const moon = chart.placements.find((p) => p.body === 'moon')!;
-  const select = (b: BodyKey) => setSelected(selected === b ? null : b);
   const canSave = !state.isExample && !state.isSaved && saved !== 'saved';
 
   return (
@@ -72,10 +73,10 @@ export default function ChartView() {
           <p className={s.birth}>{birthLine(profile, chart)}</p>
 
           <dl className={s.triptych}>
-            <BigOne label="Sun" sign={sun.sign} lon={sun.lon} house={sun.house} />
-            <BigOne label="Moon" sign={moon.sign} lon={moon.lon} house={moon.house} />
+            <BigOne label="Sun" sign={sun.sign} lon={sun.lon} house={sun.house} onOpen={() => setOpen('sun')} />
+            <BigOne label="Moon" sign={moon.sign} lon={moon.lon} house={moon.house} onOpen={() => setOpen('moon')} />
             {chart.asc !== null ? (
-              <BigOne label="Ascendant" sign={Math.floor(chart.asc / 30)} lon={chart.asc} house={1} />
+              <BigOne label="Ascendant" sign={Math.floor(chart.asc / 30)} lon={chart.asc} house={1} onOpen={() => setOpen('asc')} />
             ) : (
               <div className={s.big}>
                 <dt className="nm-label">Ascendant</dt>
@@ -92,7 +93,7 @@ export default function ChartView() {
         <h2 className="nm-title">Your sky at the minute you arrived</h2>
         <div className={s.wheelGrid}>
           <div className={s.wheelCol}>
-            <ChartWheel chart={chart} name={profile.name} selected={selected} onSelect={setSelected} ground="light" />
+            <ChartWheel chart={chart} name={profile.name} selected={open} onSelect={setOpen} ground="light" />
           </div>
           <div className={s.ledgerCol}>
             <div className={s.ledgerHead}>
@@ -105,7 +106,7 @@ export default function ChartView() {
                 const sg = SIGNS[p.sign];
                 return (
                   <li key={p.body}>
-                    <button className={s.ledgerRow} onClick={() => select(p.body)} aria-pressed={selected === p.body}>
+                    <button className={s.ledgerRow} onClick={() => setOpen(p.body)} aria-haspopup="dialog" aria-pressed={open === p.body}>
                       <Glyph3D name={p.body} size={30} color={b.color} ground="light" />
                       <span className={s.ledgerName}>{b.name}</span>
                       <span className={s.ledgerSign}>
@@ -123,8 +124,8 @@ export default function ChartView() {
               })}
               {chart.asc !== null && chart.mc !== null && (
                 <>
-                  <AngleRow label="Ascendant" glyph="asc" lon={chart.asc} house="I" />
-                  <AngleRow label="Midheaven" glyph="mc" lon={chart.mc} house="X" />
+                  <AngleRow label="Ascendant" glyph="asc" lon={chart.asc} house="I" onOpen={() => setOpen('asc')} on={open === 'asc'} />
+                  <AngleRow label="Midheaven" glyph="mc" lon={chart.mc} house="X" onOpen={() => setOpen('mc')} on={open === 'mc'} />
                 </>
               )}
             </ul>
@@ -142,7 +143,6 @@ export default function ChartView() {
                 <span className={s.swatch} style={{ background: 'var(--asp-blend)' }} /> Conjunction
               </li>
             </ul>
-            {selected && <Focus chart={chart} body={selected} onClose={() => setSelected(null)} />}
           </div>
         </div>
       </section>
@@ -156,7 +156,7 @@ export default function ChartView() {
             const b = bodyByKey(p.body);
             const sg = SIGNS[p.sign];
             return (
-              <button key={p.body} className={`nm-bracket ${s.planetCard} ${selected === p.body ? s.planetOn : ''}`} onClick={() => select(p.body)}>
+              <button key={p.body} className={`nm-bracket ${s.planetCard} ${open === p.body ? s.planetOn : ''}`} onClick={() => setOpen(p.body)} aria-haspopup="dialog">
                 <span className={s.planetGlyph}>
                   <Glyph3D name={p.body} size={72} color={b.color} ground="light" />
                 </span>
@@ -168,7 +168,8 @@ export default function ChartView() {
                   {p.house ? ` · House ${ROMAN[p.house - 1]}, ${HOUSE_REALM[p.house - 1]}` : ''}
                   {p.retrograde ? ' · Retrograde' : ''}
                 </span>
-                <span className={s.planetText}>{placementLine(p.body, p.sign)}</span>
+                <span className={s.planetText}>{firstSentence(IN_SIGN[p.body][p.sign])}</span>
+                <span className={s.readMore}>Read more</span>
               </button>
             );
           })}
@@ -197,7 +198,7 @@ export default function ChartView() {
                   <span className={s.aspectName}>
                     {pointName(a.a)} {a.def.kind} {pointName(a.b)}
                   </span>
-                  <span className={s.aspectText}>{natalAspectLine(a.a, a.def.kind, a.b)}</span>
+                  <span className={s.aspectText}>{aspectReading(a)}</span>
                 </span>
                 <span className={s.orb}>{a.orb.toFixed(1)}°</span>
               </li>
@@ -205,6 +206,8 @@ export default function ChartView() {
           </ul>
         </div>
       </section>
+
+      {open && <ReadingSheet chart={chart} point={open} onClose={() => setOpen(null)} onPick={setOpen} />}
     </>
   );
 }
@@ -217,28 +220,30 @@ function birthLine(p: BirthProfile, chart: Chart) {
   return `${date} · ${time} · ${place}`;
 }
 
-function BigOne({ label, sign, lon, house }: { label: string; sign: number; lon: number; house: number | null }) {
+function BigOne({ label, sign, lon, house, onOpen }: { label: string; sign: number; lon: number; house: number | null; onOpen: () => void }) {
   const sg = SIGNS[sign];
   return (
     <div className={s.big}>
       <dt className="nm-label">{label}</dt>
-      <dd className={s.bigBody}>
-        <Glyph name={sg.key as SignKey} size={64} color={ELEMENT_COLORS[sg.element]} weight={1.7} />
-        <span className={s.bigSign}>{sg.name}</span>
-        <span className={s.bigMeta}>
-          {formatDegree(lon)}
-          {house ? ` · House ${ROMAN[house - 1]}` : ''}
-        </span>
+      <dd>
+        <button className={s.bigBody} onClick={onOpen} aria-haspopup="dialog" aria-label={`${label} in ${sg.name}. Open the reading`}>
+          <Glyph name={sg.key as SignKey} size={64} color={ELEMENT_COLORS[sg.element]} weight={1.7} />
+          <span className={s.bigSign}>{sg.name}</span>
+          <span className={s.bigMeta}>
+            {formatDegree(lon)}
+            {house ? ` · House ${ROMAN[house - 1]}` : ''}
+          </span>
+        </button>
       </dd>
     </div>
   );
 }
 
-function AngleRow({ label, glyph, lon, house }: { label: string; glyph: 'asc' | 'mc'; lon: number; house: string }) {
+function AngleRow({ label, glyph, lon, house, onOpen, on }: { label: string; glyph: 'asc' | 'mc'; lon: number; house: string; onOpen: () => void; on: boolean }) {
   const sg = SIGNS[Math.floor(lon / 30)];
   return (
     <li>
-      <div className={`${s.ledgerRow} ${s.ledgerAngle}`}>
+      <button className={s.ledgerRow} onClick={onOpen} aria-haspopup="dialog" aria-pressed={on}>
         <Glyph name={glyph} size={20} color="currentColor" weight={1.9} />
         <span className={s.ledgerName}>{label}</span>
         <span className={s.ledgerSign}>
@@ -247,46 +252,8 @@ function AngleRow({ label, glyph, lon, house }: { label: string; glyph: 'asc' | 
         </span>
         <span className={s.ledgerDeg}>{formatDegree(lon)}</span>
         <span className={s.ledgerHouse}>{house}</span>
-      </div>
+      </button>
     </li>
-  );
-}
-
-function Focus({ chart, body, onClose }: { chart: Chart; body: BodyKey; onClose: () => void }) {
-  const p = chart.placements.find((x) => x.body === body)!;
-  const b = bodyByKey(body);
-  const related = chart.aspects.filter((a) => a.a === body || a.b === body);
-  return (
-    <div className={`nm-bracket ${s.focus}`}>
-      <div className={s.focusHead}>
-        <Glyph3D name={body} size={52} color={b.color} ground="light" />
-        <div>
-          <p className={s.focusTitle}>
-            {b.name} in {SIGNS[p.sign].name}
-          </p>
-          <p className={s.focusMeta}>
-            {formatDegree(p.lon)}
-            {p.house ? ` · House ${ROMAN[p.house - 1]}, ${HOUSE_REALM[p.house - 1]}` : ''}
-          </p>
-        </div>
-        <button className={s.close} onClick={onClose} aria-label="Close">
-          ×
-        </button>
-      </div>
-      <p className={s.focusText}>{placementLine(body, p.sign)}</p>
-      {related.length > 0 && (
-        <ul className={s.focusAspects}>
-          {related.map((a) => {
-            const other = a.a === body ? a.b : a.a;
-            return (
-              <li key={`${a.a}-${a.b}`}>
-                <Glyph name={a.def.kind} size={14} color={a.def.color} weight={1.9} /> {a.def.kind} {pointName(other)} <span className={s.orb}>{a.orb.toFixed(1)}°</span>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
   );
 }
 

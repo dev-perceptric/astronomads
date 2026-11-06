@@ -34,8 +34,9 @@ type Props = {
   ground?: 'dark' | 'light';
   chart: Chart;
   name?: string;
-  selected?: BodyKey | null;
-  onSelect?: (body: BodyKey | null) => void;
+  selected?: PointKey | null;
+  /** Called with the planet, Ascendant or Midheaven that was picked */
+  onSelect?: (point: PointKey) => void;
 };
 
 type Outer = { key: PointKey; lon: number };
@@ -44,7 +45,7 @@ const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'
 
 export default function ChartWheel({ chart, name, selected = null, onSelect, ground = 'dark' }: Props) {
   const uid = useId().replace(/:/g, '');
-  const [hovered, setHovered] = useState<BodyKey | null>(null);
+  const [hovered, setHovered] = useState<PointKey | null>(null);
   const focus = hovered ?? selected;
   const base = chart.asc ?? 0;
 
@@ -247,32 +248,28 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
           const dim = focus && focus !== o.key;
           const pointName = isAngle ? (o.key === 'asc' ? 'Ascendant' : 'Midheaven') : bodyByKey(o.key as BodyKey).name;
           const desc = `${pointName} in ${SIGNS[Math.floor(norm(o.lon) / 30)].name} ${formatDegree(o.lon)}${placement?.house ? `, house ${placement.house}` : ''}${placement?.retrograde ? ', retrograde' : ''}`;
-          const interactive = !isAngle;
           const body = o.key as BodyKey;
+          const key = o.key;
           return (
             <g
               key={o.key}
-              className={interactive ? s.planet : s.point}
+              className={s.planet}
               opacity={dim ? 0.25 : 1}
-              {...(interactive
-                ? {
-                    tabIndex: 0,
-                    role: 'button',
-                    'aria-label': desc,
-                    'aria-pressed': selected === body,
-                    onMouseEnter: () => setHovered(body),
-                    onMouseLeave: () => setHovered(null),
-                    onFocus: () => setHovered(body),
-                    onBlur: () => setHovered(null),
-                    onClick: () => onSelect?.(selected === body ? null : body),
-                    onKeyDown: (e: React.KeyboardEvent) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        onSelect?.(selected === body ? null : body);
-                      }
-                    },
-                  }
-                : { 'aria-label': desc })}
+              tabIndex={0}
+              role="button"
+              aria-label={`${desc}. Open the reading`}
+              aria-pressed={selected === key}
+              onMouseEnter={() => setHovered(key)}
+              onMouseLeave={() => setHovered(null)}
+              onFocus={() => setHovered(key)}
+              onBlur={() => setHovered(null)}
+              onClick={() => onSelect?.(key)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onSelect?.(key);
+                }
+              }}
             >
               <title>{desc}</title>
               {/* Straight out from the exact degree, then a bend to the symbol */}
