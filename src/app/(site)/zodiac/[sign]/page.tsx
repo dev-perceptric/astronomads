@@ -18,8 +18,11 @@ import LiveSky from './LiveSky';
 import Toc from './Toc';
 import s from './zodiac.module.css';
 
-/** Rebuilt once a day, so "this year's dates" stay current. */
-export const revalidate = 86400;
+/**
+ * Fully built at deploy time (the famous-people list is read from the repo then). The live parts,
+ * what is in the sign today and the next season, are worked out in the visitor's browser.
+ */
+export const dynamic = 'force-static';
 export const dynamicParams = false;
 
 export function generateStaticParams() {
