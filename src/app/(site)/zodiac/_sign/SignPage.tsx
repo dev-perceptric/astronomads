@@ -98,7 +98,7 @@ export default function SignPage({ slug }: { slug: string }) {
         <Stipple kind="field" tone="astral" className={s.heroField} />
         <div className={`nm-bracket ${s.heroFrame}`}>
           <nav className={s.crumbs} aria-label="Breadcrumb">
-            <Link href="/">Home</Link> <span aria-hidden="true">/</span> <span>Zodiac</span> <span aria-hidden="true">/</span> <span aria-current="page">{f.name}</span>
+            <Link href="/">Home</Link> <span aria-hidden="true">/</span> <Link href="/zodiac">Zodiac</Link> <span aria-hidden="true">/</span> <span aria-current="page">{f.name}</span>
           </nav>
           <div className={s.heroGrid}>
             <div className={s.heroText}>

@@ -7,6 +7,7 @@ import Logo from '@/components/Logo';
 import { signOut, useAccount } from '@/lib/account';
 
 const LINKS = [
+  { href: '/zodiac', label: 'Zodiac' },
   { href: '/chart', label: 'My chart' },
   { href: '/today', label: 'Today' },
 ];
@@ -24,7 +25,7 @@ export default function SiteHeader() {
   // Close the phone menu whenever the page changes.
   useEffect(() => setMobileOpen(false), [path]);
 
-  const current = (href: string) => (path === href ? 'page' : undefined);
+  const current = (href: string) => (path === href || (href === '/zodiac' && path.startsWith('/zodiac/')) ? 'page' : undefined);
   const leave = async () => {
     setMobileOpen(false);
     await signOut();

@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
     { url: `${site}/chart`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${site}/today`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
+    { url: `${site}/zodiac`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
     ...Object.keys(SIGN_COPY).map((sign) => ({ url: `${site}/zodiac/${sign}`, lastModified: now, changeFrequency: 'weekly' as const, priority: 0.9 })),
   ];
 }

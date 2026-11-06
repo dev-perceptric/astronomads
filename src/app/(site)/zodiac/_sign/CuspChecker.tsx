@@ -14,15 +14,18 @@ import s from './zodiac.module.css';
 
 type Result = { sign: number; lon: number; exact: boolean } | { cusp: true; from: number; to: number; ingress: Date };
 
-/** "Is your Sun in Aries?" Checks the real Sun position for a birthday, and asks for time and place on a cusp day. */
-export default function CuspChecker({ sign }: { sign: number }) {
+/**
+ * "Is your Sun in Aries?" Checks the real Sun position for a birthday, and asks for time and place on a
+ * cusp day. Without a `sign` it simply finds your sign (the zodiac hub).
+ */
+export default function CuspChecker({ sign }: { sign?: number }) {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [city, setCity] = useState<City | null>(null);
   const [more, setMore] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState('');
-  const here = SIGNS[sign];
+  const here = sign === undefined ? null : SIGNS[sign];
 
   const check = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +80,7 @@ export default function CuspChecker({ sign }: { sign: number }) {
       <div className={s.checkResult} aria-live="polite">
         {!result && (
           <div className={s.resultIdle}>
-            <Glyph name={here.key as SignKey} size={88} color={ELEMENT_COLORS[here.element]} weight={1.2} />
+            {here ? <Glyph name={here.key as SignKey} size={88} color={ELEMENT_COLORS[here.element]} weight={1.2} /> : <Glyph name="sun" size={88} color="var(--p-sun)" weight={1.2} />}
             <p>Your result shows here.</p>
           </div>
         )}
@@ -96,9 +99,9 @@ export default function CuspChecker({ sign }: { sign: number }) {
         {result && 'sign' in result && (
           <div className={s.resultCard}>
             <Glyph name={SIGNS[result.sign].key as SignKey} size={64} color={ELEMENT_COLORS[SIGNS[result.sign].element]} weight={1.4} />
-            <p className={s.resultLabel}>{result.sign === sign ? 'Yes' : 'Your Sun is in'}</p>
+            <p className={s.resultLabel}>{here && result.sign === sign ? 'Yes' : 'Your Sun is in'}</p>
             <p className={s.resultTitle}>
-              {result.sign === sign ? `Your Sun is in ${here.name}` : SIGNS[result.sign].name}
+              {here && result.sign === sign ? `Your Sun is in ${here.name}` : SIGNS[result.sign].name}
             </p>
             <p className={s.resultText}>
               {result.exact ? `Exactly ${formatDegree(result.lon)} ${SIGNS[result.sign].name}.` : `About ${Math.floor(result.lon % 30)}° ${SIGNS[result.sign].name} on that day.`}{' '}
@@ -108,7 +111,7 @@ export default function CuspChecker({ sign }: { sign: number }) {
               <Link href="/#start" className="nm-btn nm-btn-primary">
                 Draw my full chart
               </Link>
-              {result.sign !== sign && (
+              {(!here || result.sign !== sign) && (
                 <Link href={`/zodiac/${SIGNS[result.sign].key}`} className={s.textBtn}>
                   Read about {SIGNS[result.sign].name}
                 </Link>
