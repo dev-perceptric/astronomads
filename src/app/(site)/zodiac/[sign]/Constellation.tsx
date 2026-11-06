@@ -24,7 +24,9 @@ export default function Constellation({ sign, color, name }: { sign: SignKey; co
   const spanY = Math.max(...fig.map((p) => p[1])) - Math.min(...fig.map((p) => p[1]));
   // The figure fills about 42% of the plate's width, leaving room for the sky around it.
   const scale = (plate * 2 * 0.42) / Math.max(spanX, spanY, 6);
-  const P = (ra: number, dec: number): [number, number] => [C - (ra - ra0) * k * scale, C - (dec - dec0) * scale];
+  // Rounded to a tenth of a unit: plenty for the eye, and it keeps the page small.
+  const r1 = (n: number) => Math.round(n * 10) / 10;
+  const P = (ra: number, dec: number): [number, number] => [r1(C - (ra - ra0) * k * scale), r1(C - (dec - dec0) * scale)];
   const inside = ([x, y]: [number, number], m = 0) => Math.hypot(x - C, y - C) <= plate - m;
   const onFigure = (ra: number, dec: number) => fig.some(([a, b]) => Math.abs(a - ra) < 0.05 && Math.abs(b - dec) < 0.05);
 
@@ -33,21 +35,21 @@ export default function Constellation({ sign, color, name }: { sign: SignKey; co
   const grid: string[] = [];
   for (let dec = -80; dec <= 80; dec += 10) {
     const pts: string[] = [];
-    for (let ra = ra0 - 60; ra <= ra0 + 60; ra += 1) pts.push(P(ra, dec).join(','));
+    for (let ra = ra0 - 60; ra <= ra0 + 60; ra += 3) pts.push(P(ra, dec).join(','));
     grid.push(pts.join(' '));
   }
   const raStart = Math.ceil((d.center + ra0 - 60) / 15) * 15;
   for (let raAbs = raStart; raAbs <= d.center + ra0 + 60; raAbs += 15) {
     const ra = wrapRa(raAbs);
     const pts: string[] = [];
-    for (let dec = dec0 - 60; dec <= dec0 + 60; dec += 1) pts.push(P(ra, dec).join(','));
+    for (let dec = dec0 - 60; dec <= dec0 + 60; dec += 5) pts.push(P(ra, dec).join(','));
     grid.push(pts.join(' '));
   }
 
   // The ecliptic, from ecliptic longitude to right ascension and declination.
   const ecl: string[] = [];
   let label: [number, number] | null = null;
-  for (let lam = 0; lam < 360; lam += 0.5) {
+  for (let lam = 0; lam < 360; lam += 1) {
     const l = (lam * Math.PI) / 180;
     const dec = (Math.asin(Math.sin(EPS) * Math.sin(l)) * 180) / Math.PI;
     const ra = (Math.atan2(Math.cos(EPS) * Math.sin(l), Math.cos(l)) * 180) / Math.PI;
@@ -76,7 +78,7 @@ export default function Constellation({ sign, color, name }: { sign: SignKey; co
       {Array.from({ length: 72 }, (_, i) => {
         const a = (i * 5 * Math.PI) / 180;
         const len = i % 6 === 0 ? 8 : 4;
-        return <line key={i} x1={C + Math.cos(a) * plate} y1={C + Math.sin(a) * plate} x2={C + Math.cos(a) * (plate + len)} y2={C + Math.sin(a) * (plate + len)} stroke="var(--marble)" strokeOpacity={0.45} />;
+        return <line key={i} x1={r1(C + Math.cos(a) * plate)} y1={r1(C + Math.sin(a) * plate)} x2={r1(C + Math.cos(a) * (plate + len))} y2={r1(C + Math.sin(a) * (plate + len))} stroke="var(--marble)" strokeOpacity={0.45} />;
       })}
       <g clipPath={`url(#${clip})`}>
         <g fill="none" stroke="var(--marble)" strokeOpacity={0.16} strokeWidth={0.8}>
@@ -106,9 +108,9 @@ export default function Constellation({ sign, color, name }: { sign: SignKey; co
               {Array.from({ length: dust }, (_, j) => {
                 const a = rand() * Math.PI * 2;
                 const dist = r * (1.5 + rand() * 3.4);
-                return <circle key={j} cx={x + Math.cos(a) * dist} cy={y + Math.sin(a) * dist} r={0.45 + rand() * 0.6} fill="var(--marble)" opacity={0.25 + rand() * 0.4} />;
+                return <circle key={j} cx={r1(x + Math.cos(a) * dist)} cy={r1(y + Math.sin(a) * dist)} r={r1(0.45 + rand() * 0.6)} fill="var(--marble)" opacity={r1(0.25 + rand() * 0.4)} />;
               })}
-              <circle cx={x} cy={y} r={r} fill="var(--marble)" opacity={onFig ? 1 : Math.min(0.95, 0.55 + (6 - mag) * 0.12)} />
+              <circle cx={x} cy={y} r={r1(r)} fill="var(--marble)" opacity={onFig ? 1 : r1(Math.min(0.95, 0.55 + (6 - mag) * 0.12))} />
               {starName && (onFig || mag < 3) && inside(p, 30) && (
                 <text x={x + r + 9} y={y - r - 5} className="zodiac-star-name" opacity={onFig ? 1 : 0.6}>
                   {starName}
