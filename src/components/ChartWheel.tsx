@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import type { Chart, PointKey } from '@/lib/astro/chart';
 import { formatDegree } from '@/lib/astro/chart';
 import { ELEMENT_COLORS, SIGNS, bodyByKey, norm, type BodyKey } from '@/lib/astro/constants';
+import { placeSignSymbols } from '@/lib/astro/layout';
 import { GlyphAt, type SignKey } from './Glyph';
 import s from './ChartWheel.module.css';
 
@@ -55,6 +56,14 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
   const spread = useMemo(() => spreadOut(outer, 11.5), [outer]);
 
   const lonOf = (k: PointKey) => outer.find((o) => o.key === k)!.lon;
+
+  // Every line that crosses the sign ring: house cusps and the four angles.
+  const crossing = useMemo(() => {
+    const list = [...(chart.houses ?? [])];
+    if (chart.asc !== null && chart.mc !== null) list.push(chart.asc, norm(chart.asc + 180), chart.mc, norm(chart.mc + 180));
+    return list;
+  }, [chart]);
+  const signSpots = useMemo(() => placeSignSymbols(crossing, (R.scaleIn + R.zodiacIn) / 2), [crossing]);
   const aspectLines = chart.aspects.filter((a) => a.def.kind !== 'conjunction' || a.orb < 3);
 
   const sun = chart.placements.find((p) => p.body === 'sun')!;
@@ -70,16 +79,14 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
       {/* Wheel body */}
       <circle r={R.wheel} className={s.wheelFill} />
 
-      {/* Sign ring: large symbols in element colors */}
+      {/* Sign ring tint and dividers (symbols are drawn after the house lines, clear of them) */}
       <g>
         {SIGNS.map((sign, i) => {
           const start = i * 30;
-          const [gx, gy] = pt((R.scaleIn + R.zodiacIn) / 2, start + 15);
           return (
             <g key={sign.key}>
               <path d={sector(pt, R.zodiacIn, R.scaleIn, start, start + 30)} fill={ELEMENT_COLORS[sign.element]} className={s.signSector} />
               <line {...seg(R.zodiacIn, R.scaleIn, start)} className={s.signDivider} />
-              <GlyphAt name={sign.key as SignKey} x={gx} y={gy} size={38} color={ELEMENT_COLORS[sign.element]} weight={2.6} />
             </g>
           );
         })}
@@ -101,7 +108,8 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
         <g>
           {chart.houses.map((cusp, i) => {
             const isAngle = i % 3 === 0;
-            const [nx, ny] = pt((R.wheel + R.houseIn) / 2, cusp + 3.2);
+            const width = norm(chart.houses![(i + 1) % 12] - cusp);
+            const [nx, ny] = pt((R.wheel + R.houseIn) / 2, cusp + width / 2);
             return (
               <g key={i}>
                 {!isAngle && <line {...seg(R.houseIn, R.core, cusp)} className={s.cusp} />}
@@ -124,6 +132,14 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
           <line {...seg(R.wheel, R.core, chart.mc + 180)} className={s.axisSoft} />
         </g>
       )}
+
+      {/* Sign symbols, each moved within its sign to the spot farthest from every house and axis line */}
+      <g>
+        {signSpots.map(({ key, lon, size, color }) => {
+          const [gx, gy] = pt((R.scaleIn + R.zodiacIn) / 2, lon);
+          return <GlyphAt key={key} name={key as SignKey} x={gx} y={gy} size={size} color={color} weight={2.6} halo="var(--card)" />;
+        })}
+      </g>
 
       <circle r={R.wheel} className={s.rim} />
 
@@ -224,13 +240,9 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
               ) : (
                 <GlyphAt name={body} x={gx} y={gy} size={34 * Math.min(1.06, Math.max(0.92, bodyByKey(body).weight))} color={color} weight={2.5} />
               )}
-              {placement?.retrograde && (
-                <text x={f(gx + 17)} y={f(gy + 15)} className={s.retro} fill={color}>
-                  R
-                </text>
-              )}
               <text x={f(lx)} y={f(ly)} dominantBaseline="central" textAnchor="middle" className={s.degree} fill={color}>
                 {deg}°<tspan className={s.minute}>{String(min).padStart(2, '0')}′</tspan>
+                {placement?.retrograde && <tspan className={s.retro}> R</tspan>}
               </text>
             </g>
           );
@@ -279,3 +291,4 @@ function spreadOut(points: Outer[], gap: number): Map<PointKey, number> {
   }
   return new Map(items.map((i) => [i.key, norm(i.shown)]));
 }
+

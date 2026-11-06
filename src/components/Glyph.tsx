@@ -19,20 +19,26 @@ export type SignKey =
   | 'aquarius'
   | 'pisces';
 
-type Shape = { d?: string; circles?: [number, number, number][]; dots?: [number, number, number][]; rects?: [number, number, number, number][] };
+type Shape = {
+  d?: string; // stroked path
+  f?: string; // filled path
+  circles?: [number, number, number][];
+  dots?: [number, number, number][];
+  rects?: [number, number, number, number][];
+};
 
 export const SHAPES: Record<GlyphName, Shape> = {
-  // Planets
-  sun: { circles: [[12, 12, 8]], dots: [[12, 12, 1.7]] },
-  moon: { d: 'M9 3.5A8.5 8.5 0 1 1 9 20.5A11 11 0 0 0 9 3.5Z' },
-  mercury: { d: 'M7.5 3.2A4.6 4.6 0 0 0 16.5 3.2M12 15.6V21.6M9 18.6H15', circles: [[12, 11.5, 4.1]] },
-  venus: { d: 'M12 14.2V22M8.5 18.2H15.5', circles: [[12, 8.8, 5.4]] },
-  mars: { d: 'M13.9 10.1 19.8 4.2M14.4 4.2H19.8V9.6', circles: [[9.8, 14.2, 5.6]] },
-  jupiter: { d: 'M5.5 7.6C6 4.6 10.8 3.6 11.4 7C11.9 10 8.1 13.8 5 16.6H19.2M15.6 3.8V21' },
-  saturn: { d: 'M8 3V15.8M5 6.4H11.4M8 12.2C9.4 9.6 15.6 9.4 15.6 13.6C15.6 16.6 12.6 17.6 12.6 20C12.6 21.6 14 22.1 15.6 21.2' },
-  uranus: { d: 'M6 3.6V14.6M18 3.6V14.6M6 9.1H18M12 3.6V16.4', circles: [[12, 19, 2.4]] },
-  neptune: { d: 'M5 4.6C5 9.8 8 12.8 12 12.8C16 12.8 19 9.8 19 4.6M12 3.6V21.6M8.4 17.8H15.6M3.6 6.4 5 4.4 6.4 6.4M17.6 6.4 19 4.4 20.4 6.4M10.6 5.4 12 3.4 13.4 5.4' },
-  pluto: { d: 'M6 3.8A6 6 0 0 0 18 3.8M12 9.8V21.8M8.4 17H15.6', circles: [[12, 5.4, 2.3]] },
+  // Planets: a bolder family with solid details (filled crescent, arrowhead, trident tips, orb)
+  sun: { circles: [[12, 12, 8.2]], dots: [[12, 12, 2.5]] },
+  moon: { f: 'M9 3.4A8.6 8.6 0 1 1 9 20.6A11.4 11.4 0 0 0 9 3.4Z' },
+  mercury: { d: 'M7.6 3.2C8.2 5.9 9.8 7.4 12 7.4C14.2 7.4 15.8 5.9 16.4 3.2M12 15.9V21.8M9.2 18.9H14.8', circles: [[12, 11.6, 4.1]] },
+  venus: { d: 'M12 14.2V21.8M8.6 18.2H15.4', circles: [[12, 8.8, 5.3]] },
+  mars: { d: 'M13.5 10.5 18.2 5.8', circles: [[9.6, 14.4, 5.5]], f: 'M20.8 3.2 20.4 9.9 14.1 3.6Z' },
+  jupiter: { d: 'M5.4 8C5.6 4.8 9.2 3.3 11.3 5.2C13.5 7.2 11.5 11 5.2 16.4H19.6M15.8 3.8V21.4' },
+  saturn: { d: 'M8.2 2.8V16M5 6H11.4M8.2 12.6C9.4 10 15.8 9.6 15.8 13.8C15.8 16.8 12.8 17.6 12.8 20C12.8 21.6 14.2 22.2 16 21.2' },
+  uranus: { d: 'M6 3.4V13.6M18 3.4V13.6M6 8.5H18M12 3.4V15.8', circles: [[12, 18.7, 2.6]], dots: [[12, 18.7, 0.9]] },
+  neptune: { d: 'M5.2 6.6C5.2 11 8.2 13.4 12 13.4C15.8 13.4 18.8 11 18.8 6.6M12 5.2V21.8M8.6 18.2H15.4', f: 'M5.2 2.8 3.3 6.6H7.1ZM18.8 2.8 16.9 6.6H20.7ZM12 1.6 10.1 5.4H13.9Z' },
+  pluto: { d: 'M5.8 3.8C5.8 7.3 8.6 9.9 12 9.9C15.4 9.9 18.2 7.3 18.2 3.8M12 9.9V21.8M8.6 17.2H15.4', dots: [[12, 4.6, 2.4]] },
 
   // Signs
   aries: { d: 'M12 21V9.4C12 4.6 4 3.2 4 8.2C4 10 5.2 11.2 6.6 11.2M12 9.4C12 4.6 20 3.2 20 8.2C20 10 18.8 11.2 17.4 11.2' },
@@ -64,6 +70,7 @@ function Paths({ shape }: { shape: Shape }) {
   return (
     <>
       {shape.d && <path d={shape.d} />}
+      {shape.f && <path d={shape.f} fill="currentColor" />}
       {shape.circles?.map(([cx, cy, r], i) => <circle key={`c${i}`} cx={cx} cy={cy} r={r} />)}
       {shape.rects?.map(([x, y, w, h], i) => <rect key={`r${i}`} x={x} y={y} width={w} height={h} rx={0.6} />)}
       {shape.dots?.map(([cx, cy, r], i) => <circle key={`d${i}`} cx={cx} cy={cy} r={r} fill="currentColor" stroke="none" />)}
@@ -98,12 +105,23 @@ export function Glyph({ name, size = 18, color, title, weight = 1.6, className }
   );
 }
 
-/** The same symbol inside another SVG, centered on (x, y). */
-export function GlyphAt({ name, x, y, size, color, weight = 1.6 }: { name: GlyphName; x: number; y: number; size: number; color: string; weight?: number }) {
+/**
+ * The same symbol inside another SVG, centered on (x, y).
+ * `halo` draws a thin knockout edge in the given color first, so any line passing near never touches the symbol.
+ */
+export function GlyphAt({ name, x, y, size, color, weight = 1.6, halo }: { name: GlyphName; x: number; y: number; size: number; color: string; weight?: number; halo?: string }) {
   const scale = size / 24;
+  const transform = `translate(${(x - size / 2).toFixed(2)} ${(y - size / 2).toFixed(2)}) scale(${scale.toFixed(4)})`;
   return (
-    <g transform={`translate(${(x - size / 2).toFixed(2)} ${(y - size / 2).toFixed(2)}) scale(${scale.toFixed(4)})`} {...strokeProps} stroke={color} strokeWidth={weight / scale} style={{ color }}>
-      <Paths shape={SHAPES[name]} />
-    </g>
+    <>
+      {halo && (
+        <g transform={transform} {...strokeProps} stroke={halo} strokeWidth={(weight + 6) / scale} style={{ color: halo }}>
+          <Paths shape={SHAPES[name]} />
+        </g>
+      )}
+      <g transform={transform} {...strokeProps} stroke={color} strokeWidth={weight / scale} style={{ color }}>
+        <Paths shape={SHAPES[name]} />
+      </g>
+    </>
   );
 }

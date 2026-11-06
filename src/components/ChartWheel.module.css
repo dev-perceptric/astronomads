@@ -51,4 +51,4 @@
 .mcRing + .angleText { font-size: 19px; }
 .degree { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
 .minute { font-size: 12px; font-weight: 500; baseline-shift: 30%; }
-.retro { font-size: 12px; font-weight: 700; }
+.retro { font-size: 12px; font-weight: 700; baseline-shift: 30%; }
