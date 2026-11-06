@@ -104,7 +104,7 @@ export const PAIR: PairCopy = {
     },
     {
       q: 'Why do Aries and Pisces fight?',
-      a: 'Most fights come from sensitivity. Aries is blunt and quick, while Pisces is gentle and easily hurt. Aries may confront, and Pisces may withdraw. Gentle words and a calm pause help these two resolve conflicts with care.',
+      a: 'Most fights come from sensitivity. Aries is blunt and quick, while Pisces is gentle and easily hurt. Aries may confront, and Pisces may withdraw. Gentle words and a calm pause help these two resolve conflicts with care. Pisces can name the hurt, and Aries can say sorry quickly.',
     },
     {
       q: 'Is Pisces good for Aries?',
