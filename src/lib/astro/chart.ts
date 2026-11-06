@@ -89,8 +89,26 @@ export type HouseSystem = 'placidus' | 'whole-sign';
  */
 export function placidusCusps(date: Date, lat: number, lon: number): number[] | null {
   const { ramc, eps } = frame(date, lon);
+  return cuspsFromFrame(ramc, eps, lat);
+}
+
+/** Obliquity of the ecliptic at a moment, in radians. */
+export const obliquity = (date: Date) => (23.4392911 - 0.0130042 * (Astronomy.MakeTime(date).tt / 36525)) * DEG;
+
+/** The right ascension of a Midheaven (radians), for charts built from a Midheaven, like the composite. */
+export const ramcFromMc = (mc: number, eps: number) => norm(Math.atan2(Math.sin(mc * DEG) * Math.cos(eps), Math.cos(mc * DEG)) / DEG) * DEG;
+
+/** Ascendant, Midheaven and Placidus cusps from the right ascension of the Midheaven, obliquity and latitude. */
+export function anglesFromFrame(ramc: number, eps: number, lat: number): { asc: number; mc: number } {
   const phi = lat * DEG;
-  const { asc, mc } = angles(date, lat, lon);
+  const asc = Math.atan2(Math.cos(ramc), -(Math.sin(ramc) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps)));
+  const mc = Math.atan2(Math.sin(ramc), Math.cos(ramc) * Math.cos(eps));
+  return { asc: norm(asc / DEG), mc: norm(mc / DEG) };
+}
+
+export function cuspsFromFrame(ramc: number, eps: number, lat: number): number[] | null {
+  const phi = lat * DEG;
+  const { asc, mc } = anglesFromFrame(ramc, eps, lat);
   const lonFromRa = (ra: number) => Math.atan2(Math.sin(ra), Math.cos(ra) * Math.cos(eps));
   const semiArc = (ra: number, nocturnal: boolean): number | null => {
     const decl = Math.asin(Math.sin(eps) * Math.sin(lonFromRa(ra)));
@@ -201,6 +219,11 @@ export function chartAt(utc: Date, lat: number, lon: number, timeKnown = true): 
     }
   }
 
+  return chartFrom({ utc, timeKnown, raw, asc, mc, houses, houseSystem, north: trueNode(utc) });
+}
+
+/** Builds a chart from positions and angles, so charts made in other ways (composite) read the same. */
+export function chartFrom({ utc, timeKnown, raw, asc, mc, houses, houseSystem, north }: { utc: Date; timeKnown: boolean; raw: { body: BodyKey; lon: number; retrograde: boolean }[]; asc: number | null; mc: number | null; houses: number[] | null; houseSystem: HouseSystem | null; north: number }): Chart {
   const placements: Placement[] = raw.map(({ body, lon, retrograde }) => {
     const sign = Math.floor(lon / 30);
     const inSign = lon - sign * 30;
@@ -214,7 +237,6 @@ export function chartAt(utc: Date, lat: number, lon: number, timeKnown = true): 
     return { body, lon, sign, degree, minute, house, retrograde };
   });
 
-  const north = trueNode(utc);
   const nodes: NodePlacement[] = (
     [
       ['nnode', north],

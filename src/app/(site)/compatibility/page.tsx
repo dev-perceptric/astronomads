@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import PairGrid from './_pair/PairGrid';
 import CompatView from './CompatView';
 
 const title = 'Compatibility: Compare Two Birth Charts';
@@ -14,8 +15,11 @@ export const metadata: Metadata = {
 
 export default function CompatibilityPage() {
   return (
-    <Suspense>
-      <CompatView />
-    </Suspense>
+    <>
+      <Suspense>
+        <CompatView />
+      </Suspense>
+      <PairGrid />
+    </>
   );
 }

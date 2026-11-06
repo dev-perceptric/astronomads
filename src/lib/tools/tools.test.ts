@@ -17,7 +17,7 @@ const root = path.resolve(__dirname, '../../app/(site)/tools');
 
 describe('tools', () => {
   it('has a plain folder and a guide for every calculator', async () => {
-    expect(slugs).toHaveLength(13);
+    expect(slugs).toHaveLength(23);
     for (const slug of slugs) {
       expect(existsSync(path.join(root, slug, 'page.tsx')), slug).toBe(true);
       const { GUIDE } = (await import(`./guides/${slug}.ts`)) as { GUIDE: ToolGuide };

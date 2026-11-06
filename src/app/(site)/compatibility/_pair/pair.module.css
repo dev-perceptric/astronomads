@@ -1,0 +1,37 @@
+.glyphs { display: flex; align-items: center; gap: 18px; margin-bottom: 4px; }
+.amp { font-family: var(--serif); font-style: italic; font-size: 64px; line-height: 1; color: var(--astral); }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 16px 0 0; border-top: 1px solid var(--rule); width: 100%; }
+@media (max-width: 720px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.facts > div { padding: 16px 16px 4px 0; min-width: 0; }
+.facts dt { font-size: 12px; letter-spacing: -0.02em; text-transform: uppercase; color: var(--stone); margin-bottom: 6px; }
+.facts dd { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.15; overflow-wrap: anywhere; }
+
+.glance { padding-bottom: 56px; }
+.glanceGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+@media (max-width: 900px) { .glanceGrid { grid-template-columns: minmax(0, 1fr); } }
+.glanceCol { padding: 22px 20px 22px 0; min-width: 0; }
+.glanceCol + .glanceCol { padding-left: 20px; border-left: 1px solid var(--rule); }
+@media (max-width: 900px) { .glanceCol + .glanceCol { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); } }
+.glanceCol ul { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.glanceCol li { font-family: var(--serif); font-size: 20px; line-height: 1.3; }
+.cta { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 28px; padding: 24px; border-radius: 22px; background: var(--secondary); }
+.ctaText { font-family: var(--serif); font-size: 21px; line-height: 1.4; margin: 0; max-width: 52ch; }
+.ctaBtns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.moreRow { margin-bottom: 28px; }
+.moreLabel { font-family: var(--serif); font-size: 24px; margin: 0 0 12px; }
+.moreLabel a { color: var(--marble); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--rule); color: var(--marble); text-decoration: none; font-size: 13px; letter-spacing: -0.02em; transition: background-color 0.2s; }
+.chip:hover { background: rgba(255, 255, 255, 0.08); }
+@media (prefers-reduced-motion: reduce) { .chip { transition: none; } }
+
+/* Hub grid on /compatibility */
+.hub { padding-bottom: 72px; scroll-margin-top: 90px; }
+.hubLead { font-family: var(--serif); font-size: 21px; line-height: 1.45; margin: -28px 0 32px; max-width: 58ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 12px; }
+.signCol { padding: 18px 20px; border-radius: 20px; box-shadow: inset 0 0 0 1px var(--rule); }
+.signHead { display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 26px; margin: 0 0 10px; }
+.signCol ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; }
+.signCol a { display: inline-flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 13px; letter-spacing: -0.02em; color: inherit; text-decoration: none; }
+.signCol a:hover { text-decoration: underline; }

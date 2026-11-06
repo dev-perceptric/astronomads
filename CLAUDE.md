@@ -47,6 +47,12 @@ An astrology site: free birth charts, a daily sky, compatibility and astrocartog
 - Timing math is in `src/lib/astro/timing.ts` (sign changes, stations and shadows, solar, lunar and Saturn returns, secondary progressions with solar arc angles, planetary hours, rising signs through a day, monthly ephemeris). `timing.test.ts` checks it against published Mercury stations, London sunrise and sunset, and exact return degrees.
 - Readings for the tools: `signDetails.ts`, `returns.ts` and `cycles.ts` in the interpretations folder. `src/lib/tools/tools.test.ts` checks every guide and reading against the copy rules and checks that every guide is detailed.
 
+## Rule: two-person tools and sign pairs
+- Sign pair pages: `/compatibility/<a>-and-<b>` for all 78 Sun sign pairings, one plain folder each, made by `node scripts/pair-pages.mjs` from the copy files in `src/lib/compat/pairs/` (type `PairCopy`), rendered by `compatibility/_pair/PairPage.tsx`, listed under the compatibility tool by `PairGrid`.
+- Two-person engine: `src/lib/astro/relate.ts`. `relate()` scores love (same as `synastry()`), friendship, work and family on the same 8 to 97 scale; `composite()` (midpoints, Midheaven midpoint kept above the horizon, Placidus from it at the average latitude), `davison()`, `overlays()`, `bestDates()` and `exactHits()`. `relate.test.ts` proves them.
+- Readings: `friendship.ts`, `work.ts`, `family.ts` (55 contacts each), `relationship.ts` (composite and Davison), `pairs.ts` (house overlays, big three match, day kinds, couple's year). `src/lib/compat/compat.test.ts` checks all of them and every pair page.
+- Celebrity match reads `public/data/celebs.json`, built by `node scripts/celebs-json.mjs` from the Pantheon list at noon UTC. Politicians, soldiers, royalty, religious figures and anyone filed under crime or extremism stay out of the pool.
+
 ## Rule: accounts are safe and small
 - Accounts live in Hostinger MySQL (`src/lib/server/db.ts`, configured by `DB_*` or `DATABASE_URL`; tables are created on first use). Without a database the site still runs and `/account` shows "Accounts open soon".
 - Passwords are hashed with scrypt; sessions are random tokens in an httpOnly cookie, stored only as SHA-256 hashes. Reset links are one-use, last one hour, and are built from `SITE_URL`, never from the request.

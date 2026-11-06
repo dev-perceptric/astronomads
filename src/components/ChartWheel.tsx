@@ -38,13 +38,17 @@ type Props = {
   selected?: PointKey | null;
   /** Called with the planet, Ascendant or Midheaven that was picked */
   onSelect?: (point: PointKey) => void;
+  /** A second person's planets, drawn on an inner ring (the synastry double wheel) */
+  partner?: { body: BodyKey; lon: number }[];
+  /** Aspects between the two charts, drawn in the center instead of this chart's own */
+  cross?: { a: BodyKey; b: BodyKey; def: { kind: string; color: string }; orb: number }[];
 };
 
 type Outer = { key: PointKey; lon: number };
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 
-export default function ChartWheel({ chart, name, selected = null, onSelect, ground = 'dark' }: Props) {
+export default function ChartWheel({ chart, name, selected = null, onSelect, ground = 'dark', partner, cross }: Props) {
   const uid = useId().replace(/:/g, '');
   const [hovered, setHovered] = useState<PointKey | null>(null);
   const focus = hovered ?? selected;
@@ -72,7 +76,9 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
 
   const stars = useMemo(() => makeStars(), []);
 
-  const aspectLines = chart.aspects.filter((a) => a.def.kind !== 'conjunction' || a.orb < 3);
+  const aspectLines = partner ? [] : chart.aspects.filter((a) => a.def.kind !== 'conjunction' || a.orb < 3);
+  const inner = useMemo(() => (partner ? spreadOut(partner.map((p) => ({ key: p.body, lon: p.lon })), 17) : null), [partner]);
+  const INNER = { tick: 150, glyph: 128, anchor: 104 };
 
   const sun = chart.placements.find((p) => p.body === 'sun')!;
   const moon = chart.placements.find((p) => p.body === 'moon')!;
@@ -222,6 +228,31 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
           return <circle key={o.key} cx={f(x)} cy={f(y)} r={3.4} fill={color} className={s.anchor} />;
         })}
       </g>
+      {partner && inner && (
+        <g>
+          <circle r={INNER.anchor} className={s.orbit} />
+          {(cross ?? []).map((c, i) => {
+            const [x1, y1] = pt(R.core, lonOf(c.a));
+            const [x2, y2] = pt(INNER.anchor, partner.find((p) => p.body === c.b)!.lon);
+            return <line key={i} x1={f(x1)} y1={f(y1)} x2={f(x2)} y2={f(y2)} stroke={c.def.color} strokeWidth={c.orb < 2 ? 1.8 : 1.1} strokeOpacity={Math.max(0.5, 1 - c.orb * 0.07)} strokeDasharray={c.def.kind === 'sextile' ? '6 5' : undefined} className={s.aspect} />;
+          })}
+          {partner.map((p) => {
+            const shown = inner.get(p.body) ?? p.lon;
+            const [tx1, ty1] = pt(R.core, p.lon);
+            const [tx2, ty2] = pt(INNER.tick, p.lon);
+            const [gx, gy] = pt(INNER.glyph, shown);
+            const [ax, ay] = pt(INNER.anchor, p.lon);
+            const color = pointColor(p.body);
+            return (
+              <g key={`in-${p.body}`}>
+                <line x1={f(tx1)} y1={f(ty1)} x2={f(tx2)} y2={f(ty2)} stroke={color} strokeWidth={1.2} />
+                <circle cx={f(ax)} cy={f(ay)} r={2.6} fill={color} className={s.anchor} />
+                <Glyph3DAt name={p.body} x={gx} y={gy} size={24} color={color} weight={1.4} ground={ground} />
+              </g>
+            );
+          })}
+        </g>
+      )}
       {/* The logo's mark at the center */}
       <circle r={17} className={s.centerRing} />
       <path d={star(0, 0, 12, 2.4)} className={s.centerStar} />

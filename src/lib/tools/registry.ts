@@ -1,5 +1,5 @@
 /** Every free calculator, for the /tools hub, the related links and the sitemap. */
-export type ToolInfo = { slug: string; href: string; name: string; short: string; group: 'chart' | 'timing' };
+export type ToolInfo = { slug: string; href: string; name: string; short: string; group: 'chart' | 'timing' | 'pairs' };
 
 export const TOOLS: ToolInfo[] = [
   { slug: 'chart', href: '/chart', name: 'Birth chart', short: 'Your full chart wheel with every planet, house and aspect explained.', group: 'chart' },
@@ -18,6 +18,18 @@ export const TOOLS: ToolInfo[] = [
   { slug: 'saturn-return', href: '/tools/saturn-return', name: 'Saturn return', short: 'Every Saturn return in your life, pass by pass.', group: 'timing' },
   { slug: 'progressions', href: '/tools/progressions', name: 'Progressions', short: 'Your progressed chart, progressed Moon phase and life chapters.', group: 'timing' },
   { slug: 'planetary-hours', href: '/tools/planetary-hours', name: 'Planetary hours', short: 'The ruler of today and of every hour, for your city.', group: 'timing' },
+  { slug: 'compatibility', href: '/compatibility', name: 'Love compatibility', short: 'Two full charts compared: five scores and every contact between your planets.', group: 'pairs' },
+  { slug: 'sign-compatibility', href: '/compatibility#signs', name: 'Sign compatibility', short: 'All 78 Sun sign pairings, read in depth for love, friendship and work.', group: 'pairs' },
+  { slug: 'big-three-match', href: '/tools/big-three-match', name: 'Big three match', short: 'Your Sun, Moon and rising against theirs, all nine pairings.', group: 'pairs' },
+  { slug: 'friendship-compatibility', href: '/tools/friendship-compatibility', name: 'Friendship compatibility', short: 'Fun, trust, talk, support and growth between two friends.', group: 'pairs' },
+  { slug: 'work-compatibility', href: '/tools/work-compatibility', name: 'Work compatibility', short: 'Decisions, communication, reliability, drive and money between colleagues.', group: 'pairs' },
+  { slug: 'parent-child', href: '/tools/parent-child', name: 'Parent and child', short: 'Warmth, structure and freedom between you and your child, and what they need.', group: 'pairs' },
+  { slug: 'composite-chart', href: '/tools/composite-chart', name: 'Composite chart', short: 'The relationship as its own chart, built from your midpoints.', group: 'pairs' },
+  { slug: 'davison-chart', href: '/tools/davison-chart', name: 'Davison chart', short: 'The relationship’s own birth moment, halfway between you in time and place.', group: 'pairs' },
+  { slug: 'synastry-chart', href: '/tools/synastry-chart', name: 'Synastry chart', short: 'A double wheel with house overlays both ways and every contact.', group: 'pairs' },
+  { slug: 'celebrity-match', href: '/tools/celebrity-match', name: 'Celebrity match', short: 'Which famous person your chart matches best, and your chart twins.', group: 'pairs' },
+  { slug: 'couple-year-ahead', href: '/tools/couple-year-ahead', name: 'Couple’s year ahead', short: 'The key dates for your relationship over the next 12 months.', group: 'pairs' },
+  { slug: 'best-dates', href: '/tools/best-dates', name: 'Best dates together', short: 'The best days in the next 90 for romance, talks and plans.', group: 'pairs' },
 ];
 
 export const toolBySlug = (slug: string) => TOOLS.find((t) => t.slug === slug)!;

@@ -105,6 +105,51 @@ export function useCityParam(name: string, fallback: City | null): [City | null,
   return [id ? city : fallback, (c) => setId(String(c.id))];
 }
 
+/** The second example person, for two-person tools before anyone is chosen. */
+export const EXAMPLE_PARTNER: BirthProfile = {
+  name: 'Sol (example)',
+  date: '1994-08-09',
+  time: '18:15',
+  city: { id: 2643743, name: 'London', region: 'England', country: 'United Kingdom', lat: 51.5085, lon: -0.1257, timeZone: 'Europe/London', population: 8961989 },
+};
+
+/**
+ * Two people from the address (a and b prefixes, the same as the compatibility page). Without them,
+ * person one is the chart saved on this device or the example, and person two is the second example.
+ */
+export function usePair(): { a: BirthProfile | null; b: BirthProfile | null; exampleA: boolean; exampleB: boolean; choose: (which: 'a' | 'b', p: BirthProfile) => void; swap: () => void } {
+  const router = useRouter();
+  const path = usePathname();
+  const sp = useSearchParams();
+  const params = useMemo(() => new URLSearchParams(sp.toString()), [sp]);
+  const fa = useProfileParam(params, 'a');
+  const fb = useProfileParam(params, 'b');
+  const [saved, setSaved] = useState<BirthProfile | null | undefined>(undefined);
+  useEffect(() => setSaved(loadProfile()), []);
+  const resolve = (x: typeof fa, fallback: BirthProfile | null): [BirthProfile | null, boolean] => {
+    if (x === null || saved === undefined) return [null, false];
+    if (x !== 'none' && x !== 'error') return [x, false];
+    return [fallback, true];
+  };
+  const [a, exampleA] = resolve(fa, saved ?? EXAMPLE_PROFILE);
+  const [b, exampleB] = resolve(fb, EXAMPLE_PARTNER);
+  const write = (pa: BirthProfile | null, pb: BirthProfile | null) => {
+    const q = new URLSearchParams(sp.toString());
+    for (const k of ['an', 'ad', 'at', 'ac', 'bn', 'bd', 'bt', 'bc']) q.delete(k);
+    if (pa) for (const [k, v] of Object.entries(profileParams(pa, 'a'))) q.set(k, v);
+    if (pb) for (const [k, v] of Object.entries(profileParams(pb, 'b'))) q.set(k, v);
+    router.replace(`${path}?${q}`, { scroll: false });
+  };
+  return {
+    a: a && saved === undefined ? null : a,
+    b,
+    exampleA: exampleA && !saved,
+    exampleB,
+    choose: (which, p) => (which === 'a' ? write(p, b && !exampleB ? b : null) : write(a && !(exampleA && !saved) ? a : null, p)),
+    swap: () => write(b, a),
+  };
+}
+
 /* ---------- Inputs ---------- */
 
 /** Whose chart: a one-line summary with a Change button that opens the person picker. */
@@ -134,6 +179,66 @@ export function PersonBar({ profile, isExample, choose, label = 'Whose chart?', 
     </div>
   );
 }
+
+/** Both people, each with a Change button. */
+export function PairBar({ a, b, exampleA, exampleB, choose, labels = ['Person one', 'Person two'], swap }: { a: BirthProfile; b: BirthProfile; exampleA: boolean; exampleB: boolean; choose: (which: 'a' | 'b', p: BirthProfile) => void; labels?: [string, string]; swap?: () => void }) {
+  const [open, setOpen] = useState<'a' | 'b' | null>(null);
+  useEffect(() => setOpen(null), [a, b]);
+  const one = (which: 'a' | 'b', p: BirthProfile, example: boolean, label: string) => (
+    <div className={s.person}>
+      <div className={s.personText}>
+        <p className={s.smallLabel}>{example ? `${label}: example` : label}</p>
+        <p className={s.personName}>{p.name}</p>
+        <p className={s.personMeta}>
+          {birthDateLabel(p.date)} · {p.time ?? 'Time unknown'} · {p.city.name}
+        </p>
+      </div>
+      <button type="button" className={`nm-btn ${example ? 'nm-btn-primary' : 'nm-btn-outline'}`} onClick={() => setOpen((o) => (o === which ? null : which))} aria-expanded={open === which}>
+        {example ? 'Choose' : 'Change'}
+      </button>
+    </div>
+  );
+  return (
+    <div className={s.personWrap}>
+      <div className={s.pairGrid}>
+        {one('a', a, exampleA, labels[0])}
+        {one('b', b, exampleB, labels[1])}
+      </div>
+      {swap && (
+        <button type="button" className={s.textBtn} onClick={swap}>
+          Swap {labels[0].toLowerCase()} and {labels[1].toLowerCase()}
+        </button>
+      )}
+      {open && (
+        <div className={s.pickerWrap}>
+          <PersonPicker label={labels[open === 'a' ? 0 : 1]} value={null} onChange={(p) => p && choose(open, p)} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Theme scores as bars, each with its reading. */
+export function ScoreList({ items }: { items: { title: string; score: number; text: string }[] }) {
+  return (
+    <div className={s.scoreList}>
+      {items.map((x) => (
+        <div key={x.title} className={s.scoreRow}>
+          <div className={s.scoreHead}>
+            <span className={s.barName}>{x.title}</span>
+            <span className={s.scoreNum}>{x.score}</span>
+          </div>
+          <span className={s.bar}>
+            <span style={{ width: `${x.score}%` }} />
+          </span>
+          <p className={s.scoreText}>{x.text}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export const band = (n: number) => (n < 45 ? 'low' : n < 70 ? 'mid' : 'high') as 'low' | 'mid' | 'high';
 
 export function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: ReactNode }) {
   return (

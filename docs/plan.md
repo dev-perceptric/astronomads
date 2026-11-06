@@ -16,6 +16,8 @@
 | Personal daily horoscope (transits to your chart) | Built |
 | Paid reports: Birth Chart Portrait $39, Compatibility Report $29 (Stripe) | Built (needs the Stripe key) |
 | Free calculators at `/tools`: big three with share card, Moon sign, rising sign, elements and modes, chart ruler, Venus and Mars, retrograde checker, transits for any date with monthly ephemeris, solar return, lunar return, Saturn return, progressions, planetary hours | Built |
+| Two-person tools: big three match, friendship, work, parent and child, composite, Davison, synastry double wheel, celebrity match, couple's year ahead, best dates | Built |
+| Sign compatibility pages: all 78 Sun sign pairings | Built |
 | Astrocartography map | Next |
 | Sign and Learn pages for SEO | Next |
 | Celebrity charts | After the birth time data is settled |
@@ -48,7 +50,8 @@ Hosting is Hostinger Cloud Startup (Node.js web app), see `docs/deploy-hostinger
 | Accounts database (Hostinger MySQL, included in the plan) | $0 (check) | $0 (check) |
 | Reset emails (Hostinger mailbox over SMTP, included in the plan) | $0 (check) | $0 (check; Hostinger caps daily sending per mailbox) |
 | Stripe | $0 a month; about 2.9% + $0.30 per sale (check) | same |
-| Claude tokens | $0 (reading texts and tool guides are written once, about $33 one-time) | $0 |
+| Claude tokens | $0 (reading texts, guides and pair pages are written once, about $45 one-time, check) | $0 |
+| Celebrity data (`public/data/celebs.json`, about 470 KB, about 230 KB compressed, served once per visitor who opens the celebrity match) | $0 | $0 (check the plan's bandwidth) |
 | Calculators (`/tools`, math runs in the visitor's browser) | $0 | $0 |
 | Chart engine (astronomy-engine, MIT), cities (GeoNames), fonts (Google Fonts) | $0 | $0 |
 | **Total with accounts** | **~$4 to $17** | **~$10 to $30** |

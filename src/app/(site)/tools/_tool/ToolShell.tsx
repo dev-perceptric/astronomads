@@ -54,7 +54,8 @@ export default function ToolShell({ guide, name, children }: { guide: ToolGuide;
     },
   ];
   const toc = guide.sections.map((x) => ({ id: x.id, title: x.title }));
-  const related = TOOLS.filter((t) => t.slug !== guide.slug).slice(0, 15);
+  const group = TOOLS.find((t) => t.slug === guide.slug)?.group;
+  const related = [...TOOLS.filter((t) => t.group === group), ...TOOLS.filter((t) => t.group !== group)].filter((t) => t.slug !== guide.slug).slice(0, 12);
 
   return (
     <>

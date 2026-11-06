@@ -104,3 +104,15 @@
 .pick:focus-visible { outline: 2px solid var(--astral); outline-offset: 2px; }
 .pickMain { font-family: var(--serif); font-size: 19px; display: inline-flex; align-items: center; gap: 6px; }
 .pickMeta { font-size: 11px; letter-spacing: -0.02em; color: var(--muted-foreground); }
+
+/* Two people */
+.pairGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 12px; }
+.scoreList { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 14px; margin-bottom: 36px; }
+.scoreRow { display: flex; flex-direction: column; gap: 10px; padding: 22px; border-radius: 22px; background: var(--secondary); }
+.scoreHead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.scoreNum { font-family: var(--serif); font-size: 40px; line-height: 1; }
+.scoreText { font-family: var(--serif); font-size: 18px; line-height: 1.45; margin: 0; }
+.scoreRow .bar { background: var(--background); }
+.contacts { list-style: none; margin: 0 0 36px; padding: 0; border-top: 1px solid var(--rule); }
+.contacts li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--rule); align-items: start; }
+@media (max-width: 620px) { .contacts li { grid-template-columns: minmax(0, 1fr); gap: 6px; } }

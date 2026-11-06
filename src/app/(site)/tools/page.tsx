@@ -5,7 +5,7 @@ import { TOOLS } from '@/lib/tools/registry';
 import s from './hub.module.css';
 
 const title = 'Free Astrology Calculators: Big Three, Moon Sign, Returns and More';
-const description = 'Free astrology calculators from your exact birth chart: big three, Moon and rising sign, Venus and Mars, retrogrades, solar and Saturn returns, progressions and planetary hours.';
+const description = 'Free astrology calculators: big three, Moon and rising sign, retrogrades, solar and Saturn returns, progressions, composite charts, synastry and celebrity match.';
 
 export const metadata: Metadata = {
   title: { absolute: `${title} · Astronomads` },
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 const GROUPS = [
   { key: 'chart', label: '01 Your birth chart', title: 'Who you are', text: 'Calculators that read the sky at the moment you were born.' },
   { key: 'timing', label: '02 Timing', title: 'What is happening now', text: 'Calculators that follow the moving sky against your chart, from today to the decades ahead.' },
+  { key: 'pairs', label: '03 Two people', title: 'You and someone else', text: 'Calculators that compare two charts, for love, friendship, work and family.' },
 ] as const;
 
 const HOW = [
@@ -34,7 +35,7 @@ export default function ToolsPage() {
         <div className={`nm-bracket ${s.heroFrame}`}>
           <p className="nm-label">Tools</p>
           <h1 className={`${s.title} fade-up`}>Every calculator, free</h1>
-          <p className={s.lead}>Sixteen tools built on your exact birth chart, each with a full guide to reading the result.</p>
+          <p className={s.lead}>Twenty eight tools built on your exact birth chart, each with a full guide to reading the result.</p>
         </div>
       </section>
       {GROUPS.map((g) => (
@@ -53,7 +54,7 @@ export default function ToolsPage() {
         </section>
       ))}
       <section className={`nm-section nm-void ${s.how}`}>
-        <p className="nm-label">03 How they work</p>
+        <p className="nm-label">04 How they work</p>
         <h2 className="nm-title">Built on the real sky</h2>
         <div className={s.howGrid}>
           {HOW.map(([h, t]) => (

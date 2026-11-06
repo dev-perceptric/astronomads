@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { PAIRS_WRITTEN } from '@/lib/compat/pairs';
 import { TOOLS } from '@/lib/tools/registry';
 import { SIGN_COPY } from '@/lib/zodiac/copy';
 
@@ -16,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site}/reports/synastry`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${site}/tools`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     ...TOOLS.filter((t) => t.href.startsWith('/tools/')).map((t) => ({ url: `${site}${t.href}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.8 })),
+    ...PAIRS_WRITTEN.map((p) => ({ url: `${site}/compatibility/${p.replace('-', '-and-')}`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.8 })),
     { url: `${site}/zodiac`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
     ...Object.keys(SIGN_COPY).map((sign) => ({ url: `${site}/zodiac/${sign}`, lastModified: now, changeFrequency: 'weekly' as const, priority: 0.9 })),
   ];
