@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Create together. Both signs are deeply creative, so shared projects build a strong bond between you. Paint a mural in the hallway, write a song for a friend's wedding or cook a new recipe every Sunday. When you make something side by side, Leo's confidence and Pisces's imagination blend into something special. Creative time also gives you a gentle way to connect after a stressful week.",
         "Protect each other's hearts. Leo can be the strong, gentle protector Pisces needs, and Pisces can be the warm, admiring partner Leo craves. Keep your promises, and make room for both lively fun and quiet rest in your week. Speak kindly, even when you feel tired or stressed. These small acts of care turn a puzzling pairing into a tender, lasting love that grows stronger each year.",
-        "Remember that the Sun sign is just one part of a chart. Your Moon signs, Venus and Mars, and rising signs add many layers to your bond. A full two chart reading on Astronomads shows how your personal charts meet, so you can see why your Leo and Pisces connection feels the way it does and where it shines most.",
+        "The Sun is one part of a chart, and your other planets may bring you closer than your Suns suggest. A Leo with Venus in Cancer, or a Pisces with Mars in Aries, already shares some of the other's language. A full two chart reading on Astronomads compares your Moons, Venus, Mars and rising signs, so you can see where your story flows and where it asks for patience.",
       ],
     },
   ],

@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Keep the magic and add a little structure. Your natural bond is rare, so protect it with simple habits. A weekly date night and a monthly money talk give your dreamy relationship a strong backbone for years to come. Cancer can lead the planning, since it is cardinal and good at starting things, and Pisces can bring the fun and the music.",
         "Practice clear words. Say what you need in one plain sentence, then listen fully to the answer. If tears come, take a break and return to the topic within a day. Both of you heal quickly when you feel heard. Over time, this habit makes your connection even stronger, since there is less guessing and more honest closeness between you.",
-        "Remember that the Sun sign is only one part of a chart. Your Moon signs, Venus and Mars, and your rising signs all shape how you love and handle stress. A full two chart reading on Astronomads shows every contact between you, so you can see the deeper and more personal reasons your Cancer and Pisces bond feels the way it does.",
+        "The Sun is one part of a chart. Your Moon signs show how each of you finds comfort, and your Venus and Mars signs show how you give and seek affection. If one of you has strong earth or air placements, the practical side may come more easily than this page suggests. A full two chart reading on Astronomads shows every contact between you, so the advice fits you.",
       ],
     },
   ],

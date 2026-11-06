@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Start by honoring both kinds of security. Make a home that feels cozy and safe for Cancer, and a plan that feels solid and clear for Capricorn. A budget with a line for family treats does both jobs at once. So does a savings goal tied to a real dream, like a home with a garden or a long trip to see relatives.",
         "Build rituals that mix your strengths. A Friday dinner where you cook together and then plan the weekend is a perfect fit for you. Cancer brings the warmth to the table, and Capricorn brings the calendar. Over time these small, steady habits matter more than grand gestures, and both of you value a promise kept week after week, year after year.",
-        "Keep in mind that the Sun sign is one part of a chart. Your Moon signs, Venus and Mars placements and rising signs all shape how you love and argue in daily life. A full two chart reading on Astronomads shows how your personal charts meet, and it often explains why your own Cancer and Capricorn story feels the way it does.",
+        "Keep in mind that the Sun is one part of a chart. A Capricorn with the Moon in a water sign may share far more of Cancer's softness than its Sun suggests, and a Cancer with Mars in an earth sign may enjoy Capricorn's plans. A full two chart reading on Astronomads compares your Moons, Venus, Mars and rising signs, so you can see your own version of this axis.",
       ],
     },
   ],

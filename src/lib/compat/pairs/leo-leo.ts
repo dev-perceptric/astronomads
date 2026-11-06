@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Celebrate each other often and on purpose. Two Leos thrive on appreciation, so make praise part of daily life. Notice your partner's effort and kindness, and say it out loud. Plan small celebrations for wins of every size, from a promotion to a finished project at home. When both of you feel adored, the rest of the relationship flows much more easily.",
         "Take turns in every sense. Take turns choosing restaurants and telling the big story at parties. Keep a light, playful tone and let humor ease the tension when you both dig in. Leos love to laugh, and one shared joke over coffee can end a standoff faster than any long argument. Generosity between you is the real secret to lasting happiness.",
-        "Keep in mind that your Sun sign is just one part of your chart. Two Leos can feel very different if their Moon signs, Venus and Mars, or rising signs differ. A full two chart reading on Astronomads shows how your personal charts meet, so you can see where your mirror bond flows and where you each bring something new.",
+        "Two Leos share a Sun sign, yet the Sun is one part of a chart. One of you may have a shy Virgo Moon and the other a bold Aries Moon, and that alone changes how each of you needs comfort after a long day. Venus, Mars and the rising sign add more layers. A full two chart reading on Astronomads compares all of these between you, so you can see exactly where your mirror bends.",
       ],
     },
   ],

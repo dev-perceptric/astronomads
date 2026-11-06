@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Keep the adventure alive. Plan trips and say yes to fun invitations together. Shared adventures, big and small, are the beating heart of your bond. At the same time, create rituals at home that make Leo feel cherished, like a weekly date night or a special breakfast. Balance freedom and closeness, and you will both feel happy and secure for the long haul.",
         "Speak with kindness and honesty. Sagittarius can wrap the truth in warmth, and Leo can ask for gentle words without taking every comment personally. Celebrate each other often. Leo loves praise, and Sagittarius loves to be appreciated for its wisdom and humor. A relationship full of laughter and sincere compliments is the kind both of you will never want to leave.",
-        "Keep in mind that the Sun is only one part of a chart. Your Moon signs, Venus and Mars, and rising signs all shape your bond in daily life. A full two chart reading on Astronomads shows how your personal charts meet, so you can see why your Leo and Sagittarius connection feels so natural and where it may need extra care.",
+        "Your shared fire is a great start, and the Sun is one part of a chart. If one of you has a Moon in a water or earth sign, home and feelings may matter more than the Sun alone suggests. A full two chart reading on Astronomads lays your Moons, Venus, Mars and rising signs next to each other, so you can plan your next adventure with the whole picture in view.",
       ],
     },
   ],

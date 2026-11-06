@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Build trust with small, steady actions. Call when you are running late, and protect each other's secrets. Leo can show loyalty in private as well as in public, and Scorpio can show warmth openly so Leo feels adored. These habits turn the intensity of a square into a deep, lasting devotion that both of you can lean on during hard times.",
         "Share power on purpose, and say so out loud. Decide together who leads which areas of life, from money to social plans, and review it every few months. Make room for both styles: Leo's bright social world and Scorpio's private inner world. When each of you feels respected in your own way, the friction becomes passion and the passion becomes a strong partnership.",
-        "Remember that your Sun signs are one part of a chart. Your Moon signs, Venus and Mars placements, and rising signs shape how you love and handle conflict in daily life. A full two chart reading on Astronomads shows how your personal charts meet, revealing where your Leo and Scorpio bond flows easily and where a little extra patience will help you two the most.",
+        "The Sun is one part of a chart, and for a square like this the rest of the chart matters a lot. A soft Moon contact or a friendly Venus link can ease the friction between two fixed signs. A full two chart reading on Astronomads compares your Moons, Venus, Mars and rising signs, so you can see where the heat between you turns into warmth and where it asks for patience.",
       ],
     },
   ],

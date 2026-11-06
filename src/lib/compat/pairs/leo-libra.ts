@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Keep romance at the heart of your life. Plan regular dates that feel special, like a picnic in a pretty park or a dressed up evening out. Leo loves to feel celebrated, and Libra loves a romantic setting. These small rituals keep the spark that drew you together bright and steady, even through busy years of work and family life.",
         "Build a fair way to decide. Libra can share options and feelings, and Leo can make the final call on agreed topics. Take turns on the bigger choices, like where to spend the holidays. Speak honestly and kindly, and remember that a good argument, handled with care, brings you closer. Fairness for Libra and respect for Leo create lasting peace between you.",
-        "Remember that the Sun sign is just one piece of a chart. Your Moon signs, Venus and Mars placements, and rising signs add many layers to your bond. A full two chart reading on Astronomads shows how your personal charts meet, and it can reveal why your Leo and Libra connection feels so natural, or where it needs a little extra care.",
+        "The Sun is one part of a chart. Your Moon signs show how each of you calms down after a hard day, and your Venus and Mars signs show how you flirt and pursue. Rising signs color the first impression you made at that crowded party. A full two chart reading on Astronomads puts all of these side by side for you and your partner, so the picture feels personal.",
       ],
     },
   ],

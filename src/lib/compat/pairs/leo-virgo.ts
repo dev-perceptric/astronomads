@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Speak each other's love language on purpose. Leo can notice and thank Virgo for every small act of care, from the packed lunch to the cleaned car. Virgo can praise Leo out loud and often, especially in front of friends. These habits cost little and mean a lot to both of you, and they turn the neighbor pairing into a warm, supportive partnership.",
         "Use your differences as a team. Let Leo lead the big vision and the celebrations, and let Virgo lead the planning and the health goals. Review big choices together, like a move or a large purchase, with Leo sharing the dream and Virgo sharing the details. When both voices shape the final plan, you get the best results and both feel proud of them.",
-        "Your Sun signs are one part of a bigger picture. Moon signs, Venus and Mars, and rising signs all add to how you love and connect. A Leo and Virgo couple with matching Moons may feel especially close. A full two chart reading on Astronomads shows how your personal charts meet, so you can see the whole story of your bond.",
+        "The Sun is one part of a chart, and a Leo and Virgo pair can look very different once the rest comes in. A Leo with Venus in Virgo, for example, already speaks part of Virgo's language. Your Moons, your Venus and Mars, and your rising signs each add a layer. A full two chart reading on Astronomads shows those layers for the two of you, one contact at a time.",
       ],
     },
   ],

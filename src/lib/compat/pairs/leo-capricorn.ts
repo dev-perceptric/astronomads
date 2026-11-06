@@ -66,7 +66,7 @@ export const PAIR: PairCopy = {
       paras: [
         "Build on what you share. Both of you care about loyalty and a life you can be proud of. Set shared goals, like buying a home or planning a big trip for a milestone birthday. Working toward something together gives both signs a sense of purpose. Leo brings the excitement, and Capricorn makes sure the dream comes true on time and on budget.",
         "Make time for fun and praise. Capricorn can schedule regular dates and practice giving compliments, even short ones. Leo can respect Capricorn's need for focused work time and admire its steady progress out loud. When both feel seen, the relationship flows. A weekly ritual, like a Friday dinner out, helps balance work and play in a way that suits you both.",
-        "Remember that the Sun is just one part of a chart. Your Moon signs, your Venus and Mars, and your rising signs add many layers to your bond. A full two chart reading on Astronomads shows how your personal charts meet, helping you see where you connect with ease and where a little extra patience will make a big difference over time.",
+        "The quincunx between your Suns is one thread, since the Sun is one part of a chart. Many Leo and Capricorn couples find a bridge elsewhere, such as a Moon in an earth sign for Leo or a Venus in a fire sign for Capricorn. A full two chart reading on Astronomads looks for those bridges across your Moons, Venus, Mars and rising signs, and shows you where they sit.",
       ],
     },
   ],
