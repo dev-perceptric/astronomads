@@ -7,20 +7,20 @@ import { ELEMENT_COLORS, SIGNS, bodyByKey, norm, type BodyKey } from '@/lib/astr
 import { GlyphAt, type SignKey } from './Glyph';
 import s from './ChartWheel.module.css';
 
-/** Radii, outside in. The drawing is 744 units wide, centered on 0,0. */
+/**
+ * Radii, outside in. The drawing is 840 units wide, centered on 0,0.
+ * Planets live outside the wheel, each tied to its exact degree by a thin line in its own color.
+ */
 const R = {
-  frame: 322, // outer hairline
-  zodiacOut: 316,
-  zodiacIn: 266,
-  scaleIn: 248, // degree scale ring
-  houseIn: 224, // ring holding the house numerals
-  glyph: 196,
-  degree: 165,
-  core: 122, // aspect disc
-  label: 352, // AC and MC markers
+  label: 384, // degree and minute
+  glyph: 340, // planet symbol
+  leaderEnd: 318,
+  wheel: 290, // heavy outer circle
+  houseIn: 272, // band for house numbers
+  scaleIn: 250, // dense degree scale
+  zodiacIn: 182, // sign ring
+  core: 160, // aspect disc
 };
-
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 
 type Props = {
   chart: Chart;
@@ -28,6 +28,8 @@ type Props = {
   selected?: BodyKey | null;
   onSelect?: (body: BodyKey | null) => void;
 };
+
+type Outer = { key: PointKey; lon: number };
 
 export default function ChartWheel({ chart, name, selected = null, onSelect }: Props) {
   const [hovered, setHovered] = useState<BodyKey | null>(null);
@@ -38,15 +40,22 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
   const theta = (lon: number) => ((180 + (lon - base)) * Math.PI) / 180;
   const pt = (r: number, lon: number): [number, number] => [r * Math.cos(theta(lon)), -r * Math.sin(theta(lon))];
   const f = (n: number) => +n.toFixed(2);
-  const line = (r1: number, r2: number, lon: number) => {
+  const seg = (r1: number, r2: number, lon: number) => {
     const [x1, y1] = pt(r1, lon);
     const [x2, y2] = pt(r2, lon);
     return { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2) };
   };
 
-  const spread = useMemo(() => spreadOut(chart.placements.map((p) => ({ key: p.body, lon: p.lon }))), [chart]);
-  const lonOf = (k: PointKey) => (k === 'asc' ? chart.asc! : k === 'mc' ? chart.mc! : chart.placements.find((p) => p.body === k)!.lon);
-  const aspectLines = chart.aspects.filter((a) => a.def.kind !== 'conjunction');
+  // Everything drawn outside the wheel: planets, plus the Ascendant and Midheaven when the time is known.
+  const outer: Outer[] = useMemo(() => {
+    const list: Outer[] = chart.placements.map((p) => ({ key: p.body, lon: p.lon }));
+    if (chart.asc !== null && chart.mc !== null) list.push({ key: 'asc', lon: chart.asc }, { key: 'mc', lon: chart.mc });
+    return list;
+  }, [chart]);
+  const spread = useMemo(() => spreadOut(outer, 11.5), [outer]);
+
+  const lonOf = (k: PointKey) => outer.find((o) => o.key === k)!.lon;
+  const aspectLines = chart.aspects.filter((a) => a.def.kind !== 'conjunction' || a.orb < 3);
 
   const sun = chart.placements.find((p) => p.body === 'sun')!;
   const moon = chart.placements.find((p) => p.body === 'moon')!;
@@ -57,53 +66,48 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
   ].join(' ');
 
   return (
-    <svg className={s.wheel} viewBox="-372 -372 744 744" role="img" aria-label={label}>
-      {/* Frame */}
-      <circle r={R.frame} className={s.frame} />
+    <svg className={s.wheel} viewBox="-420 -420 840 840" role="img" aria-label={label}>
+      {/* Wheel body */}
+      <circle r={R.wheel} className={s.wheelFill} />
 
-      {/* Zodiac band: twelve element-tinted sectors, each with its sign */}
+      {/* Sign ring: large symbols in element colors */}
       <g>
         {SIGNS.map((sign, i) => {
           const start = i * 30;
-          const [gx, gy] = pt((R.zodiacOut + R.zodiacIn) / 2, start + 15);
-          const color = ELEMENT_COLORS[sign.element];
+          const [gx, gy] = pt((R.scaleIn + R.zodiacIn) / 2, start + 15);
           return (
             <g key={sign.key}>
-              <path d={sector(pt, R.zodiacIn, R.zodiacOut, start, start + 30)} fill={color} className={s.signSector} />
-              <line {...line(R.zodiacIn, R.zodiacOut, start)} className={s.signDivider} />
-              <circle cx={f(gx)} cy={f(gy)} r={17} fill={color} className={s.signMedal} />
-              <GlyphAt name={sign.key as SignKey} x={gx} y={gy} size={20} color="var(--card)" weight={1.9} />
+              <path d={sector(pt, R.zodiacIn, R.scaleIn, start, start + 30)} fill={ELEMENT_COLORS[sign.element]} className={s.signSector} />
+              <line {...seg(R.zodiacIn, R.scaleIn, start)} className={s.signDivider} />
+              <GlyphAt name={sign.key as SignKey} x={gx} y={gy} size={38} color={ELEMENT_COLORS[sign.element]} weight={2.6} />
             </g>
           );
         })}
       </g>
 
-      {/* Degree scale: every degree, longer at 5° and 10° */}
-      <circle r={(R.zodiacIn + R.scaleIn) / 2} className={s.scaleBand} strokeWidth={R.zodiacIn - R.scaleIn} />
+      {/* Dense degree scale */}
       <g className={s.ticks}>
         {Array.from({ length: 360 }, (_, d) => {
-          const len = d % 30 === 0 ? 18 : d % 10 === 0 ? 10 : d % 5 === 0 ? 7 : 3.5;
-          return <line key={d} {...line(R.zodiacIn, R.zodiacIn - len, d)} className={d % 10 === 0 ? s.tickMajor : undefined} />;
+          const len = d % 30 === 0 ? 22 : d % 10 === 0 ? 13 : d % 5 === 0 ? 9 : 5;
+          return <line key={d} {...seg(R.houseIn, R.houseIn - len, d)} className={d % 5 === 0 ? s.tickMajor : undefined} />;
         })}
       </g>
-      <circle r={R.zodiacOut} className={s.ring} />
-      <circle r={R.zodiacIn} className={s.ring} />
+      <circle r={R.houseIn} className={s.ringThin} />
       <circle r={R.scaleIn} className={s.ringThin} />
+      <circle r={R.zodiacIn} className={s.ring} />
 
-      {/* Houses: Placidus cusps with Roman numerals */}
+      {/* Houses: cusp lines through the sign ring, numbers just after each cusp, triangles on the rim */}
       {chart.houses && (
         <g>
-          <circle r={R.houseIn} className={s.ringThin} />
           {chart.houses.map((cusp, i) => {
-            const next = chart.houses![(i + 1) % 12];
-            const mid = cusp + norm(next - cusp) / 2;
-            const [nx, ny] = pt((R.scaleIn + R.houseIn) / 2, mid);
-            const angle = i === 0 || i === 3 || i === 6 || i === 9;
+            const isAngle = i % 3 === 0;
+            const [nx, ny] = pt((R.wheel + R.houseIn) / 2, cusp + 3.2);
             return (
               <g key={i}>
-                {!angle && <line {...line(R.scaleIn, R.core, cusp)} className={s.cusp} />}
+                {!isAngle && <line {...seg(R.houseIn, R.core, cusp)} className={s.cusp} />}
+                <path d={triangle(pt, R.houseIn, cusp, isAngle ? 9 : 5.5)} className={s.cuspMark} />
                 <text x={f(nx)} y={f(ny)} dominantBaseline="central" textAnchor="middle" className={s.houseNum}>
-                  {ROMAN[i]}
+                  {i + 1}
                 </text>
               </g>
             );
@@ -111,30 +115,17 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
         </g>
       )}
 
-      {/* Angles: heavier axes, arrow at the Ascendant, markers outside the ring */}
+      {/* Angles: heavy axes across the wheel */}
       {chart.asc !== null && chart.mc !== null && (
         <g>
-          <line {...line(R.zodiacOut, R.core, chart.asc)} className={s.axis} />
-          <line {...line(R.zodiacOut, R.core, chart.asc + 180)} className={s.axisSoft} />
-          <line {...line(R.zodiacOut, R.core, chart.mc)} className={s.axis} />
-          <line {...line(R.zodiacOut, R.core, chart.mc + 180)} className={s.axisSoft} />
-          <path d={arrowHead(pt, R.frame + 1, chart.asc)} className={s.arrow} />
-          <path d={arrowHead(pt, R.frame + 1, chart.mc)} className={s.arrow} />
-          {[
-            { lon: chart.asc, text: 'AC' },
-            { lon: chart.asc + 180, text: 'DC' },
-            { lon: chart.mc, text: 'MC' },
-            { lon: chart.mc + 180, text: 'IC' },
-          ].map(({ lon, text }) => {
-            const [x, y] = pt(R.label, lon);
-            return (
-              <text key={text} x={f(x)} y={f(y)} dominantBaseline="central" textAnchor="middle" className={text === 'AC' || text === 'MC' ? s.angleMain : s.angleSoft}>
-                {text}
-              </text>
-            );
-          })}
+          <line {...seg(R.wheel, R.core, chart.asc)} className={s.axis} />
+          <line {...seg(R.wheel, R.core, chart.asc + 180)} className={s.axisSoft} />
+          <line {...seg(R.wheel, R.core, chart.mc)} className={s.axis} />
+          <line {...seg(R.wheel, R.core, chart.mc + 180)} className={s.axisSoft} />
         </g>
       )}
+
+      <circle r={R.wheel} className={s.rim} />
 
       {/* Aspect disc */}
       <circle r={R.core} className={s.core} />
@@ -143,7 +134,6 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
           const [x1, y1] = pt(R.core, lonOf(a.a));
           const [x2, y2] = pt(R.core, lonOf(a.b));
           const lit = !focus || a.a === focus || a.b === focus;
-          const tight = a.orb < 2;
           return (
             <line
               key={`${a.a}-${a.b}`}
@@ -152,61 +142,95 @@ export default function ChartWheel({ chart, name, selected = null, onSelect }: P
               x2={f(x2)}
               y2={f(y2)}
               stroke={a.def.color}
-              strokeWidth={tight ? 1.8 : 1.15}
-              strokeOpacity={lit ? Math.max(0.4, 0.95 - a.orb * 0.08) : 0.07}
-              strokeDasharray={a.def.kind === 'sextile' ? '5 4' : undefined}
-              strokeLinecap="round"
+              strokeWidth={a.orb < 2 ? 2 : 1.3}
+              strokeOpacity={lit ? Math.max(0.5, 1 - a.orb * 0.07) : 0.07}
+              strokeDasharray={a.def.kind === 'sextile' ? '7 5' : undefined}
               className={s.aspect}
             />
           );
         })}
+        {outer.map((o) => {
+          const [x, y] = pt(R.core, o.lon);
+          const color = o.key === 'asc' || o.key === 'mc' ? 'var(--foreground)' : bodyByKey(o.key).color;
+          return <circle key={o.key} cx={f(x)} cy={f(y)} r={3.6} fill={color} className={s.anchor} />;
+        })}
       </g>
-      <circle r={3} className={s.center} />
 
-      {/* Planets */}
+      {/* Points outside the wheel */}
       <g>
-        {chart.placements.map((p) => {
-          const body = bodyByKey(p.body);
-          const shown = spread.get(p.body) ?? p.lon;
+        {outer.map((o) => {
+          const shown = spread.get(o.key) ?? o.lon;
+          const isAngle = o.key === 'asc' || o.key === 'mc';
+          const placement = isAngle ? null : chart.placements.find((p) => p.body === o.key)!;
+          const color = isAngle ? 'var(--foreground)' : bodyByKey(o.key as BodyKey).color;
+          const [ex, ey] = pt(R.wheel + 2, o.lon);
+          const [bx, by] = pt(R.leaderEnd, shown);
           const [gx, gy] = pt(R.glyph, shown);
-          const [dx, dy] = pt(R.degree, shown);
-          const [cx, cy] = pt(R.houseIn - 4, p.lon);
-          const [lx, ly] = pt(R.glyph + 15, shown);
-          const [ix, iy] = pt(R.core, p.lon);
-          const dim = focus && focus !== p.body;
-          const desc = `${body.name} in ${SIGNS[p.sign].name} ${formatDegree(p.lon)}${p.house ? `, house ${p.house}` : ''}${p.retrograde ? ', retrograde' : ''}`;
+          const [lx, ly] = pt(R.label, shown);
+          // Same rounding as the positions table, so both always agree.
+          const inSign = norm(o.lon) % 30;
+          let deg = Math.floor(inSign);
+          let min = Math.round((inSign - deg) * 60);
+          if (min === 60) {
+            deg += 1;
+            min = 0;
+          }
+          const dim = focus && focus !== o.key;
+          const name = isAngle ? (o.key === 'asc' ? 'Ascendant' : 'Midheaven') : bodyByKey(o.key as BodyKey).name;
+          const desc = `${name} in ${SIGNS[Math.floor(norm(o.lon) / 30)].name} ${formatDegree(o.lon)}${placement?.house ? `, house ${placement.house}` : ''}${placement?.retrograde ? ', retrograde' : ''}`;
+          const interactive = !isAngle;
+          const body = o.key as BodyKey;
           return (
             <g
-              key={p.body}
-              className={s.planet}
+              key={o.key}
+              className={interactive ? s.planet : s.point}
               opacity={dim ? 0.25 : 1}
-              tabIndex={0}
-              role="button"
-              aria-label={desc}
-              aria-pressed={selected === p.body}
-              onMouseEnter={() => setHovered(p.body)}
-              onMouseLeave={() => setHovered(null)}
-              onFocus={() => setHovered(p.body)}
-              onBlur={() => setHovered(null)}
-              onClick={() => onSelect?.(selected === p.body ? null : p.body)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onSelect?.(selected === p.body ? null : p.body);
-                }
-              }}
+              {...(interactive
+                ? {
+                    tabIndex: 0,
+                    role: 'button',
+                    'aria-label': desc,
+                    'aria-pressed': selected === body,
+                    onMouseEnter: () => setHovered(body),
+                    onMouseLeave: () => setHovered(null),
+                    onFocus: () => setHovered(body),
+                    onBlur: () => setHovered(null),
+                    onClick: () => onSelect?.(selected === body ? null : body),
+                    onKeyDown: (e: React.KeyboardEvent) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onSelect?.(selected === body ? null : body);
+                      }
+                    },
+                  }
+                : { 'aria-label': desc })}
             >
               <title>{desc}</title>
-              {/* Exact position on the scale and on the aspect disc */}
-              <line {...line(R.scaleIn, R.scaleIn - 9, p.lon)} stroke={body.color} strokeWidth={2.2} strokeLinecap="round" />
-              <line x1={f(cx)} y1={f(cy)} x2={f(lx)} y2={f(ly)} className={s.leader} />
-              <circle cx={f(ix)} cy={f(iy)} r={3.4} fill={body.color} className={s.anchor} />
-              {/* Symbol on a soft disc, then its degree and minute */}
-              <circle cx={f(gx)} cy={f(gy)} r={16} className={s.planetDisc} />
-              <GlyphAt name={p.body} x={gx} y={gy} size={24 * Math.min(1.08, Math.max(0.88, body.weight))} color={body.color} weight={1.9} />
-              <text x={f(dx)} y={f(dy)} dominantBaseline="central" textAnchor="middle" className={s.degree}>
-                {p.degree}°<tspan className={s.minute}>{String(p.minute).padStart(2, '0')}′</tspan>
-                {p.retrograde && <tspan className={s.retro}> R</tspan>}
+              <line x1={f(ex)} y1={f(ey)} x2={f(bx)} y2={f(by)} stroke={color} className={s.leader} />
+              <circle cx={f(gx)} cy={f(gy)} r={22} className={s.hit} />
+              {isAngle ? (
+                o.key === 'mc' ? (
+                  <g>
+                    <circle cx={f(gx)} cy={f(gy)} r={19} className={s.mcRing} />
+                    <text x={f(gx)} y={f(gy)} dominantBaseline="central" textAnchor="middle" className={s.angleText}>
+                      MC
+                    </text>
+                  </g>
+                ) : (
+                  <text x={f(gx)} y={f(gy)} dominantBaseline="central" textAnchor="middle" className={s.angleText}>
+                    AC
+                  </text>
+                )
+              ) : (
+                <GlyphAt name={body} x={gx} y={gy} size={34 * Math.min(1.06, Math.max(0.92, bodyByKey(body).weight))} color={color} weight={2.5} />
+              )}
+              {placement?.retrograde && (
+                <text x={f(gx + 17)} y={f(gy + 15)} className={s.retro} fill={color}>
+                  R
+                </text>
+              )}
+              <text x={f(lx)} y={f(ly)} dominantBaseline="central" textAnchor="middle" className={s.degree} fill={color}>
+                {deg}°<tspan className={s.minute}>{String(min).padStart(2, '0')}′</tspan>
               </text>
             </g>
           );
@@ -225,18 +249,19 @@ function sector(pt: (r: number, lon: number) => [number, number], r1: number, r2
   return `M${x1} ${y1} A${r2} ${r2} 0 0 0 ${x2} ${y2} L${x3} ${y3} A${r1} ${r1} 0 0 1 ${x4} ${y4} Z`;
 }
 
-/** A small filled arrowhead pointing outward at a given longitude, sitting on the frame. */
-function arrowHead(pt: (r: number, lon: number) => [number, number], r: number, lon: number) {
-  const [tx, ty] = pt(r + 9, lon);
-  const [lx, ly] = pt(r - 1, lon + 1.6);
-  const [rx, ry] = pt(r - 1, lon - 1.6);
+/** A filled triangle on the rim, pointing inward at a cusp. */
+function triangle(pt: (r: number, lon: number) => [number, number], r: number, lon: number, size: number) {
+  const [tx, ty] = pt(r - size * 1.5, lon);
+  const spread = (size / r) * (180 / Math.PI);
+  const [lx, ly] = pt(r, lon + spread);
+  const [rx, ry] = pt(r, lon - spread);
   return `M${tx} ${ty} L${lx} ${ly} L${rx} ${ry} Z`;
 }
 
-/** Pushes crowded planets apart so their symbols never overlap. Returns display longitudes. */
-function spreadOut(points: { key: BodyKey; lon: number }[], gap = 10.5): Map<BodyKey, number> {
+/** Pushes crowded points apart so their symbols and labels never overlap. Returns display longitudes. */
+function spreadOut(points: Outer[], gap: number): Map<PointKey, number> {
   const items = points.map((p) => ({ ...p, shown: p.lon })).sort((a, b) => a.lon - b.lon);
-  for (let pass = 0; pass < 80; pass++) {
+  for (let pass = 0; pass < 100; pass++) {
     let moved = false;
     for (let i = 0; i < items.length; i++) {
       const a = items[i];

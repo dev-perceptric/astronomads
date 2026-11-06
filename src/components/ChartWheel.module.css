@@ -1,54 +1,54 @@
 .wheel {
   width: 100%;
   height: auto;
-  max-width: 640px;
+  max-width: 720px;
   aspect-ratio: 1;
   display: block;
   margin: 0 auto;
   overflow: visible;
-  font-family: var(--mono);
+  font-family: var(--sans);
   animation: appear 0.6s var(--ease-emerge) both;
 }
 @keyframes appear { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
 
-/* Frame and rings */
-.frame { fill: none; stroke: var(--border); stroke-width: 1; }
-.ring { fill: none; stroke: var(--foreground); stroke-width: 1.2; }
-.ringThin { fill: none; stroke: color-mix(in oklch, var(--foreground) 35%, transparent); stroke-width: 0.8; }
+/* Wheel body and rings */
+.wheelFill { fill: var(--card); }
+.rim { fill: none; stroke: var(--foreground); stroke-width: 2.6; }
+.ring { fill: none; stroke: var(--foreground); stroke-width: 1.6; }
+.ringThin { fill: none; stroke: var(--foreground); stroke-width: 1; }
 
-/* Zodiac band */
-.signSector { fill-opacity: 0.12; }
-.signDivider { stroke: var(--foreground); stroke-width: 1; stroke-opacity: 0.7; }
-.signMedal { stroke: var(--card); stroke-width: 2.5; }
+/* Sign ring */
+.signSector { fill-opacity: 0.06; }
+.signDivider { stroke: var(--foreground); stroke-width: 1.2; }
 
 /* Degree scale */
-.scaleBand { fill: none; stroke: var(--secondary); }
-.ticks line { stroke: var(--foreground); stroke-width: 0.6; stroke-opacity: 0.5; }
-.ticks .tickMajor { stroke-width: 1; stroke-opacity: 0.85; }
+.ticks line { stroke: var(--foreground); stroke-width: 0.8; }
+.ticks .tickMajor { stroke-width: 1.3; }
 
 /* Houses */
-.cusp { stroke: color-mix(in oklch, var(--foreground) 45%, transparent); stroke-width: 0.8; }
-.houseNum { font-family: var(--mono); font-size: 11px; font-weight: 500; fill: var(--muted-foreground); letter-spacing: 0.02em; }
+.cusp { stroke: var(--foreground); stroke-width: 1; }
+.cuspMark { fill: var(--foreground); }
+.houseNum { font-family: var(--sans); font-size: 15px; font-weight: 700; fill: var(--foreground); }
 
 /* Angles */
-.axis { stroke: var(--foreground); stroke-width: 2; }
-.axisSoft { stroke: var(--foreground); stroke-width: 1.2; stroke-opacity: 0.7; }
-.arrow { fill: var(--foreground); }
-.angleMain { font-size: 13px; font-weight: 600; fill: var(--foreground); }
-.angleSoft { font-size: 11px; font-weight: 500; fill: var(--muted-foreground); }
+.axis { stroke: var(--foreground); stroke-width: 2.4; }
+.axisSoft { stroke: var(--foreground); stroke-width: 1.6; }
 
 /* Aspect disc */
-.core { fill: var(--card); stroke: var(--foreground); stroke-width: 1.1; }
-.center { fill: var(--foreground); }
+.core { fill: var(--card); stroke: var(--foreground); stroke-width: 1.6; }
 .aspect { transition: stroke-opacity 0.2s; }
-
-/* Planets */
-.planet { cursor: pointer; transition: opacity 0.2s; outline: none; }
-.planetDisc { fill: var(--card); stroke: transparent; stroke-width: 1.4; transition: fill 0.2s, stroke 0.2s; }
-.planet:hover .planetDisc, .planet[aria-pressed='true'] .planetDisc { fill: var(--secondary); stroke: var(--border-strong); }
-.planet:focus-visible .planetDisc { stroke: var(--foreground); stroke-width: 2; }
-.leader { stroke: color-mix(in oklch, var(--foreground) 30%, transparent); stroke-width: 0.8; }
 .anchor { stroke: var(--card); stroke-width: 1.4; }
-.degree { font-size: 12px; font-weight: 600; fill: var(--foreground); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; }
-.minute { font-size: 9.5px; font-weight: 500; fill: var(--muted-foreground); }
-.retro { font-size: 9.5px; font-weight: 700; fill: var(--destructive); }
+
+/* Points outside the wheel */
+.planet { cursor: pointer; transition: opacity 0.2s; outline: none; }
+.point { transition: opacity 0.2s; }
+.hit { fill: transparent; stroke: transparent; stroke-width: 1.4; transition: fill 0.2s, stroke 0.2s; }
+.planet:hover .hit, .planet[aria-pressed='true'] .hit { fill: var(--secondary); }
+.planet:focus-visible .hit { stroke: var(--foreground); stroke-width: 2; }
+.leader { stroke-width: 1.2; stroke-opacity: 0.9; }
+.angleText { font-family: var(--sans); font-size: 26px; font-weight: 600; letter-spacing: -0.04em; fill: var(--foreground); }
+.mcRing { fill: var(--card); stroke: var(--foreground); stroke-width: 2; }
+.mcRing + .angleText { font-size: 19px; }
+.degree { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+.minute { font-size: 12px; font-weight: 500; baseline-shift: 30%; }
+.retro { font-size: 12px; font-weight: 700; }
