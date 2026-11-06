@@ -30,6 +30,13 @@ An astrology site: free birth charts, a daily sky, compatibility and astrocartog
 - Planet, sign, aspect and angle symbols are our own SVG set in `src/components/Glyph.tsx` (24 grid, round 1.6 strokes). Use `Glyph` in pages and `GlyphAt` inside the wheel, never font characters.
 - On brand pages the planets are solid, matte symbols (`Glyph3D`, `Glyph3DAt`: a fine line in the planet color on a pale tint of the same color stepping back to the lower right; no shine, glow or dark shadow; square ends and mitered corners), built from the same shapes. Planet, sign and aspect colors there follow the classic chart palette set in `site.css` and the homepage's `.light` block. The wheel is an astrolabe: thin double frame, dotted degree scale, tinted sign ring with spaced sign names, Roman house numerals, starred center. Each planet's line runs straight out from its exact degree, then bends to the symbol. A solid wedge on the frame marks each axis end (AC, DC, MC, IC), and AC and MC get lines with open arrows out to their labels. No browser pop-ups (`alert`, `confirm`, `prompt`).
 
+## Rule: sign pages are real and our own
+- `/zodiac/[sign]` is built only for signs with written copy in `src/lib/zodiac/copy/` (`SIGN_COPY`); add a sign by adding its file. Facts live in `src/lib/zodiac/signs.ts`.
+- The hero is the sign's real constellation (`src/data/zodiac-stars.json`, d3-celestial BSD-3-Clause from Hipparcos, credited on the page), drawn as a star-chart plate with the ecliptic.
+- Every date is computed: season start and end from `sunSeason`, the birthday check from `sunSignForDay` (asks for time and city on a cusp day), the live sky from the engine. Famous people come from the Pantheon list, filed under a sign only when their Sun was there all day.
+- Long reading text is set in the serif. Each page has metadata, a canonical link, Article, Breadcrumb and FAQ structured data, and a share image made by `node scripts/og-zodiac.mjs <base url> <sign>`; new pages join `sitemap.xml` by themselves.
+- `src/lib/zodiac/zodiac.test.ts` checks facts, copy rules and the famous-people filing.
+
 ## Rule: accounts are safe and small
 - Accounts live in Hostinger MySQL (`src/lib/server/db.ts`, configured by `DB_*` or `DATABASE_URL`; tables are created on first use). Without a database the site still runs and `/account` shows "Accounts open soon".
 - Passwords are hashed with scrypt; sessions are random tokens in an httpOnly cookie, stored only as SHA-256 hashes. Reset links are one-use, last one hour, and are built from `SITE_URL`, never from the request.

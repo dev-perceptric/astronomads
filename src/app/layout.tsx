@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.SITE_URL || 'https://astronomads.com'),
   title: { default: 'Astronomads', template: '%s · Astronomads' },
   description: 'Free birth charts calculated to the minute, the daily sky, and where on Earth your stars land.',
 };
