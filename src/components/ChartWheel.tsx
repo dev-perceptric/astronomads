@@ -9,14 +9,15 @@ import { Glyph3DAt } from './Glyph3D';
 import s from './ChartWheel.module.css';
 
 /**
- * The Astronomads astrolabe. Radii, outside in; the drawing is 880 units wide, centered on 0,0.
+ * The Astronomads astrolabe. Radii, outside in; the drawing is 932 units wide, centered on 0,0.
  * Planets sit outside as solid 3D symbols, tied to their exact degree by a thin line in their own color.
  * Inside, in closed bands: a dotted degree scale, the sign ring with spaced names, the house band
  * (cusp lines and Roman numerals live only here) and the aspect disc.
  */
 const R = {
-  label: 400, // degree and minute
-  glyph: 356, // planet symbol center
+  label: 428, // degree and minute
+  glyph: 376, // planet symbol center
+  bend: 336, // the leader runs out at the exact degree to here, then bends to the symbol
   sphere: 20, // room each symbol takes
   frame: 318, // thin double frame around the scale
   scaleOut: 310,
@@ -96,7 +97,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
   };
 
   return (
-    <svg className={s.wheel} viewBox="-440 -440 880 880" role="img" aria-label={label}>
+    <svg className={s.wheel} viewBox="-466 -466 932 932" role="img" aria-label={label}>
       <defs>
         {SIGNS.map((sign, i) => (
           <path key={sign.key} id={`${uid}-n${i}`} d={nameArc(i * 30)} />
@@ -232,6 +233,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
           const [gx, gy] = pt(R.glyph, shown);
           // Leader stops short of the symbol.
           const [bx, by] = pt(R.glyph - R.sphere - (isAngle ? 0 : 2), shown);
+          const [kx, ky] = pt(R.bend, o.lon);
           const [lx, ly] = pt(R.label, shown);
           // Same rounding as the positions table, so both always agree.
           const inSign = norm(o.lon) % 30;
@@ -272,7 +274,8 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
                 : { 'aria-label': desc })}
             >
               <title>{desc}</title>
-              <line x1={f(ex)} y1={f(ey)} x2={f(bx)} y2={f(by)} stroke={color} className={s.leader} />
+              {/* Straight out from the exact degree, then a bend to the symbol */}
+              <polyline points={`${f(ex)},${f(ey)} ${f(kx)},${f(ky)} ${f(bx)},${f(by)}`} stroke={color} className={s.leader} />
               <circle cx={f(ex)} cy={f(ey)} r={2.4} fill={color} />
               <circle cx={f(gx)} cy={f(gy)} r={R.sphere + 2} className={s.hit} />
               {isAngle ? (
