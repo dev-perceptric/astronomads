@@ -25,7 +25,7 @@ export const PAIR: PairCopy = {
       id: 'communication',
       paras: [
         "Gemini loves facts and clever wordplay. Pisces loves stories and the feelings behind words. When you talk about a film, Gemini may analyze the plot while Pisces describes how the music made it cry. Both views are valuable. Together you can see the whole picture, the head and the heart, which makes your talks rich and surprising for you both, even after many years together.",
-        "Misunderstandings can happen easily. Gemini says things quickly and may forget them an hour later. Pisces takes words to heart and may hold on to a passing comment for days. Gemini can slow down and choose gentle words when Pisces seems sensitive. Pisces can ask, \"Did you mean that the way it sounded?\" instead of guessing. Clear questions clear the fog.",
+        "Misunderstandings can happen easily. Gemini says things quickly and may forget them an hour later. Pisces takes words to heart and may hold on to a passing comment for days. Gemini can slow down and choose gentle words when Pisces seems sensitive. Pisces can ask, \"Did you mean that the way it sounded?\" before guessing. Clear questions clear the fog.",
         "Both mutable signs also dislike being pinned down, so plans may stay vague. You might both say \"let's see\" about a weekend until it is already Saturday. That can be fun, and it can also lead to missed chances and frustration. Pick one small plan each week and commit to it. Keeping simple promises builds trust and helps both of you feel secure.",
       ],
     },

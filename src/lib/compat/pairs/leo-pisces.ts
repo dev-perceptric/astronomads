@@ -3,7 +3,7 @@ import type { PairCopy } from '../types';
 export const PAIR: PairCopy = {
   essence: "The stage and the dream. Leo brings the spotlight and Pisces brings the magic, and together you make life feel like a story.",
   intro:
-    "Leo and Pisces sit five signs apart, an angle astrologers call a quincunx. You share no element and no mode, so your styles can feel puzzling at first. Leo is a fixed fire sign ruled by the Sun. It is bold and warm, and it loves to be seen. Pisces is a mutable water sign ruled by Jupiter and, in modern astrology, Neptune. It is gentle and imaginative, and it loves to feel deeply connected. Yet you share more than it seems. Both signs are creative, romantic and generous with the people you love. Leo is the performer on the stage, and Pisces is the artist who dreams up the play. The work here is adjustment. Leo can learn softness from Pisces, and Pisces can learn confidence from Leo. With patience, you two can build a bond full of tenderness and wonder.",
+    "Leo and Pisces sit five signs apart, an angle astrologers call a quincunx. You share no element and no mode, so your styles can feel puzzling at first. Leo is a fixed fire sign ruled by the Sun. It is bold and warm, and it loves to be seen. Pisces is a mutable water sign ruled by Jupiter and, in modern astrology, Neptune. It is gentle and imaginative, and it loves to feel deeply connected. Yet you share more than it seems. Both signs are romantic, and both are generous with the people you love. Leo is the performer on the stage, and Pisces is the artist who dreams up the play. The work here is adjustment. Leo can learn softness from Pisces, and Pisces can learn confidence from Leo. With patience, you two can build a bond full of tenderness and wonder.",
   sections: [
     {
       id: 'love',
@@ -32,9 +32,9 @@ export const PAIR: PairCopy = {
     {
       id: 'friendship',
       paras: [
-        "As friends, Leo and Pisces make a creative and caring pair. Leo is the friend who pulls you onto the dance floor, and Pisces is the friend who listens to your worries at two in the morning. Together you can make art, music or theater, and your shared imagination can turn a simple weekend project into something truly beautiful.",
+        "As friends, Leo and Pisces make a creative and caring pair. Leo is the friend who pulls you onto the dance floor, and Pisces is the friend who listens to your worries at two in the morning. Together you can make music or put on a backyard play, and your shared imagination can turn a simple weekend project into something truly beautiful.",
         "You may enjoy different kinds of fun. Leo loves big parties and being at the center of the action. Pisces may prefer a small gathering, a walk by the water or a cozy movie night. Take turns choosing the plan. Leo helps Pisces feel brave in a crowd, and Pisces helps Leo slow down and enjoy calm moments. You both grow from the swap.",
-        "Kindness is the heart of this friendship. Leo protects Pisces when someone is unkind, standing up for it with fierce loyalty. Pisces comforts Leo when its pride is hurt, offering empathy without judgment. Over the years, you may become the friends who show up for every important moment, from the first art show to the hardest goodbye.",
+        "Kindness is the heart of this friendship. Leo protects Pisces when someone is unkind, standing up for it with fierce loyalty. Pisces comforts Leo when its pride is hurt, offering empathy without judgment. Over the years, you may become the friends who show up for every important moment, from the first art show to the hardest goodbye, and who still call each other after every big day.",
       ],
     },
     {
@@ -49,8 +49,8 @@ export const PAIR: PairCopy = {
       id: 'family',
       paras: [
         "Meeting the family can be sweet. Leo charms relatives with warmth and humor, and Pisces wins hearts with gentle kindness and attention. Picture Pisces listening to a grandmother's stories while Leo leads a game with the kids. Families often see you as a warm, loving couple. Pisces may feel shy in big groups, so Leo can stay close and include it.",
-        "As parents, Leo brings play and big celebrations, and Pisces brings comfort, imagination and endless patience. Children often feel loved and inspired. The watch point is structure. Pisces may struggle to set firm limits, and Leo may lean on rules when tired. Agree on a few simple routines together, like bedtimes and homework time, so kids feel secure.",
-        "Home life can be a creative haven. Leo wants a beautiful home that welcomes guests, and Pisces wants a peaceful space to dream and rest. A home with a bright living room for Leo and a quiet, soft corner for Pisces suits you both. Holidays can blend Leo's love of celebration with Pisces's gift for meaningful, heartfelt traditions.",
+        "As parents, Leo brings play and big celebrations, and Pisces brings comfort and endless patience at bedtime. Children often feel loved and inspired in your home. The watch point is structure. Pisces may struggle to set firm limits, and Leo may lean on rules when tired. Agree on a few simple routines together, like bedtimes and homework time, so kids feel secure.",
+        "Home life can be a creative haven. Leo wants a beautiful home that welcomes guests, and Pisces wants a peaceful space to dream and rest. A home with a bright living room for Leo and a quiet, soft corner for Pisces suits you both. Holidays can blend Leo's love of celebration with Pisces's gift for meaningful traditions, like a candle lit for each person you miss.",
       ],
     },
     {
@@ -64,8 +64,8 @@ export const PAIR: PairCopy = {
     {
       id: 'making-it-work',
       paras: [
-        "Create together. Both signs are deeply creative, so shared projects build a strong bond. Paint, write, cook, play music or plan a beautiful home together. When you make something side by side, Leo's confidence and Pisces's imagination blend into something special. Creative time also gives you a gentle way to connect after a stressful week.",
-        "Protect each other's hearts. Leo can be the strong, gentle protector Pisces needs, and Pisces can be the warm, admiring partner Leo craves. Speak kindly, keep promises and make room for both lively fun and quiet rest. These small acts of care turn a puzzling pairing into a tender, lasting love that grows stronger each year.",
+        "Create together. Both signs are deeply creative, so shared projects build a strong bond between you. Paint a mural in the hallway, write a song for a friend's wedding or cook a new recipe every Sunday. When you make something side by side, Leo's confidence and Pisces's imagination blend into something special. Creative time also gives you a gentle way to connect after a stressful week.",
+        "Protect each other's hearts. Leo can be the strong, gentle protector Pisces needs, and Pisces can be the warm, admiring partner Leo craves. Keep your promises, and make room for both lively fun and quiet rest in your week. Speak kindly, even when you feel tired or stressed. These small acts of care turn a puzzling pairing into a tender, lasting love that grows stronger each year.",
         "Remember that the Sun sign is just one part of a chart. Your Moon signs, Venus and Mars, and rising signs add many layers to your bond. A full two chart reading on Astronomads shows how your personal charts meet, so you can see why your Leo and Pisces connection feels the way it does and where it shines most.",
       ],
     },
@@ -92,7 +92,7 @@ export const PAIR: PairCopy = {
   faq: [
     {
       q: "Are Leo and Pisces compatible?",
-      a: "Leo and Pisces can be compatible with patience and care. They form a quincunx, so their styles differ. Leo is bold and outgoing, and Pisces is gentle and dreamy. Both are romantic, creative and generous, which gives them strong common ground. When Leo softens and Pisces speaks clearly, the bond becomes tender and lasting.",
+      a: "Leo and Pisces can be compatible with patience and care. They form a quincunx, so their styles differ. Leo is bold and outgoing, and Pisces is gentle and dreamy. Both are romantic and generous, which gives them strong common ground. When Leo softens and Pisces speaks clearly, the bond becomes tender and lasting.",
     },
     {
       q: "Can Leo and Pisces be soulmates?",
@@ -104,15 +104,15 @@ export const PAIR: PairCopy = {
     },
     {
       q: "Why are Leo and Pisces attracted to each other?",
-      a: "Leo is drawn to Pisces's gentleness, mystery and romantic heart. Pisces is drawn to Leo's warmth, confidence and protective spirit. Both love art, beauty and stories, so they share a creative spark. The difference in their energy adds intrigue, and each sees something they admire and want more of.",
+      a: "Leo is drawn to Pisces's gentleness and romantic heart. Pisces is drawn to Leo's confidence and protective spirit. Both love art and stories, so they share a creative spark. The difference in their energy adds intrigue, and each sees something they admire and want more of.",
     },
     {
       q: "What do Leo and Pisces argue about?",
-      a: "Common topics are energy, clarity and money. Leo may want more social time, while Pisces wants more quiet. Pisces may hint instead of speaking plainly, which can confuse Leo. Both may overspend out of generosity. These talks go better with gentle words, clear wishes and a shared plan for time and money.",
+      a: "Common topics are energy and money, and sometimes clarity. Leo may want more social time, while Pisces wants more quiet. Pisces may hint instead of speaking plainly, which can confuse Leo. Both may overspend out of generosity. These talks go better with gentle words and a shared plan for time and money.",
     },
     {
       q: "Is a Leo and Pisces marriage a good idea?",
-      a: "A Leo and Pisces marriage can be loving and creative. Both partners value romance, kindness and a beautiful home. The marriage thrives when Leo protects Pisces with gentleness and Pisces admires Leo openly. With simple routines and honest talk, this pair can build a warm, imaginative family life together.",
+      a: "A Leo and Pisces marriage can be loving and creative. Both partners value romance and a beautiful home. The marriage thrives when Leo protects Pisces with gentleness and Pisces admires Leo openly. With simple routines and honest talk, this pair can build a warm, imaginative family life together.",
     },
   ],
 };

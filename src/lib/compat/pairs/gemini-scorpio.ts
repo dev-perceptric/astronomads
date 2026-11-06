@@ -17,7 +17,7 @@ export const PAIR: PairCopy = {
       id: 'intimacy',
       paras: [
         "Intimacy is where this pairing feels the difference most, and where it can grow the most. Scorpio, ruled by Mars and Pluto, wants a deep and private connection. Gemini, ruled by Mercury, connects through playfulness and talk. Neither style is better. Scorpio can teach Gemini how good it feels to be fully present, and Gemini can teach Scorpio how freeing it is to laugh in bed.",
-        "Trust needs careful building. Scorpio may test a partner, watching how Gemini handles a secret or a jealous moment. Gemini may feel watched and pull back into jokes. The way through is openness on both sides. Gemini can share where it is going and who it is talking to, and Scorpio can say plainly what it fears instead of hinting.",
+        "Trust needs careful building. Scorpio may test a partner, watching how Gemini handles a secret or a jealous moment. Gemini may feel watched and pull back into jokes. The way through is openness on both sides. Gemini can share where it is going and who it is talking to, and Scorpio can say plainly what it fears, so that nothing has to be guessed.",
         "Once trust is in place, the bond can feel thrilling. Scorpio finds a partner who keeps things fresh, and Gemini finds a partner who makes it feel truly seen. Small rituals help, like a late night talk where phones stay in another room. In that space, Gemini's words and Scorpio's feelings meet, and both of you discover a new side of yourselves.",
       ],
     },
@@ -25,7 +25,7 @@ export const PAIR: PairCopy = {
       id: 'communication',
       paras: [
         "Gemini talks to think, and Scorpio thinks before it talks. In a conversation, Gemini may cover ten topics while Scorpio is still weighing the first one. Gemini can read Scorpio's silence as boredom when it is really focus. Scorpio can read Gemini's chatter as a way of hiding. Learning each other's rhythm takes time and lots of patient listening, and the effort pays off quickly.",
-        "Scorpio loves a deep question, and Gemini loves any question at all, so a good conversation for you two is one that goes somewhere real. Instead of small talk about the weather, try asking each other about a memory that shaped you, or what you would do with a free year. Gemini's curiosity and Scorpio's depth meet beautifully in those talks.",
+        "Scorpio loves a deep question, and Gemini loves any question at all, so a good conversation for you two is one that goes somewhere real. Skip the small talk about the weather and try asking each other about a memory that shaped you, or what you would do with a free year. Gemini's curiosity and Scorpio's depth meet beautifully in those talks.",
         "When you disagree, Scorpio may go silent and hold on to the hurt, while Gemini wants to talk it out right now. A helpful habit is a pause with a promise: Scorpio says, \"Give me an hour and then we will talk,\" and Gemini agrees to wait. Coming back to the topic, as promised, builds trust on both sides and keeps small hurts small.",
       ],
     },
@@ -41,7 +41,7 @@ export const PAIR: PairCopy = {
       id: 'work',
       paras: [
         "At work, Gemini and Scorpio can complement each other in powerful ways. Gemini is great at research and quick problem solving. Scorpio is great at strategy and seeing what others miss. On a project, Gemini can gather the facts from twenty sources, and Scorpio can find the one detail that changes everything. That is a winning team for any tough job.",
-        "The modes also shape the work. Scorpio, a fixed sign, wants to stick with a plan and see it through to the end. Gemini, a mutable sign, wants to adjust as new information appears. Talk about this up front. Let Scorpio guard the core goal while Gemini handles the changes, and each of you will feel useful instead of stuck.",
+        "The modes also shape the work. Scorpio, a fixed sign, wants to stick with a plan and see it through to the end. Gemini, a mutable sign, wants to adjust as new information appears. Talk about this up front. Let Scorpio guard the core goal while Gemini handles the changes, and each of you will feel useful and free in the work.",
         "Money is often a private matter for Scorpio, which likes to save and to keep its plans close. Gemini may spend more casually and talk about it openly. A joint plan works best with clear rules about shared costs and some private funds for each person. Scorpio feels secure, Gemini feels free, and neither has to explain every small purchase.",
       ],
     },

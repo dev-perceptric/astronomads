@@ -42,7 +42,7 @@ export const PAIR: PairCopy = {
       paras: [
         "At work, Gemini and Libra make a natural front office. Gemini is skilled at gathering information and pitching ideas, while Libra is skilled at building relationships and smoothing tense meetings. Put you two in charge of client care or a launch event, and people will feel both informed and welcomed. Your shared air element makes teamwork feel easy and friendly.",
         "Libra, the cardinal sign, often sets the direction, and Gemini, the mutable sign, adapts the plan as new facts arrive. This works beautifully as long as someone handles the follow through and the small daily tasks that keep a project alive. Both of you can drift from the boring details, so a shared checklist with firm deadlines helps turn bright plans into finished work.",
-        "Money can be a tender topic. Libra likes beautiful things, from good shoes to fresh flowers, and Gemini likes gadgets and spur of the moment trips. A shared budget with room for both kinds of treat keeps things calm. Agree on a savings goal you both find exciting, like a trip abroad, so saving feels like a shared adventure instead of a chore.",
+        "Money can be a tender topic. Libra likes beautiful things, from good shoes to fresh flowers, and Gemini likes gadgets and spur of the moment trips. A shared budget with room for both kinds of treat keeps things calm. Agree on a savings goal you both find exciting, like a trip abroad, so saving feels like the first step of a shared adventure.",
       ],
     },
     {
@@ -80,7 +80,7 @@ export const PAIR: PairCopy = {
   challenges: [
     "Indecision can stall big plans for months",
     "Both may dodge hard talks to keep peace",
-    "Feelings can get explained instead of shared",
+    "Feelings can get explained more than shared",
     "Spending on treats can outrun savings goals",
   ],
   ideas: [
