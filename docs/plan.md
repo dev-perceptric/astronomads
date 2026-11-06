@@ -12,6 +12,9 @@
 | Saved chart (on this device) | Built |
 | Accounts: email and password, up to 200 saved birth profiles | Built (needs the Hostinger database set up) |
 | Readings: points, signs, houses, AC/MC aspects, lunar nodes | Built |
+| Compatibility (two charts, five scores) | Built |
+| Personal daily horoscope (transits to your chart) | Built |
+| Paid reports: Birth Chart Portrait $39, Compatibility Report $29 (Stripe) | Built (needs the Stripe key) |
 | Big three share card | Next |
 | Compatibility | Next |
 | Astrocartography map | Next |
@@ -45,6 +48,7 @@ Hosting is Hostinger Cloud Startup (Node.js web app), see `docs/deploy-hostinger
 | Hostinger Business web hosting | ~$3.50 to $4 intro, ~$17 at renewal (check) | Move to Hostinger Cloud: ~$10 to $30 (check) |
 | Accounts database (Hostinger MySQL, included in the plan) | $0 (check) | $0 (check) |
 | Reset emails (Hostinger mailbox over SMTP, included in the plan) | $0 (check) | $0 (check; Hostinger caps daily sending per mailbox) |
+| Stripe | $0 a month; about 2.9% + $0.30 per sale (check) | same |
 | Claude tokens | $0 (reading texts are written once, about $30 one-time) | $0 |
 | Chart engine (astronomy-engine, MIT), cities (GeoNames), fonts (Google Fonts) | $0 | $0 |
 | **Total with accounts** | **~$4 to $17** | **~$10 to $30** |

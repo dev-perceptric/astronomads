@@ -58,6 +58,15 @@ The Google button shows only when these two settings exist. Cost: $0 (Google sig
    - `SITE_URL` = `https://astronomads.com` (already there if reset emails are set up)
 5. Redeploy. The account page shows **Continue with Google**.
 
+## Turn on paid reports (Stripe)
+
+The report pages show "On sale very soon" until Stripe is set up. Cost: no monthly fee; Stripe takes about 2.9% plus 30 cents per card sale (check stripe.com/pricing).
+
+1. Create an account at https://dashboard.stripe.com and finish the business details so you can take live payments.
+2. **Developers → API keys**: copy the **Secret key** (starts with `sk_live_`). For a test run first, use the test key (`sk_test_`) and the card 4242 4242 4242 4242.
+3. In hPanel → the app's **Environment variables**, add `STRIPE_SECRET_KEY` with that key. `SITE_URL` must be `https://astronomads.com` (the return links are built from it).
+4. Redeploy. Buy a report once to check: Stripe's page opens, you return to the report, and the link arrives by email (if the mailbox is set up).
+
 ## After that
 
 - Every push to the connected branch rebuilds and redeploys by itself.

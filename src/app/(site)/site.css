@@ -193,3 +193,11 @@
   .nm-header a, .nm-header button, .nm-btn { transition: none; }
   .nm-account-menu, .nm-header-sheet { animation: none; }
 }
+
+/* Printing a report (Save as PDF): just the document. */
+@page { margin: 18mm 16mm; }
+@media print {
+  .nm-header, .nm-signature, .nm-skip { display: none !important; }
+  .nm-root { padding-top: 0 !important; background: var(--marble); }
+  .nm-section { padding: 0 !important; }
+}

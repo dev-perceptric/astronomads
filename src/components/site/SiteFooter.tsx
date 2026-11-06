@@ -15,6 +15,9 @@ export default function SiteFooter() {
         <div className="nm-foot-links">
           <Link href="/chart">My chart</Link>
           <Link href="/today">Today</Link>
+          <Link href="/zodiac">Zodiac</Link>
+          <Link href="/compatibility">Compatibility</Link>
+          <Link href="/reports">Reports</Link>
           <Link href="/account">Account</Link>
           <Link href="/brand">Brand</Link>
           <span>

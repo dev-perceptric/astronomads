@@ -37,6 +37,11 @@ An astrology site: free birth charts, a daily sky, compatibility and astrocartog
 - Long reading text is set in the serif. Each page has metadata, a canonical link, Article, Breadcrumb and FAQ structured data, and a share image made by `node scripts/og-zodiac.mjs <base url> <sign>`; new pages join `sitemap.xml` by themselves.
 - `src/lib/zodiac/zodiac.test.ts` checks facts, copy rules, the famous-people filing, and that every written sign has its folder.
 
+## Rule: compatibility, today and reports
+- `/compatibility` compares two charts with `synastry()` (`src/lib/astro/synastry.ts`): cross-chart aspects at 0.75 orbs and five theme scores (a guide, 8 to 97). Readings: `SYNASTRY` and `THEME_TEXT`. People come from `PersonPicker` (saved chart, account profiles, or new details) and travel in the address (`pairQuery`).
+- `/today` is the personal daily horoscope: `transitsAt` and `weekAhead` (`src/lib/astro/transits.ts`) with `TRANSIT_FAST` and `TRANSIT_SLOW` readings, the Moon of the day from `MOON_DAYS`.
+- Paid reports (`/reports`, `PRODUCTS` in `src/lib/reports/products.ts`): the Birth Chart Portrait ($39) and the Compatibility Report ($29), drawn by `PortraitDoc` and `SynastryDoc` with a free preview. Checkout is Stripe through its REST API (`src/lib/server/stripe.ts`, `STRIPE_SECRET_KEY`); orders live in the `orders` table, and `/reports/view?order=<token>` checks the payment with Stripe and shows the full report, with Save as PDF through the browser's print. We never handle card details. `orders.test.ts` runs a whole purchase with Stripe faked.
+
 ## Rule: accounts are safe and small
 - Accounts live in Hostinger MySQL (`src/lib/server/db.ts`, configured by `DB_*` or `DATABASE_URL`; tables are created on first use). Without a database the site still runs and `/account` shows "Accounts open soon".
 - Passwords are hashed with scrypt; sessions are random tokens in an httpOnly cookie, stored only as SHA-256 hashes. Reset links are one-use, last one hour, and are built from `SITE_URL`, never from the request.

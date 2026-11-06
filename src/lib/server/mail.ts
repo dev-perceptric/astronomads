@@ -23,3 +23,17 @@ export async function sendResetEmail(to: string, link: string): Promise<void> {
     html: `<p>Someone asked to reset the password for your Astronomads account.</p><p><a href="${link}">Choose a new password</a> (the link works for one hour).</p><p>If it wasn't you, ignore this email and your password stays the same.</p>`,
   });
 }
+
+/** The link to a paid report, sent once when the payment is confirmed. */
+export async function sendReportEmail(to: string, name: string, link: string): Promise<void> {
+  const port = Number(process.env.SMTP_PORT || 465);
+  const transport = nodemailer.createTransport({ host: process.env.SMTP_HOST, port, secure: port === 465, auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } });
+  const from = process.env.MAIL_FROM || `Astronomads <${process.env.SMTP_USER}>`;
+  await transport.sendMail({
+    from,
+    to,
+    subject: `Your ${name} is ready`,
+    text: `Thank you for your order. Your ${name} is ready:\n${link}\n\nKeep this link: it opens your report any time, and you can save it as a PDF from the page.`,
+    html: `<p>Thank you for your order. Your ${name} is ready.</p><p><a href="${link}">Open your report</a></p><p>Keep this link: it opens your report any time, and you can save it as a PDF from the page.</p>`,
+  });
+}

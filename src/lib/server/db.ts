@@ -64,6 +64,22 @@ const SCHEMA = [
     INDEX (user_id, name),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
+  `CREATE TABLE IF NOT EXISTS orders (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    token VARCHAR(64) NOT NULL UNIQUE,
+    product VARCHAR(24) NOT NULL,
+    people TEXT NOT NULL,
+    email VARCHAR(254) NULL,
+    user_id INT UNSIGNED NULL,
+    amount INT UNSIGNED NOT NULL,
+    currency CHAR(3) NOT NULL,
+    stripe_session VARCHAR(255) NULL,
+    status VARCHAR(12) NOT NULL DEFAULT 'pending',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    paid_at DATETIME NULL,
+    INDEX (user_id),
+    INDEX (email)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
 ];
 
 /** Changes to tables made before these columns existed. Each one is safe to run again. */

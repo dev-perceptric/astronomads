@@ -1,0 +1,42 @@
+.blank { min-height: 80svh; }
+.hero { padding-block: 16px 56px; }
+.field { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.45; }
+.heroFrame { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 18px; padding-block: 40px; }
+.heroFrame :global(.nm-label) { margin: 0; }
+.title { font-family: var(--serif); font-weight: 400; font-size: clamp(52px, 8vw, 124px); line-height: 0.92; letter-spacing: -0.03em; margin: 0; }
+.lead { font-family: var(--serif); font-size: clamp(20px, 2vw, 26px); line-height: 1.3; margin: 0; max-width: 40ch; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; }
+.card { display: flex; flex-direction: column; gap: 12px; padding: 28px; border-radius: 22px; box-shadow: inset 0 0 0 1px var(--rule); color: inherit; text-decoration: none; transition: background-color 0.2s; }
+.card:hover { background: var(--secondary); }
+.card :global(.nm-label) { margin: 0; }
+.cardTitle { font-family: var(--serif); font-size: 36px; line-height: 1.05; }
+.cardText { font-family: var(--serif); font-size: 19px; line-height: 1.45; color: var(--muted-foreground); }
+.cardPrice { font-family: var(--serif); font-size: 28px; margin-top: auto; }
+
+.product { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(28px, 5vw, 64px); align-items: start; }
+@media (max-width: 1000px) { .product { grid-template-columns: minmax(0, 1fr); } .buyCol { order: -1; } }
+.buyCol { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 16px; }
+@media (max-width: 1000px) { .buyCol { position: static; } }
+.buy { display: flex; flex-direction: column; gap: 14px; padding: 26px; border-radius: 22px; background: var(--secondary); }
+.buy :global(.nm-label) { margin: 0; }
+.price { font-family: var(--serif); font-size: 56px; line-height: 1; margin: 0; }
+.includes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.includes li { font-family: var(--serif); font-size: 18px; line-height: 1.3; padding-left: 20px; position: relative; }
+.includes li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: var(--astral); }
+.buyBtn { width: 100%; }
+.fine { font-size: 12px; letter-spacing: -0.02em; color: var(--muted-foreground); margin: 0; }
+.soon { font-family: var(--serif); font-size: 20px; margin: 0; }
+.previewNote { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-foreground); margin: 0 0 16px; }
+.unlock { margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.unlockTitle { font-family: var(--serif); font-size: 30px; margin: 0; }
+
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; max-width: 760px; margin: 0 auto 28px; }
+.toolbarText { font-size: 13px; letter-spacing: -0.02em; color: var(--muted-foreground); }
+.wait { min-height: 60svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; }
+.waitTitle { font-family: var(--serif); font-size: 40px; margin: 0; }
+
+@media print {
+  .toolbar, .buyCol { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }

@@ -6,6 +6,8 @@ import { ANGLE_ASPECT } from './angleAspects';
 import { IN_HOUSE as PLANET_IN_HOUSE } from './inHouse';
 import { IN_SIGN as POINT_IN_SIGN } from './inSign';
 import { NODE_ANGLE, NODE_CONTACT, NODE_INFO, NODE_IN_HOUSE, NODE_IN_SIGN } from './nodes';
+import { ELEMENT_LOW, ELEMENT_STRONG, MODE_STRONG, NATAL_ASPECT } from './natalAspects';
+import { pairKey } from '../synastry';
 import { POINT_INFO as CORE_INFO, type PointInfo } from './points';
 
 /** What every point stands for: planets, nodes, Ascendant and Midheaven. */
@@ -15,7 +17,7 @@ export const IN_SIGN: Record<PointKey, string[]> = { ...POINT_IN_SIGN, ...NODE_I
 /** Every planet and node in every house. Index 0 is the 1st house. */
 export const IN_HOUSE: Record<BodyKey | NodeKey, string[]> = { ...PLANET_IN_HOUSE, ...NODE_IN_HOUSE };
 
-export { ANGLE_ASPECT, NODE_ANGLE, NODE_CONTACT };
+export { ANGLE_ASPECT, ELEMENT_LOW, ELEMENT_STRONG, MODE_STRONG, NATAL_ASPECT, NODE_ANGLE, NODE_CONTACT };
 export { isAngle, pointColor, pointName, pointWeight } from '../points';
 
 /** "1st", "2nd", "3rd", "11th" */
@@ -51,6 +53,10 @@ export function aspectReading(a: Aspect): string {
   if (angle) {
     const body = angle === a.a ? a.b : a.a;
     if (!isAngle(body) && !isNode(body)) return ANGLE_ASPECT[body][angle][a.def.tone];
+  }
+  if (!angle && !node) {
+    const written = NATAL_ASPECT[pairKey(a.a as BodyKey, a.b as BodyKey)]?.[a.def.tone];
+    if (written) return written;
   }
   return natalAspectLine(a.a, a.def.kind, a.b);
 }

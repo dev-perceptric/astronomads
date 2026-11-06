@@ -337,6 +337,41 @@ function Profiles({ max, onChange }: { max: number; onChange: () => void }) {
           </ul>
         )}
       </section>
+      <MyReports />
     </>
+  );
+}
+
+/** Reports bought with this account or its email. Hidden until there is one. */
+function MyReports() {
+  const [orders, setOrders] = useState<{ token: string; product: 'portrait' | 'synastry'; people: { name: string }[]; createdAt: string }[]>([]);
+  useEffect(() => {
+    api<{ orders: typeof orders }>('/api/orders?mine=1').then((r) => r.ok && setOrders(r.data.orders));
+  }, []);
+  if (!orders.length) return null;
+  return (
+    <section className={`nm-section nm-marble ${s.profiles}`} style={{ minHeight: 0, paddingTop: 0 }}>
+      <p className="nm-label">Reports</p>
+      <h2 className="nm-title">My reports</h2>
+      <ul className={s.list}>
+        {orders.map((o) => (
+          <li key={o.token} className={s.row}>
+            <div className={s.rowMain}>
+              <Link href={`/reports/view?order=${o.token}`} className={s.name}>
+                {o.product === 'portrait' ? 'Birth Chart Portrait' : 'Compatibility Report'}
+              </Link>
+              <span className={s.details}>
+                {o.people.map((p) => p.name).join(' and ')} · {o.createdAt.slice(0, 10)}
+              </span>
+            </div>
+            <div className={s.actions}>
+              <Link href={`/reports/view?order=${o.token}`} className={s.action}>
+                Open
+              </Link>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
