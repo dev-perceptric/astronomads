@@ -35,14 +35,16 @@
 
 ## Monthly running cost
 
+Hosting is Hostinger Business web hosting (Node.js web app), see `docs/deploy-hostinger.md`.
+
 | Item | Beta (50k visits a month) | Growth (2M visits a month) |
 |---|---|---|
-| Render web service | $25 (check) | $170 (check) |
+| Hostinger Business web hosting | ~$3.50 to $4 intro, ~$17 at renewal (check) | Move to Hostinger Cloud: ~$10 to $30 (check) |
 | Supabase (when accounts arrive) | $25 (check) | $135 (check) |
 | Resend email (when accounts arrive) | $20 (check) | $90 (check) |
 | Claude tokens | $0 (reading texts are written once, about $30 one-time) | $0 |
 | Chart engine (astronomy-engine, MIT), cities (GeoNames), fonts (Google Fonts) | $0 | $0 |
-| **Total today (web service only)** | **~$25** | **~$170** |
-| **Total with accounts** | **~$70** | **~$395** |
+| **Total today (hosting only)** | **~$4 to $17** | **~$10 to $30** |
+| **Total with accounts** | **~$49 to $62** | **~$235 to $255** |
 
 Optional: Astro-Databank SADBY5, about $16 a month spread over 5 years. Domain renewal about $10 to $15 a year.
