@@ -12,10 +12,11 @@ export async function POST(req: NextRequest) {
     return fail('Too many tries. Wait 15 minutes and try again.', 429);
   }
   try {
-    const rows = await query<{ id: number; password_hash: string }[]>('SELECT id, password_hash FROM users WHERE email = ?', [email]);
+    const rows = await query<{ id: number; password_hash: string | null }[]>('SELECT id, password_hash FROM users WHERE email = ?', [email]);
     const user = rows[0];
     // Same work whether or not the email exists, so timing reveals nothing.
     const ok = await verifyPassword(password, user?.password_hash ?? (await decoyHash()));
+    if (user && !user.password_hash) return fail('This account signs in with Google. Use Continue with Google.', 401);
     if (!user || !ok) return fail('That email and password don’t match.', 401);
     const { token, expires } = await createSession(user.id);
     return setSessionCookie(json({ user: { email } }), token, expires);

@@ -43,6 +43,21 @@ Accounts (sign in, up to 200 saved birth profiles) need a MySQL database. The si
 4. Redeploy (or restart the app). The tables are created by themselves on the first request.
 5. Check: open `/account`, create an account, add a profile, sign out and back in. Then use "Forgot your password?" and confirm the email arrives.
 
+## Turn on Sign in with Google
+
+The Google button shows only when these two settings exist. Cost: $0 (Google sign-in is free).
+
+1. Open https://console.cloud.google.com and create a project named `Astronomads`.
+2. **APIs & Services → OAuth consent screen** (Google Auth Platform): choose **External**, app name `Astronomads`, your support email, and add `astronomads.com` as an authorized domain. Scopes: `openid`, `email`, `profile` only (these need no Google review). Then **Publish app** so anyone can sign in.
+3. **Credentials → Create credentials → OAuth client ID → Web application**:
+   - Authorized JavaScript origins: `https://astronomads.com`
+   - Authorized redirect URIs: `https://astronomads.com/api/auth/google/callback`
+4. Copy the **Client ID** and **Client secret** into the app's Environment variables in hPanel:
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+   - `SITE_URL` = `https://astronomads.com` (already there if reset emails are set up)
+5. Redeploy. The account page shows **Continue with Google**.
+
 ## After that
 
 - Every push to the connected branch rebuilds and redeploys by itself.

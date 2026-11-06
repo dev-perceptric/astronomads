@@ -9,8 +9,8 @@ export type SavedProfile = { id: number; name: string; date: string; time: strin
 export type AccountState =
   | { status: 'loading' }
   | { status: 'off' } // the server has no database yet
-  | { status: 'out' }
-  | { status: 'in'; email: string; profiles: number; max: number };
+  | { status: 'out'; google: boolean }
+  | { status: 'in'; email: string; profiles: number; max: number; hasPassword: boolean; hasGoogle: boolean; google: boolean };
 
 type Result<T> = { ok: true; data: T } | { ok: false; error: string; status: number };
 
@@ -47,12 +47,23 @@ const listeners = new Set<() => void>();
 
 /** Asks the server who is signed in and tells every component that uses `useAccount`. */
 export function refreshAccount(): Promise<void> {
-  inflight ??= api<{ enabled: boolean; user: { email: string } | null; profiles?: number; max?: number }>('/api/auth/me')
+  type Me = { enabled: boolean; google?: boolean; user: { email: string; hasPassword?: boolean; hasGoogle?: boolean } | null; profiles?: number; max?: number };
+  inflight ??= api<Me>('/api/auth/me')
     .then((r) => {
-      if (!r.ok) current = { status: 'out' };
+      const google = r.ok && Boolean(r.data.google);
+      if (!r.ok) current = { status: 'out', google: false };
       else if (!r.data.enabled) current = { status: 'off' };
-      else if (!r.data.user) current = { status: 'out' };
-      else current = { status: 'in', email: r.data.user.email, profiles: r.data.profiles ?? 0, max: r.data.max ?? 200 };
+      else if (!r.data.user) current = { status: 'out', google };
+      else
+        current = {
+          status: 'in',
+          email: r.data.user.email,
+          profiles: r.data.profiles ?? 0,
+          max: r.data.max ?? 200,
+          hasPassword: r.data.user.hasPassword !== false,
+          hasGoogle: Boolean(r.data.user.hasGoogle),
+          google,
+        };
       listeners.forEach((l) => l());
     })
     .finally(() => {
@@ -79,6 +90,26 @@ export function useAccount(): AccountState & { refresh: () => Promise<void> } {
 export async function signOut(): Promise<void> {
   await api('/api/auth/logout', 'POST');
   await refreshAccount();
+}
+
+/** Short lines for the errors Google sign-in can come back with (?error= on the account pages). */
+export const GOOGLE_ERRORS: Record<string, string> = {
+  google_cancelled: 'Google sign-in was cancelled.',
+  google_failed: 'Google sign-in didn’t work. Try again.',
+  google_off: 'Google sign-in isn’t available yet.',
+  google_busy: 'Too many tries. Wait 15 minutes and try again.',
+  google_taken: 'That Google account is already linked to another Astronomads account.',
+};
+
+/** Reads ?error= once, then takes it out of the address so a refresh doesn't show it again. */
+export function takeUrlError(): string {
+  if (typeof window === 'undefined') return '';
+  const url = new URL(window.location.href);
+  const code = url.searchParams.get('error');
+  if (!code) return '';
+  url.searchParams.delete('error');
+  window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+  return GOOGLE_ERRORS[code] ?? '';
 }
 
 export const profileBody = (p: BirthProfile) => ({ name: p.name, date: p.date, time: p.time, cityId: p.city.id });

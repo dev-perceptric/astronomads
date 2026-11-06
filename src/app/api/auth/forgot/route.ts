@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { allow, createResetToken, normalizeEmail, validEmail } from '@/lib/server/auth';
 import { query } from '@/lib/server/db';
 import { clientIp, fail, json, readBody, serverError } from '@/lib/server/http';
+import { siteUrl } from '@/lib/server/google';
 import { mailConfigured, sendResetEmail } from '@/lib/server/mail';
 
 /** Always answers the same way, so it never reveals whether an email has an account. */
@@ -19,8 +20,7 @@ export async function POST(req: NextRequest) {
     if (rows[0]) {
       const token = await createResetToken(rows[0].id);
       // Built from our own address, never from the request, so the link can't be pointed elsewhere.
-      const base = (process.env.SITE_URL || 'https://astronomads.com').replace(/\/$/, '');
-      await sendResetEmail(email, `${base}/account/reset?token=${encodeURIComponent(token)}`);
+      await sendResetEmail(email, `${siteUrl()}/account/reset?token=${encodeURIComponent(token)}`);
     }
     return json({ ok: true });
   } catch (e) {

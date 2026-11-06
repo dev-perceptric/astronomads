@@ -31,7 +31,8 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS users (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(254) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NULL,
+    google_sub VARCHAR(64) NULL UNIQUE,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
   `CREATE TABLE IF NOT EXISTS sessions (
@@ -65,10 +66,24 @@ const SCHEMA = [
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
 ];
 
+/** Changes to tables made before these columns existed. Each one is safe to run again. */
+const MIGRATIONS: { sql: string; ignore?: string }[] = [
+  // Sign in with Google: accounts may have no password.
+  { sql: 'ALTER TABLE users MODIFY password_hash VARCHAR(255) NULL' },
+  { sql: 'ALTER TABLE users ADD COLUMN google_sub VARCHAR(64) NULL UNIQUE', ignore: 'ER_DUP_FIELDNAME' },
+];
+
 /** Creates the tables on first use, once per server process. */
 async function ensureSchema(): Promise<void> {
   globalForDb.astroSchema ??= (async () => {
     for (const sql of SCHEMA) await pool().query(sql);
+    for (const m of MIGRATIONS) {
+      try {
+        await pool().query(m.sql);
+      } catch (e) {
+        if ((e as { code?: string }).code !== m.ignore) throw e;
+      }
+    }
   })().catch((e) => {
     globalForDb.astroSchema = undefined;
     throw e;

@@ -3,5 +3,6 @@ import path from 'node:path';
 
 export default defineConfig({
   resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src') } },
-  test: { environment: 'node' },
+  // Files run one after another: the account tests share one test database.
+  test: { environment: 'node', fileParallelism: false },
 });

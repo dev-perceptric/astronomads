@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import BirthForm from '@/components/BirthForm';
 import Stipple from '@/components/Stipple';
-import { api, profileBody, toBirthProfile, useAccount, type SavedProfile } from '@/lib/account';
+import { api, profileBody, takeUrlError, toBirthProfile, useAccount, type SavedProfile } from '@/lib/account';
 import { loadProfile, profileToQuery, type BirthProfile } from '@/lib/profile';
 import s from './account.module.css';
 
@@ -30,19 +30,25 @@ export default function AccountView() {
       </section>
     );
   }
-  if (account.status === 'out') return <SignIn onDone={account.refresh} />;
+  if (account.status === 'out') return <SignIn google={account.google} onDone={account.refresh} />;
   return <Profiles max={account.max} onChange={account.refresh} />;
 }
 
 /* ---------- Signed out ---------- */
 
-function SignIn({ onDone }: { onDone: () => void }) {
+function SignIn({ google, onDone }: { google: boolean; onDone: () => void }) {
   const [mode, setMode] = useState<'in' | 'up' | 'forgot'>('in');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
+
+  // Coming back from Google with a problem shows it here.
+  useEffect(() => {
+    const e = takeUrlError();
+    if (e) setError(e);
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,6 +97,18 @@ function SignIn({ onDone }: { onDone: () => void }) {
             </div>
           ) : (
             <p className={s.panelTitle}>Reset your password</p>
+          )}
+          {google && mode !== 'forgot' && (
+            <>
+              <a className={s.google} href="/api/auth/google?next=/account">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/brand/google-g.svg" alt="" width={18} height={18} />
+                Continue with Google
+              </a>
+              <p className={s.or}>
+                <span>or with email</span>
+              </p>
+            </>
           )}
           <div className="field">
             <label htmlFor="acc-email">Email</label>
