@@ -11,6 +11,7 @@ const LINKS = [
   { href: '/chart', label: 'My chart' },
   { href: '/today', label: 'Today' },
   { href: '/compatibility', label: 'Compatibility' },
+  { href: '/tools', label: 'Tools' },
   { href: '/reports', label: 'Reports' },
 ];
 
@@ -27,7 +28,7 @@ export default function SiteHeader() {
   // Close the phone menu whenever the page changes.
   useEffect(() => setMobileOpen(false), [path]);
 
-  const current = (href: string) => (path === href || ((href === '/zodiac' || href === '/reports') && path.startsWith(`${href}/`)) ? 'page' : undefined);
+  const current = (href: string) => (path === href || ((href === '/zodiac' || href === '/reports' || href === '/tools') && path.startsWith(`${href}/`)) ? 'page' : undefined);
   const leave = async () => {
     setMobileOpen(false);
     await signOut();

@@ -176,8 +176,13 @@ export function positionsAt(date: Date): { body: BodyKey; lon: number; retrograd
 }
 
 export function computeChart(input: BirthInput): Chart {
-  const timeKnown = Boolean(input.time);
   const utc = localToUtc(input.date, input.time ?? '12:00', input.timeZone);
+  return chartAt(utc, input.lat, input.lon, Boolean(input.time));
+}
+
+/** The chart for a UTC moment and place. Without a known time it leaves out the angles and houses. */
+export function chartAt(utc: Date, lat: number, lon: number, timeKnown = true): Chart {
+  const input = { lat, lon };
   const raw = positionsAt(utc);
 
   let asc: number | null = null;

@@ -172,6 +172,11 @@
   font-family: var(--mono); font-size: 14px; letter-spacing: -0.02em; text-transform: uppercase; color: var(--void); text-decoration: none; text-align: left; cursor: pointer;
 }
 .nm-header-sheet a:hover, .nm-header-sheet button:hover, .nm-header-sheet a[aria-current='page'] { background: rgba(0, 0, 0, 0.05); }
+/* Six links need room: below this width they move into the menu, the button and account stay. */
+@media (max-width: 1060px) {
+  .nm-header-links { display: none; }
+  .nm-header-toggle { display: inline-flex; }
+}
 @media (max-width: 760px) {
   .nm-root { padding-top: 76px; }
   .nm-header-bar { height: 56px; padding: 0 8px 0 16px; }

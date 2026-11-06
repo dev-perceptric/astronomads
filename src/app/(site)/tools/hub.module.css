@@ -1,0 +1,19 @@
+.hero { padding-block: 16px 56px; }
+.field { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.45; }
+.heroFrame { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 18px; padding-block: 40px; }
+.heroFrame :global(.nm-label) { margin: 0; }
+.title { font-family: var(--serif); font-weight: 400; font-size: clamp(52px, 8vw, 124px); line-height: 0.92; letter-spacing: -0.03em; margin: 0; }
+.lead { font-family: var(--serif); font-size: clamp(20px, 2vw, 26px); line-height: 1.3; margin: 0; max-width: 40ch; }
+.group { padding-bottom: 64px; }
+.group + .group { border-top: 1px solid var(--rule); }
+.groupText { font-family: var(--serif); font-size: 21px; line-height: 1.45; margin: -28px 0 32px; max-width: 56ch; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.card { display: flex; flex-direction: column; gap: 10px; padding: 26px; border-radius: 22px; box-shadow: inset 0 0 0 1px var(--rule); color: inherit; text-decoration: none; transition: background-color 0.2s; }
+.card:hover { background: var(--secondary); }
+.cardTitle { font-family: var(--serif); font-size: 32px; line-height: 1.05; }
+.cardText { font-family: var(--serif); font-size: 18px; line-height: 1.45; color: var(--muted-foreground); }
+.how { padding-block: 56px 72px; }
+.howGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 28px; }
+.howTitle { font-family: var(--serif); font-size: 26px; margin: 0 0 8px; }
+.howText { font-size: 14px; line-height: 1.5; letter-spacing: -0.02em; color: var(--stone); margin: 0; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }

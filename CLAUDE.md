@@ -42,6 +42,11 @@ An astrology site: free birth charts, a daily sky, compatibility and astrocartog
 - `/today` is the personal daily horoscope: `transitsAt` and `weekAhead` (`src/lib/astro/transits.ts`) with `TRANSIT_FAST` and `TRANSIT_SLOW` readings, the Moon of the day from `MOON_DAYS`.
 - Paid reports (`/reports`, `PRODUCTS` in `src/lib/reports/products.ts`): the Birth Chart Portrait ($39) and the Compatibility Report ($29), drawn by `PortraitDoc` and `SynastryDoc` with a free preview. Checkout is Stripe through its REST API (`src/lib/server/stripe.ts`, `STRIPE_SECRET_KEY`); orders live in the `orders` table, and `/reports/view?order=<token>` checks the payment with Stripe and shows the full report, with Save as PDF through the browser's print. We never handle card details. `orders.test.ts` runs a whole purchase with Stripe faked.
 
+## Rule: calculators are proven and detailed
+- Free calculators live at `/tools/<slug>` (plain folders, listed in `src/lib/tools/registry.ts`). Each page is `ToolShell` (hero, calculator, long guide from `src/lib/tools/guides/<slug>.ts`, questions, more tools) around a client calculator built from `tools/_tool/parts.tsx`.
+- Timing math is in `src/lib/astro/timing.ts` (sign changes, stations and shadows, solar, lunar and Saturn returns, secondary progressions with solar arc angles, planetary hours, rising signs through a day, monthly ephemeris). `timing.test.ts` checks it against published Mercury stations, London sunrise and sunset, and exact return degrees.
+- Readings for the tools: `signDetails.ts`, `returns.ts` and `cycles.ts` in the interpretations folder. `src/lib/tools/tools.test.ts` checks every guide and reading against the copy rules and checks that every guide is detailed.
+
 ## Rule: accounts are safe and small
 - Accounts live in Hostinger MySQL (`src/lib/server/db.ts`, configured by `DB_*` or `DATABASE_URL`; tables are created on first use). Without a database the site still runs and `/account` shows "Accounts open soon".
 - Passwords are hashed with scrypt; sessions are random tokens in an httpOnly cookie, stored only as SHA-256 hashes. Reset links are one-use, last one hour, and are built from `SITE_URL`, never from the request.
