@@ -56,7 +56,7 @@ export default function Constellation({ sign, color, name }: { sign: SignKey; co
     const p = P(wrapRa(ra), dec);
     if (inside(p, -2)) {
       ecl.push(p.join(','));
-      if (!label && inside(p, 110)) label = p;
+      if (!label && inside(p, 110) && !fig.some(([fr, fd]) => Math.hypot(...P(fr, fd).map((v, i) => v - p[i])) < 90)) label = p;
     } else if (ecl.length && ecl[ecl.length - 1] !== '|') ecl.push('|');
   }
   const eclPaths = ecl.join(' ').split('|').map((s) => s.trim()).filter((s) => s.split(' ').length > 1);
@@ -64,6 +64,16 @@ export default function Constellation({ sign, color, name }: { sign: SignKey; co
   let seed = 11;
   const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
   const clip = `plate-${sign}`;
+  // Name only figure stars, brightest first, skipping a name that would land on one already placed.
+  const placed: [number, number][] = [];
+  const named = new Set<number>();
+  d.stars.forEach(([ra, dec, , starName], i) => {
+    if (!starName || !onFigure(ra, dec)) return;
+    const p = P(ra, dec);
+    if (!inside(p, 30) || placed.some(([x, y]) => Math.abs(x - p[0]) < 70 && Math.abs(y - p[1]) < 16)) return;
+    placed.push(p);
+    named.add(i);
+  });
 
   return (
     <svg viewBox={`0 0 ${S} ${S}`} className="zodiac-constellation" role="img" aria-label={`Star chart of the constellation ${name}, with its brightest stars named`}>
@@ -91,7 +101,7 @@ export default function Constellation({ sign, color, name }: { sign: SignKey; co
             <polyline key={i} points={pts} />
           ))}
         </g>
-        <g stroke={color} strokeOpacity={0.85} strokeWidth={1.4} fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <g stroke={`color-mix(in oklch, ${color}, white 30%)`} strokeOpacity={0.9} strokeWidth={1.4} fill="none" strokeLinecap="round" strokeLinejoin="round">
           {d.lines.map((line, i) => (
             <polyline key={i} points={line.map(([ra, dec]) => P(ra, dec).join(',')).join(' ')} />
           ))}
@@ -111,7 +121,7 @@ export default function Constellation({ sign, color, name }: { sign: SignKey; co
                 return <circle key={j} cx={r1(x + Math.cos(a) * dist)} cy={r1(y + Math.sin(a) * dist)} r={r1(0.45 + rand() * 0.6)} fill="var(--marble)" opacity={r1(0.25 + rand() * 0.4)} />;
               })}
               <circle cx={x} cy={y} r={r1(r)} fill="var(--marble)" opacity={onFig ? 1 : r1(Math.min(0.95, 0.55 + (6 - mag) * 0.12))} />
-              {starName && (onFig || mag < 3) && inside(p, 30) && (
+              {named.has(i) && (
                 <text x={x + r + 9} y={y - r - 5} className="zodiac-star-name" opacity={onFig ? 1 : 0.6}>
                   {starName}
                 </text>
