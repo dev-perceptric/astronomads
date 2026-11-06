@@ -4,9 +4,9 @@ import { useId } from 'react';
 import { SHAPES, type GlyphName } from './Glyph';
 
 /**
- * Our symbols as cold, solid objects: a polished metal face with a hard horizon line, a thin cut
- * edge going back to the lower right, a sharp glint on the lit edges and a faint aura in their color.
- * Square ends and mitered corners keep the lines rigid.
+ * Our symbols as solid, matte objects: a flat face in the planet's color, a side edge going back
+ * to the lower right, and a faint aura in their color. No shine. Square ends and mitered corners
+ * keep the lines rigid.
  * Drawn on the same 24 grid as `Glyph`, so the two always match.
  */
 type Props = { name: GlyphName; color: string; weight?: number; ground?: 'dark' | 'light'; depth?: number };
@@ -27,35 +27,23 @@ function Layer({ name, paint, weight, dx = 0, dy = 0, opacity, filter, mask }: {
 }
 
 /** The solid symbol in the 24 grid. Put it inside an SVG, or use `Glyph3DAt` or `Glyph3D`. */
-function Solid({ name, color, weight = 1.9, ground = 'dark', depth = 3 }: Props) {
+function Solid({ name, color, weight = 1.9, ground = 'dark', depth = 4 }: Props) {
   const id = useId().replace(/[^a-zA-Z0-9]/g, '');
   const face = `${id}-face`;
   const aura = `${id}-aura`;
-  const glint = `${id}-glint`;
   const dark = (amount: number) => `color-mix(in oklch, ${color}, black ${amount}%)`;
   const light = (amount: number) => `color-mix(in oklch, ${color}, white ${amount}%)`;
   return (
     <>
       <defs>
-        {/* Polished metal: a cold highlight, the color, then a hard horizon line across the middle. */}
-        <linearGradient id={face} gradientUnits="userSpaceOnUse" x1="6" y1="1" x2="14" y2="23">
-          <stop offset="0%" style={{ stopColor: light(62) }} />
-          <stop offset="30%" style={{ stopColor: color }} />
-          <stop offset="49%" style={{ stopColor: dark(34) }} />
-          <stop offset="51%" style={{ stopColor: light(22) }} />
-          <stop offset="100%" style={{ stopColor: dark(18) }} />
+        {/* A matte face: the planet's color, a touch lighter toward the light, no shine. */}
+        <linearGradient id={face} gradientUnits="userSpaceOnUse" x1="4" y1="2" x2="18" y2="22">
+          <stop offset="0%" style={{ stopColor: light(14) }} />
+          <stop offset="55%" style={{ stopColor: color }} />
+          <stop offset="100%" style={{ stopColor: dark(8) }} />
         </linearGradient>
         <filter id={aura} filterUnits="userSpaceOnUse" x="-12" y="-12" width="48" height="48">
           <feGaussianBlur stdDeviation="2.6" />
-        </filter>
-        {/* A thin, hard glint along the lit edges, no softening of the shape. */}
-        <filter id={glint} x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation={weight * 0.14} result="height" />
-          <feSpecularLighting in="height" surfaceScale="1.4" specularConstant="0.8" specularExponent="48" lightingColor="white" result="shine">
-            <feDistantLight azimuth="225" elevation="32" />
-          </feSpecularLighting>
-          <feComposite in="shine" in2="SourceAlpha" operator="in" result="shineIn" />
-          <feComposite in="SourceGraphic" in2="shineIn" operator="arithmetic" k1="0" k2="1" k3="0.6" k4="0" />
         </filter>
       </defs>
       {/* Aura */}
@@ -65,8 +53,8 @@ function Solid({ name, color, weight = 1.9, ground = 'dark', depth = 3 }: Props)
         const i = depth - k;
         return <Layer key={i} name={name} paint={dark(ground === 'dark' ? 58 - k * 6 : 62 - k * 6)} weight={weight} dx={i * DEPTH_STEP[0]} dy={i * DEPTH_STEP[1]} />;
       })}
-      {/* Polished face */}
-      <Layer name={name} paint={`url(#${face})`} weight={weight} filter={`url(#${glint})`} />
+      {/* Matte face */}
+      <Layer name={name} paint={`url(#${face})`} weight={weight} />
     </>
   );
 }

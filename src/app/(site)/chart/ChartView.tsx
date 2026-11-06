@@ -106,7 +106,7 @@ export default function ChartView() {
                 return (
                   <li key={p.body}>
                     <button className={s.ledgerRow} onClick={() => select(p.body)} aria-pressed={selected === p.body}>
-                      <Glyph3D name={p.body} size={30} color={b.color} ground="dark" depth={3} />
+                      <Glyph3D name={p.body} size={30} color={b.color} ground="dark" />
                       <span className={s.ledgerName}>{b.name}</span>
                       <span className={s.ledgerSign}>
                         <Glyph name={sg.key as SignKey} size={16} color={ELEMENT_COLORS[sg.element]} weight={1.8} />
