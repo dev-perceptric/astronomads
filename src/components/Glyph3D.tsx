@@ -5,7 +5,7 @@ import { SHAPES, type GlyphName } from './Glyph';
 
 /**
  * Our symbols as solid, matte objects: a flat face in the planet's color, a side edge going back
- * to the lower right, and a faint aura in their color. No shine. Square ends and mitered corners
+ * to the lower right. No shine, no glow. Square ends and mitered corners
  * keep the lines rigid.
  * Drawn on the same 24 grid as `Glyph`, so the two always match.
  */
@@ -30,7 +30,6 @@ function Layer({ name, paint, weight, dx = 0, dy = 0, opacity, filter, mask }: {
 function Solid({ name, color, weight = 1.9, ground = 'dark', depth = 4 }: Props) {
   const id = useId().replace(/[^a-zA-Z0-9]/g, '');
   const face = `${id}-face`;
-  const aura = `${id}-aura`;
   const dark = (amount: number) => `color-mix(in oklch, ${color}, black ${amount}%)`;
   const light = (amount: number) => `color-mix(in oklch, ${color}, white ${amount}%)`;
   return (
@@ -42,12 +41,7 @@ function Solid({ name, color, weight = 1.9, ground = 'dark', depth = 4 }: Props)
           <stop offset="55%" style={{ stopColor: color }} />
           <stop offset="100%" style={{ stopColor: dark(8) }} />
         </linearGradient>
-        <filter id={aura} filterUnits="userSpaceOnUse" x="-12" y="-12" width="48" height="48">
-          <feGaussianBlur stdDeviation="2.6" />
-        </filter>
       </defs>
-      {/* Aura */}
-      <Layer name={name} paint={color} weight={weight * 2.2} opacity={ground === 'dark' ? 0.38 : 0.1} filter={`url(#${aura})`} />
       {/* A thin cut edge going back to the lower right */}
       {Array.from({ length: depth }, (_, k) => {
         const i = depth - k;
