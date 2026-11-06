@@ -283,7 +283,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
                   </text>
                 </g>
               ) : (
-                <Glyph3DAt name={body} x={f(gx) - 1} y={f(gy) - 1.5} size={36 * Math.min(1.06, Math.max(0.92, bodyByKey(body).weight))} color={color} ground={ground} />
+                <Glyph3DAt name={body} x={f(gx) - 1} y={f(gy) - 1.5} size={42 * Math.min(1.06, Math.max(0.92, bodyByKey(body).weight))} color={color} ground={ground} weight={2.1} />
               )}
               <text x={f(lx)} y={f(ly)} dominantBaseline="central" textAnchor="middle" className={s.degree} fill={color}>
                 {deg}°<tspan className={s.minute}>{String(min).padStart(2, '0')}′</tspan>
