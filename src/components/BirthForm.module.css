@@ -1,4 +1,4 @@
-.form { display: flex; flex-direction: column; gap: 18px; padding: 24px; background: var(--paper); border-color: var(--line); }
+.form { display: flex; flex-direction: column; gap: 18px; padding: 24px; }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 420px) { .row { grid-template-columns: 1fr; } }
 
@@ -6,7 +6,7 @@
 .check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .box { width: 18px; height: 18px; border-radius: 5px; border: 1px solid var(--line-strong); background: var(--bg); display: grid; place-items: center; transition: background 0.15s, border-color 0.15s; }
 .check input:checked + .box { background: var(--accent); border-color: var(--accent); }
-.check input:checked + .box::after { content: ''; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateY(-1px); }
+.check input:checked + .box::after { content: ''; width: 8px; height: 4px; border-left: 2px solid var(--background); border-bottom: 2px solid var(--background); transform: rotate(-45deg) translateY(-1px); }
 .check input:focus-visible + .box { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .picker { position: relative; }
@@ -22,7 +22,7 @@
   background: var(--bg);
   border: 1px solid var(--line-strong);
   border-radius: 10px;
-  box-shadow: 0 12px 32px rgba(21, 25, 53, 0.12);
+  box-shadow: var(--shadow-lg);
   max-height: 300px;
   overflow-y: auto;
 }

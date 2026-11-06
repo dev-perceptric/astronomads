@@ -21,9 +21,9 @@ An astrology site: free birth charts, a daily sky, compatibility and astrocartog
 - `data/celebs/top5500.csv` is the working list (Pantheon 2025, CC BY-SA 4.0).
 
 ## Rule: one look
-- A light reference site: white page, dark readable text, tokens in `globals.css`. One deep blue (`--accent`) for links and actions, a gold star in the wordmark.
-- Bodoni Moda for headings, Jost for text (16px), DM Mono for degrees, Noto Sans Symbols for glyphs.
-- Data goes in clean tables and white cards with thin borders. The chart wheel is drawn on white: element-tinted sign band, colored planet glyphs, straight aspect lines (blue trine, green dashed sextile, red square and opposition).
-- Planet and sign glyphs carry U+FE0E so phones never show emoji.
-- Motion stays minimal and stops under `prefers-reduced-motion`.
-- No browser pop-ups (`alert`, `confirm`, `prompt`).
+- Neutral oklch tokens in `globals.css`, light by default with a dark theme (`data-theme` plus the system setting, switched by `ThemeToggle`). Never a raw hex in components: chart colors come from `--p-*`, `--el-*` and `--asp-*`.
+- Geist for text and headings (bold, tight tracking), Geist Mono for eyebrows, tables and degrees, Noto Sans Symbols for glyphs. Eyebrows read `01 · label`.
+- Primary buttons are filled with the foreground color, 44px tall, `rounded 8px`. Cards are 16px rounded with a soft border and shadow. One warm accent, `--peak`, used sparingly.
+- The chart wheel sits in a card: element-tinted sign band, colored planet glyphs, straight aspect lines (blue trine, teal dashed sextile, red square and opposition).
+- Headlines blur in word by word (`reveal-word`), blocks fade up (`fade-up`). Everything stops under `prefers-reduced-motion`.
+- Planet and sign glyphs carry U+FE0E so phones never show emoji. No browser pop-ups (`alert`, `confirm`, `prompt`).

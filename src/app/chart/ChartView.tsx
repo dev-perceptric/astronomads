@@ -63,7 +63,7 @@ export default function ChartView() {
 
       <header className={s.head}>
         <div className={s.headText}>
-          <p className="eyebrow">Birth chart</p>
+          <p className="eyebrow"><b>01</b> · birth chart</p>
           <h1 className={`display ${s.name}`}>{profile.name}</h1>
           <p className={s.birth}>{birthLine(profile, chart)}</p>
         </div>
@@ -162,8 +162,9 @@ export default function ChartView() {
       </div>
 
       <section className={s.section} aria-labelledby="reading">
+        <p className="eyebrow"><b>02</b> · your planets</p>
         <h2 id="reading" className={`display ${s.h2}`}>
-          Your planets
+          What each planet says about you.
         </h2>
         <div className={s.readings}>
           {chart.placements.map((p) => {
@@ -298,13 +299,13 @@ function Legend() {
   return (
     <ul className={s.legend}>
       <li>
-        <span className={s.swatch} style={{ background: '#2a6cc9' }} /> Trine
+        <span className={s.swatch} style={{ background: 'var(--asp-ease)' }} /> Trine
       </li>
       <li>
-        <span className={`${s.swatch} ${s.dashed}`} style={{ borderColor: '#2f9a6a' }} /> Sextile
+        <span className={`${s.swatch} ${s.dashed}`} style={{ borderColor: 'var(--asp-soft)' }} /> Sextile
       </li>
       <li>
-        <span className={s.swatch} style={{ background: '#d2452f' }} /> Square, opposition
+        <span className={s.swatch} style={{ background: 'var(--asp-hard)' }} /> Square, opposition
       </li>
     </ul>
   );
@@ -336,7 +337,7 @@ function Balance({ chart }: { chart: Chart }) {
       </div>
       <div className={s.balGroup}>
         <p className="eyebrow">Modes</p>
-        {mds.map(([m, n]) => row(m, n, 'var(--accent)', m === topMd))}
+        {mds.map(([m, n]) => row(m, n, 'var(--foreground)', m === topMd))}
       </div>
       <p className={s.balSummary}>
         Strongest: <strong>{topEl}</strong> and <strong>{topMd}</strong>. Sun and Moon count double{chart.asc !== null ? ', and so does the Ascendant' : ''}.

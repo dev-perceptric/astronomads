@@ -64,7 +64,7 @@ export default function TodayView() {
       <section className={s.hero}>
         <MoonGlyph angle={phase.angle} />
         <div className={s.heroText}>
-          <p className="eyebrow">{dateLabel}</p>
+          <p className="eyebrow"><b>01</b> · {dateLabel.toLowerCase()}</p>
           <h1 className={`display ${s.title}`}>
             {phase.name}
             <br />
@@ -167,8 +167,8 @@ function MoonGlyph({ angle }: { angle: number }) {
           <stop offset="100%" stopColor="#efe6c8" />
         </radialGradient>
       </defs>
-      <circle r={r + 10} fill="none" stroke="var(--line)" />
-      <circle r={r} fill="#232a58" />
+      <circle r={r + 10} fill="none" stroke="var(--border)" />
+      <circle r={r} fill="oklch(26% 0.02 260)" />
       <path d={d} fill="url(#moonLit)" />
     </svg>
   );

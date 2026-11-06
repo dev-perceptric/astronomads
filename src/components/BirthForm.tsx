@@ -27,7 +27,7 @@ export default function BirthForm({ initial }: { initial?: BirthProfile | null }
   };
 
   return (
-    <form className={`card ${s.form}`} onSubmit={submit} noValidate>
+    <form className={`card card-raised ${s.form}`} onSubmit={submit} noValidate>
       <div className="field">
         <label htmlFor="bf-name">Name</label>
         <input id="bf-name" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your first name" autoComplete="given-name" />

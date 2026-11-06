@@ -10,8 +10,8 @@
 }
 @keyframes appear { from { opacity: 0; } to { opacity: 1; } }
 
-.ringStrong { fill: none; stroke: var(--ink); stroke-width: 1.3; }
-.core { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1; }
+.ringStrong { fill: none; stroke: var(--foreground); stroke-width: 1.2; }
+.core { fill: var(--secondary); stroke: var(--line-strong); stroke-width: 1; }
 .divider { stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.55; }
 .signGlyph { font-size: 24px; }
 .ticks line { stroke: var(--ink); stroke-width: 0.7; stroke-opacity: 0.45; }
@@ -20,15 +20,15 @@
 .houseNum { font-family: var(--mono); font-size: 11px; fill: var(--faint); }
 
 .angles line { stroke: var(--ink); }
-.angles text { font-family: var(--mono); font-size: 11.5px; font-weight: 500; fill: var(--muted); }
+.angles text { font-family: var(--mono); font-size: 11.5px; font-weight: 500; fill: var(--muted-foreground); }
 .angles .angleMain { fill: var(--ink); font-size: 13px; }
 
 .aspect { transition: stroke-opacity 0.2s; }
 
 .planet { cursor: pointer; transition: opacity 0.2s; outline: none; }
-.planet:focus-visible .hit { stroke: var(--accent); stroke-width: 2; }
-.hit { fill: #fff; fill-opacity: 0; }
-.planet:hover .hit, .planet[aria-pressed='true'] .hit { fill: var(--accent-soft); fill-opacity: 1; }
+.planet:focus-visible .hit { stroke: var(--foreground); stroke-width: 2; }
+.hit { fill: var(--background); fill-opacity: 0; }
+.planet:hover .hit, .planet[aria-pressed='true'] .hit { fill: var(--secondary); fill-opacity: 1; }
 .leader { stroke: var(--line-strong); stroke-width: 0.8; }
-.planetGlyph { paint-order: stroke; stroke: #fff; stroke-width: 4px; }
-.degree { font-family: var(--mono); font-size: 11px; fill: var(--text); paint-order: stroke; stroke: #fff; stroke-width: 3px; }
+.planetGlyph { paint-order: stroke; stroke: var(--card); stroke-width: 4px; }
+.degree { font-family: var(--mono); font-size: 11px; fill: var(--text); paint-order: stroke; stroke: var(--card); stroke-width: 3px; }
