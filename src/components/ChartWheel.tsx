@@ -9,16 +9,16 @@ import { Glyph3DAt } from './Glyph3D';
 import s from './ChartWheel.module.css';
 
 /**
- * The Astronomads astrolabe. Radii, outside in; the drawing is 932 units wide, centered on 0,0.
+ * The Astronomads astrolabe. Radii, outside in; the drawing is 984 units wide, centered on 0,0.
  * Planets sit outside as solid 3D symbols, tied to their exact degree by a thin line in their own color.
  * Inside, in closed bands: a dotted degree scale, the sign ring with spaced names, the house band
  * (cusp lines and Roman numerals live only here) and the aspect disc.
  */
 const R = {
-  label: 428, // degree and minute
-  glyph: 376, // planet symbol center
-  bend: 336, // the leader runs out at the exact degree to here, then bends to the symbol
-  sphere: 20, // room each symbol takes
+  label: 452, // degree and minute
+  glyph: 394, // planet symbol center
+  bend: 340, // the leader runs out at the exact degree to here, then bends to the symbol
+  sphere: 25, // room each symbol takes
   frame: 318, // thin double frame around the scale
   scaleOut: 310,
   rim: 286, // heavy circle, outer edge of the sign ring
@@ -64,7 +64,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
     if (chart.asc !== null && chart.mc !== null) list.push({ key: 'asc', lon: chart.asc }, { key: 'mc', lon: chart.mc });
     return list;
   }, [chart]);
-  const spread = useMemo(() => spreadOut(outer, 12.5), [outer]);
+  const spread = useMemo(() => spreadOut(outer, 14), [outer]);
   const lonOf = (k: PointKey) => outer.find((o) => o.key === k)!.lon;
 
   const stars = useMemo(() => makeStars(), []);
@@ -97,7 +97,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
   };
 
   return (
-    <svg className={s.wheel} viewBox="-466 -466 932 932" role="img" aria-label={label}>
+    <svg className={s.wheel} viewBox="-492 -492 984 984" role="img" aria-label={label}>
       <defs>
         {SIGNS.map((sign, i) => (
           <path key={sign.key} id={`${uid}-n${i}`} d={nameArc(i * 30)} />
@@ -163,7 +163,8 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
         </g>
       )}
 
-      {/* Angles: drawn in the scale band and the house band, stopping at the sign ring */}
+      {/* Angles: drawn in the scale band and the house band, stopping at the sign ring.
+          A solid wedge on the frame marks each end of both axes (AC, DC, MC, IC). */}
       {chart.asc !== null && chart.mc !== null && (
         <g>
           {[
@@ -175,7 +176,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
             <g key={i}>
               <line {...seg(R.rim, R.scaleOut, lon)} className={main ? s.axis : s.axisSoft} />
               <line {...seg(R.zodiacIn - 5, R.core, lon)} className={main ? s.axis : s.axisSoft} />
-              {main && <path d={arrow(pt, R.frame + 1, lon)} className={s.axisHead} />}
+              <path d={wedge(pt, R.frame, R.rim + 3, lon, main ? 9 : 7)} className={s.axisHead} />
             </g>
           ))}
         </g>
@@ -232,7 +233,7 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
           const [ex, ey] = pt(R.frame + 1, o.lon);
           const [gx, gy] = pt(R.glyph, shown);
           // Leader stops short of the symbol.
-          const [bx, by] = pt(R.glyph - R.sphere - (isAngle ? 0 : 2), shown);
+          const [bx, by] = pt(R.glyph - R.sphere - (isAngle ? 4 : 2), shown);
           const [kx, ky] = pt(R.bend, o.lon);
           const [lx, ly] = pt(R.label, shown);
           // Same rounding as the positions table, so both always agree.
@@ -275,18 +276,19 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
             >
               <title>{desc}</title>
               {/* Straight out from the exact degree, then a bend to the symbol */}
-              <polyline points={`${f(ex)},${f(ey)} ${f(kx)},${f(ky)} ${f(bx)},${f(by)}`} stroke={color} className={s.leader} />
-              <circle cx={f(ex)} cy={f(ey)} r={2.4} fill={color} />
+              <polyline points={`${f(ex)},${f(ey)} ${f(kx)},${f(ky)} ${f(bx)},${f(by)}`} stroke={color} className={isAngle ? s.angleLeader : s.leader} />
+              {isAngle && <path d={chevron(kx, ky, bx, by)} className={s.angleArrow} />}
+              {!isAngle && <circle cx={f(ex)} cy={f(ey)} r={2.4} fill={color} />}
               <circle cx={f(gx)} cy={f(gy)} r={R.sphere + 2} className={s.hit} />
               {isAngle ? (
                 <g>
-                  <circle cx={f(gx)} cy={f(gy)} r={R.sphere} className={s.angleRing} />
+                  <circle cx={f(gx)} cy={f(gy)} r={R.sphere - 2} className={s.angleRing} />
                   <text x={f(gx)} y={f(gy)} dominantBaseline="central" textAnchor="middle" className={s.angleText}>
                     {o.key === 'asc' ? 'AC' : 'MC'}
                   </text>
                 </g>
               ) : (
-                <Glyph3DAt name={body} x={f(gx) - 1} y={f(gy) - 1.5} size={42 * Math.min(1.06, Math.max(0.92, bodyByKey(body).weight))} color={color} ground={ground} weight={2.1} />
+                <Glyph3DAt name={body} x={f(gx) - 1} y={f(gy) - 1.5} size={52 * Math.min(1.06, Math.max(0.92, bodyByKey(body).weight))} color={color} ground={ground} weight={2} />
               )}
               <text x={f(lx)} y={f(ly)} dominantBaseline="central" textAnchor="middle" className={s.degree} fill={color}>
                 {deg}°<tspan className={s.minute}>{String(min).padStart(2, '0')}′</tspan>
@@ -300,13 +302,20 @@ export default function ChartWheel({ chart, name, selected = null, onSelect, gro
   );
 }
 
-/** A small arrowhead on the inside of the key border, pointing out along an angle. */
-function arrow(pt: (r: number, lon: number) => [number, number], r: number, lon: number) {
-  const [tx, ty] = pt(r, lon);
-  const spread = (5 / r) * (180 / Math.PI);
-  const [lx, ly] = pt(r - 12, lon + spread);
-  const [rx, ry] = pt(r - 12, lon - spread);
+/** A solid wedge with its base on the frame, pointing in along an axis. */
+function wedge(pt: (r: number, lon: number) => [number, number], rBase: number, rTip: number, lon: number, half: number) {
+  const [tx, ty] = pt(rTip, lon);
+  const spread = (half / rBase) * (180 / Math.PI);
+  const [lx, ly] = pt(rBase, lon + spread);
+  const [rx, ry] = pt(rBase, lon - spread);
   return `M${tx.toFixed(2)} ${ty.toFixed(2)} L${lx.toFixed(2)} ${ly.toFixed(2)} L${rx.toFixed(2)} ${ry.toFixed(2)} Z`;
+}
+
+/** An open arrowhead at (x, y), pointing away from (fromX, fromY). */
+function chevron(fromX: number, fromY: number, x: number, y: number, len = 10) {
+  const a = Math.atan2(y - fromY, x - fromX);
+  const p = (da: number) => `${(x - len * Math.cos(a + da)).toFixed(2)} ${(y - len * Math.sin(a + da)).toFixed(2)}`;
+  return `M${p(0.5)} L${x.toFixed(2)} ${y.toFixed(2)} L${p(-0.5)}`;
 }
 
 /** Pushes crowded points apart so their symbols and labels never overlap. Returns display longitudes. */

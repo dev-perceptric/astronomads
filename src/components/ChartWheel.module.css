@@ -39,6 +39,8 @@
 .axis { stroke: var(--foreground); stroke-width: 2; }
 .axisSoft { stroke: var(--foreground); stroke-width: 1; stroke-opacity: 0.7; }
 .axisHead { fill: var(--foreground); }
+.angleLeader { fill: none; stroke: var(--foreground); stroke-width: 1.6; stroke-linejoin: miter; }
+.angleArrow { fill: none; stroke: var(--foreground); stroke-width: 1.6; stroke-linecap: square; stroke-linejoin: miter; }
 
 /* Aspect disc */
 .core { fill: var(--card); stroke: var(--foreground); stroke-width: 1.4; }
@@ -57,7 +59,7 @@
 .planet:focus-visible .hit { stroke: var(--foreground); stroke-width: 2.5; }
 .angleRing { fill: var(--card); stroke: var(--foreground); stroke-width: 1.4; }
 .leader { fill: none; stroke-width: 1.1; stroke-opacity: 0.9; stroke-linejoin: miter; }
-.angleText { font-family: var(--roman, 'Cinzel', serif); font-size: 15px; font-weight: 600; letter-spacing: 0.04em; fill: var(--foreground); }
+.angleText { font-family: var(--roman, 'Cinzel', serif); font-size: 17px; font-weight: 600; letter-spacing: 0.04em; fill: var(--foreground); }
 .degree { font-size: 18px; font-weight: 600; letter-spacing: -0.04em; }
 .minute { font-size: 11px; font-weight: 500; baseline-shift: 30%; }
 .retro { font-size: 11px; font-weight: 700; baseline-shift: 30%; }
