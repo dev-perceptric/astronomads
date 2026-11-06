@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { City } from './cities';
 import type { BirthProfile } from './profile';
 
@@ -40,18 +40,45 @@ export async function api<T = Record<string, unknown>>(path: string, method = 'G
   }
 }
 
-export function useAccount(): AccountState & { refresh: () => void } {
-  const [state, setState] = useState<AccountState>({ status: 'loading' });
-  const refresh = useCallback(() => {
-    api<{ enabled: boolean; user: { email: string } | null; profiles?: number; max?: number }>('/api/auth/me').then((r) => {
-      if (!r.ok) return setState({ status: 'out' });
-      if (!r.data.enabled) return setState({ status: 'off' });
-      if (!r.data.user) return setState({ status: 'out' });
-      setState({ status: 'in', email: r.data.user.email, profiles: r.data.profiles ?? 0, max: r.data.max ?? 200 });
+/* One shared account state for the whole page, so the header and the account pages always agree. */
+let current: AccountState = { status: 'loading' };
+let inflight: Promise<void> | null = null;
+const listeners = new Set<() => void>();
+
+/** Asks the server who is signed in and tells every component that uses `useAccount`. */
+export function refreshAccount(): Promise<void> {
+  inflight ??= api<{ enabled: boolean; user: { email: string } | null; profiles?: number; max?: number }>('/api/auth/me')
+    .then((r) => {
+      if (!r.ok) current = { status: 'out' };
+      else if (!r.data.enabled) current = { status: 'off' };
+      else if (!r.data.user) current = { status: 'out' };
+      else current = { status: 'in', email: r.data.user.email, profiles: r.data.profiles ?? 0, max: r.data.max ?? 200 };
+      listeners.forEach((l) => l());
+    })
+    .finally(() => {
+      inflight = null;
     });
+  return inflight;
+}
+
+export function useAccount(): AccountState & { refresh: () => Promise<void> } {
+  const [state, setState] = useState<AccountState>(current);
+  useEffect(() => {
+    const update = () => setState(current);
+    listeners.add(update);
+    if (current.status === 'loading') refreshAccount();
+    else update();
+    return () => {
+      listeners.delete(update);
+    };
   }, []);
-  useEffect(refresh, [refresh]);
-  return { ...state, refresh };
+  return { ...state, refresh: refreshAccount };
+}
+
+/** Signs out everywhere on this page. */
+export async function signOut(): Promise<void> {
+  await api('/api/auth/logout', 'POST');
+  await refreshAccount();
 }
 
 export const profileBody = (p: BirthProfile) => ({ name: p.name, date: p.date, time: p.time, cityId: p.city.id });

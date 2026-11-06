@@ -31,7 +31,7 @@ export default function AccountView() {
     );
   }
   if (account.status === 'out') return <SignIn onDone={account.refresh} />;
-  return <Profiles email={account.email} max={account.max} onChange={account.refresh} />;
+  return <Profiles max={account.max} onChange={account.refresh} />;
 }
 
 /* ---------- Signed out ---------- */
@@ -144,7 +144,7 @@ function SignIn({ onDone }: { onDone: () => void }) {
 
 /* ---------- Signed in ---------- */
 
-function Profiles({ email, max, onChange }: { email: string; max: number; onChange: () => void }) {
+function Profiles({ max, onChange }: { max: number; onChange: () => void }) {
   const [profiles, setProfiles] = useState<SavedProfile[] | null>(null);
   const [error, setError] = useState('');
   const [adding, setAdding] = useState(false);
@@ -211,7 +211,7 @@ function Profiles({ email, max, onChange }: { email: string; max: number; onChan
             <p className="nm-label">Account</p>
             <h1 className="nm-title">My birth profiles</h1>
             <p className={s.meta}>
-              {email} · {count} of {max} saved
+              {count} of {max} saved
             </p>
           </div>
           <button className="nm-btn nm-btn-primary" onClick={() => setAdding(true)} disabled={full || adding}>
@@ -319,101 +319,6 @@ function Profiles({ email, max, onChange }: { email: string; max: number; onChan
           </ul>
         )}
       </section>
-      <Settings onSignedOut={onChange} />
     </>
-  );
-}
-
-/* ---------- Settings ---------- */
-
-function Settings({ onSignedOut }: { onSignedOut: () => void }) {
-  const [current, setCurrent] = useState('');
-  const [next, setNext] = useState('');
-  const [pwMsg, setPwMsg] = useState<{ ok: boolean; text: string } | null>(null);
-  const [deleting, setDeleting] = useState(false);
-  const [delPassword, setDelPassword] = useState('');
-  const [delError, setDelError] = useState('');
-
-  const changePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const r = await api('/api/auth/password', 'POST', { current, next });
-    if (!r.ok) return setPwMsg({ ok: false, text: r.error });
-    setCurrent('');
-    setNext('');
-    setPwMsg({ ok: true, text: 'Password changed. Other devices were signed out.' });
-  };
-  const signOut = async () => {
-    await api('/api/auth/logout', 'POST');
-    onSignedOut();
-  };
-  const deleteAccount = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const r = await api('/api/auth/delete', 'POST', { password: delPassword });
-    if (!r.ok) return setDelError(r.error);
-    onSignedOut();
-  };
-
-  return (
-    <section className={`nm-section nm-void ${s.settings}`}>
-      <p className="nm-label">Settings</p>
-      <div className={s.settingsGrid}>
-        <form className={`${s.setting} ${s.brandForm}`} onSubmit={changePassword}>
-          <p className={s.settingTitle}>Change password</p>
-          <div className="field">
-            <label htmlFor="pw-current">Current password</label>
-            <input id="pw-current" className="input" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} />
-          </div>
-          <div className="field">
-            <label htmlFor="pw-next">New password</label>
-            <input id="pw-next" className="input" type="password" autoComplete="new-password" minLength={8} value={next} onChange={(e) => setNext(e.target.value)} />
-          </div>
-          {pwMsg && (
-            <p className={pwMsg.ok ? s.note : 'error'} role={pwMsg.ok ? 'status' : 'alert'}>
-              {pwMsg.text}
-            </p>
-          )}
-          <button className="btn btn-primary" type="submit">
-            Change password
-          </button>
-        </form>
-
-        <div className={s.setting}>
-          <p className={s.settingTitle}>Sign out</p>
-          <button className="nm-btn nm-btn-glass" onClick={signOut}>
-            Sign out
-          </button>
-        </div>
-
-        <div className={`${s.setting} ${s.brandForm}`}>
-          <p className={s.settingTitle}>Delete account</p>
-          {!deleting ? (
-            <button className={`nm-btn nm-btn-outline ${s.dangerBtn}`} onClick={() => setDeleting(true)}>
-              Delete my account
-            </button>
-          ) : (
-            <form onSubmit={deleteAccount} className={s.deleteForm}>
-              <p className={s.settingLine}>This removes your account and every saved profile for good.</p>
-              <div className="field">
-                <label htmlFor="del-password">Password</label>
-                <input id="del-password" className="input" type="password" autoComplete="current-password" value={delPassword} onChange={(e) => setDelPassword(e.target.value)} />
-              </div>
-              {delError && (
-                <p className="error" role="alert">
-                  {delError}
-                </p>
-              )}
-              <div className={s.actionsRow}>
-                <button className={`nm-btn ${s.dangerFill}`} type="submit">
-                  Delete for good
-                </button>
-                <button className="nm-btn nm-btn-glass" type="button" onClick={() => setDeleting(false)}>
-                  Keep my account
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </div>
-    </section>
   );
 }
