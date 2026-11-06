@@ -4,7 +4,7 @@
 
 | Feature | Status |
 |---|---|
-| Free birth chart: wheel, planets, houses, aspects | Built |
+| Free birth chart: wheel, planets, Placidus houses, aspects, aspect grid | Built |
 | Unknown birth time mode | Built |
 | Big three (Sun, Moon, Rising) | Built |
 | Daily sky: Moon phase and sign, contacts with your chart | Built |

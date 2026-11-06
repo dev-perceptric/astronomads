@@ -50,9 +50,10 @@ describe('computeChart', () => {
     expect(Math.abs(inSign(obama.mc!) - 28.87)).toBeLessThan(0.2);
   });
 
-  it('uses whole sign houses from the rising sign', () => {
-    expect(obama.houses![0]).toBe(300); // Aquarius
-    expect(at('sun').house).toBe(7); // Leo is the 7th sign from Aquarius
+  it('places Placidus cusps within 0.1° of Swiss Ephemeris', () => {
+    expect(obama.houseSystem).toBe('placidus');
+    expectCusps(obama.houses!, OBAMA_CUSPS);
+    expect(at('sun').house).toBe(6); // 12°33' Leo sits before the 7th cusp at 18°03' Leo
   });
 
   it('marks retrograde planets', () => {
@@ -74,6 +75,49 @@ describe('computeChart', () => {
   it('sorts aspects tightest first', () => {
     const orbs = obama.aspects.map((a) => a.orb);
     expect([...orbs].sort((x, y) => x - y)).toEqual(orbs);
+  });
+});
+
+// Placidus cusps 1 to 12 from Swiss Ephemeris (swe.houses, 'P') for the same moments and places.
+const OBAMA_CUSPS = [318.052, 355.908, 30.299, 58.893, 83.981, 109.023, 138.052, 175.908, 210.299, 238.893, 263.981, 289.023];
+const REFERENCE: { name: string; date: string; time: string; lat: number; lon: number; tz: string; cusps: number[] }[] = [
+  { name: 'Lisbon 1996', date: '1996-03-20', time: '06:40', lat: 38.7251, lon: -9.1498, tz: 'UTC', cusps: [358.21, 39.371, 66.887, 89.017, 110.99, 137.953, 178.21, 219.371, 246.887, 269.017, 290.99, 317.953] },
+  { name: 'Sydney 1985 (south)', date: '1985-12-01', time: '22:15', lat: -33.8679, lon: 151.2073, tz: 'UTC', cusps: [298.129, 320.065, 345.794, 16.997, 52.368, 87.182, 118.129, 140.065, 165.794, 196.997, 232.368, 267.182] },
+  { name: 'Oslo 2000 (far north)', date: '2000-06-15', time: '03:30', lat: 59.9127, lon: 10.7461, tz: 'UTC', cusps: [102.536, 113.483, 126.466, 144.679, 175.604, 232.869, 282.536, 293.483, 306.466, 324.679, 355.604, 52.869] },
+  { name: 'Quito 1977 (equator)', date: '1977-02-02', time: '14:00', lat: -0.2299, lon: -78.5249, tz: 'UTC', cusps: [353.61, 25.988, 56.407, 84.605, 112.364, 141.791, 173.61, 205.988, 236.407, 264.605, 292.364, 321.791] },
+];
+
+function expectCusps(actual: number[], expected: number[]) {
+  expected.forEach((e, i) => {
+    const d = Math.abs(((actual[i] - e + 540) % 360) - 180);
+    expect(d, `cusp ${i + 1}: ${actual[i].toFixed(3)} vs ${e}`).toBeLessThan(0.1);
+  });
+}
+
+describe('Placidus houses', () => {
+  for (const r of REFERENCE) {
+    it(`matches Swiss Ephemeris for ${r.name}`, () => {
+      const c = computeChart({ date: r.date, time: r.time, lat: r.lat, lon: r.lon, timeZone: r.tz });
+      expect(c.houseSystem).toBe('placidus');
+      expectCusps(c.houses!, r.cusps);
+    });
+  }
+
+  it('falls back to whole sign houses above the polar circle', () => {
+    const c = computeChart({ date: '2000-06-15', time: '03:30', lat: 78.22, lon: 15.65, timeZone: 'UTC' });
+    expect(c.houseSystem).toBe('whole-sign');
+    expect(c.houses).toHaveLength(12);
+    expect(c.placements.every((p) => p.house !== null && p.house >= 1 && p.house <= 12)).toBe(true);
+  });
+
+  it('assigns every planet to the house whose cusps contain it', () => {
+    const c = computeChart({ date: '1985-12-01', time: '22:15', lat: -33.8679, lon: 151.2073, timeZone: 'UTC' });
+    for (const p of c.placements) {
+      const start = c.houses![p.house! - 1];
+      const end = c.houses![p.house! % 12];
+      const span = (end - start + 360) % 360;
+      expect((p.lon - start + 360) % 360).toBeLessThan(span);
+    }
   });
 });
 

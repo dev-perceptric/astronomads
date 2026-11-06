@@ -30,8 +30,8 @@
 .rowOn td { background: var(--secondary) !important; }
 .angleRow { cursor: default !important; }
 .angleRow td { background: var(--paper); font-weight: 500; }
-.cellGlyph { display: inline-block; width: 26px; font-size: 18px; text-align: center; margin-right: 8px; font-family: var(--mono); font-size: 13px; color: var(--ink); }
-.cellGlyph :global(.glyph) { font-size: 19px; }
+.cellGlyph { display: inline-flex; align-items: center; justify-content: center; width: 26px; margin-right: 8px; vertical-align: middle; font-family: var(--mono); font-size: 12px; color: var(--foreground); }
+
 .retro { color: var(--error); }
 
 .grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
@@ -73,3 +73,5 @@
 
 .saveRow { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; }
 .angleTag { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.glyphTrio { display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; }
+.gridGlyph { display: block !important; margin: 0 auto; }

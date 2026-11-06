@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import ChartWheel from '@/components/ChartWheel';
+import { Glyph, type GlyphName, type SignKey } from '@/components/Glyph';
 import { useChart, useProfileFromUrl } from '@/components/useChart';
 import { findAspect, formatDegree, type Chart, type PointKey } from '@/lib/astro/chart';
 import { ELEMENT_COLORS, SIGNS, bodyByKey, type BodyKey, type Element, type Mode } from '@/lib/astro/constants';
@@ -13,7 +14,7 @@ import { saveProfile, type BirthProfile } from '@/lib/profile';
 import s from './chart.module.css';
 
 const pointName = (k: PointKey) => (k === 'asc' ? 'Ascendant' : k === 'mc' ? 'Midheaven' : bodyByKey(k).name);
-const pointGlyph = (k: PointKey) => (k === 'asc' ? 'AC' : k === 'mc' ? 'MC' : bodyByKey(k).glyph);
+const PointGlyph = ({ k, size = 17 }: { k: PointKey; size?: number }) => <Glyph name={k as GlyphName} size={size} color={pointColor(k)} />;
 const pointColor = (k: PointKey) => (k === 'asc' || k === 'mc' ? 'var(--ink)' : bodyByKey(k).color);
 
 export default function ChartView() {
@@ -92,7 +93,11 @@ export default function ChartView() {
             <h2 id="positions" className="card-title">
               Planet positions
             </h2>
-            {!chart.timeKnown && <span className={s.note}>Noon chart, houses hidden</span>}
+            {chart.timeKnown ? (
+              <span className={s.note}>{chart.houseSystem === 'placidus' ? 'Placidus houses' : 'Whole sign houses'}</span>
+            ) : (
+              <span className={s.note}>Noon chart, houses hidden</span>
+            )}
           </div>
           <div className="table-scroll">
             <table className={`table ${s.positions}`}>
@@ -111,14 +116,14 @@ export default function ChartView() {
                   return (
                     <tr key={p.body} className={selected === p.body ? s.rowOn : undefined} onClick={() => setSelected(selected === p.body ? null : p.body)}>
                       <td>
-                        <span className={s.cellGlyph} style={{ color: b.color }}>
-                          <span className="glyph">{b.glyph}</span>
+                        <span className={s.cellGlyph}>
+                          <Glyph name={p.body} size={19} color={b.color} />
                         </span>
                         {b.name}
                       </td>
                       <td>
-                        <span className={s.cellGlyph} style={{ color: ELEMENT_COLORS[sg.element] }}>
-                          <span className="glyph">{sg.glyph}</span>
+                        <span className={s.cellGlyph}>
+                          <Glyph name={sg.key as SignKey} size={18} color={ELEMENT_COLORS[sg.element]} />
                         </span>
                         {sg.name}
                       </td>
@@ -173,9 +178,7 @@ export default function ChartView() {
             return (
               <article key={p.body} className={`card ${s.reading} ${selected === p.body ? s.readingOn : ''}`}>
                 <h3 className={s.readingTitle}>
-                  <span className="glyph" style={{ color: b.color }}>
-                    {b.glyph}
-                  </span>{' '}
+                  <Glyph name={p.body} size={20} color={b.color} />
                   {b.name} in {sg.name}
                   {p.retrograde && <span className={s.retroTag}>Retrograde</span>}
                 </h3>
@@ -218,14 +221,10 @@ export default function ChartView() {
                 {chart.aspects.map((a) => (
                   <tr key={`${a.a}-${a.b}`}>
                     <td className={s.aspectCell}>
-                      <span className={a.a === 'asc' || a.a === 'mc' ? s.angleTag : 'glyph'} style={{ color: pointColor(a.a) }}>
-                        {pointGlyph(a.a)}
-                      </span>{' '}
-                      <span className="glyph" style={{ color: a.def.color }}>
-                        {a.def.glyph}
-                      </span>{' '}
-                      <span className={a.b === 'asc' || a.b === 'mc' ? s.angleTag : 'glyph'} style={{ color: pointColor(a.b) }}>
-                        {pointGlyph(a.b)}
+                      <span className={s.glyphTrio}>
+                        <PointGlyph k={a.a} />
+                        <Glyph name={a.def.kind} size={15} color={a.def.color} />
+                        <PointGlyph k={a.b} />
                       </span>
                       <span className={s.aspectName}>
                         {pointName(a.a)} {a.def.kind} {pointName(a.b)}
@@ -266,9 +265,7 @@ function BigOne({ label, sign }: { label: string; sign: number }) {
     <div className={s.big}>
       <dt className="eyebrow">{label}</dt>
       <dd className={s.bigSign}>
-        <span className="glyph" style={{ color: ELEMENT_COLORS[sg.element] }}>
-          {sg.glyph}
-        </span>{' '}
+        <Glyph name={sg.key as SignKey} size={20} color={ELEMENT_COLORS[sg.element]} />
         {sg.name}
       </dd>
     </div>
@@ -280,12 +277,14 @@ function AngleRow({ label, lon, house }: { label: string; lon: number; house: st
   return (
     <tr className={s.angleRow}>
       <td>
-        <span className={s.cellGlyph}>{label === 'Ascendant' ? 'AC' : 'MC'}</span>
+        <span className={s.cellGlyph}>
+          <Glyph name={label === 'Ascendant' ? 'asc' : 'mc'} size={17} color="var(--foreground)" />
+        </span>
         {label}
       </td>
       <td>
-        <span className={s.cellGlyph} style={{ color: ELEMENT_COLORS[sg.element] }}>
-          <span className="glyph">{sg.glyph}</span>
+        <span className={s.cellGlyph}>
+          <Glyph name={sg.key as SignKey} size={18} color={ELEMENT_COLORS[sg.element]} />
         </span>
         {sg.name}
       </td>
@@ -361,9 +360,7 @@ function AspectGrid({ chart }: { chart: Chart }) {
                   <td key={col.key} title={hit ? `${pointName(row.key)} ${hit.def.kind} ${pointName(col.key)}, orb ${hit.orb.toFixed(1)}°` : undefined}>
                     {hit && (
                       <>
-                        <span className="glyph" style={{ color: hit.def.color }}>
-                          {hit.def.glyph}
-                        </span>
+                        <Glyph name={hit.def.kind} size={16} color={hit.def.color} className={s.gridGlyph} />
                         <span className={s.gridOrb}>{hit.orb.toFixed(0)}°</span>
                       </>
                     )}
@@ -371,7 +368,7 @@ function AspectGrid({ chart }: { chart: Chart }) {
                 );
               })}
               <th scope="row" style={{ color: pointColor(row.key) }}>
-                {row.key === 'asc' || row.key === 'mc' ? pointGlyph(row.key) : <span className="glyph">{pointGlyph(row.key)}</span>}
+                <PointGlyph k={row.key} size={18} />
               </th>
             </tr>
           ))}

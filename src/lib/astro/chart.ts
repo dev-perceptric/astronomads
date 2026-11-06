@@ -18,7 +18,7 @@ export type Placement = {
   sign: number; // 0..11
   degree: number; // 0..29
   minute: number; // 0..59
-  house: number | null; // 1..12, whole sign
+  house: number | null; // 1..12
   retrograde: boolean;
 };
 
@@ -37,8 +37,9 @@ export type Chart = {
   placements: Placement[];
   asc: number | null;
   mc: number | null;
-  /** Whole sign house cusps, starting with the rising sign */
+  /** House cusps 1 to 12 */
   houses: number[] | null;
+  houseSystem: HouseSystem | null;
   aspects: Aspect[];
   elements: Record<Element, number>;
 };
@@ -51,16 +52,73 @@ export function eclipticLongitude(engine: (typeof BODIES)[number]['engine'], dat
   return norm(Astronomy.Ecliptic(v).elon);
 }
 
-/** Ascendant and Midheaven for a UTC instant and place */
-export function angles(date: Date, lat: number, lon: number): { asc: number; mc: number } {
+/** Right ascension of the Midheaven and obliquity of the ecliptic, both in radians */
+function frame(date: Date, lon: number): { ramc: number; eps: number } {
   const gst = Astronomy.SiderealTime(date); // hours
   const ramc = norm(gst * 15 + lon) * DEG;
   const centuries = Astronomy.MakeTime(date).tt / 36525;
   const eps = (23.4392911 - 0.0130042 * centuries) * DEG; // mean obliquity of the ecliptic
+  return { ramc, eps };
+}
+
+/** Ascendant and Midheaven for a UTC instant and place */
+export function angles(date: Date, lat: number, lon: number): { asc: number; mc: number } {
+  const { ramc, eps } = frame(date, lon);
   const phi = lat * DEG;
   const asc = Math.atan2(Math.cos(ramc), -(Math.sin(ramc) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps)));
   const mc = Math.atan2(Math.sin(ramc), Math.cos(ramc) * Math.cos(eps));
   return { asc: norm(asc / DEG), mc: norm(mc / DEG) };
+}
+
+export type HouseSystem = 'placidus' | 'whole-sign';
+
+/**
+ * Placidus house cusps 1 to 12, in degrees of ecliptic longitude.
+ * Each intermediate cusp divides its quadrant's semi-arc into thirds, solved by iteration.
+ * Returns null near the poles, where some degrees never rise or set and Placidus has no answer.
+ */
+export function placidusCusps(date: Date, lat: number, lon: number): number[] | null {
+  const { ramc, eps } = frame(date, lon);
+  const phi = lat * DEG;
+  const { asc, mc } = angles(date, lat, lon);
+  const lonFromRa = (ra: number) => Math.atan2(Math.sin(ra), Math.cos(ra) * Math.cos(eps));
+  const semiArc = (ra: number, nocturnal: boolean): number | null => {
+    const decl = Math.asin(Math.sin(eps) * Math.sin(lonFromRa(ra)));
+    const x = -Math.tan(phi) * Math.tan(decl);
+    if (x < -1 || x > 1) return null;
+    const dsa = Math.acos(x);
+    return nocturnal ? Math.PI - dsa : dsa;
+  };
+  const solve = (fraction: number, nocturnal: boolean): number | null => {
+    const base = nocturnal ? ramc + Math.PI : ramc;
+    const sign = nocturnal ? -1 : 1;
+    let ra = base + sign * fraction * (Math.PI / 2);
+    for (let i = 0; i < 60; i++) {
+      const arc = semiArc(ra, nocturnal);
+      if (arc === null) return null;
+      const next = base + sign * fraction * arc;
+      if (Math.abs(next - ra) < 1e-10) break;
+      ra = next;
+    }
+    return norm(lonFromRa(ra) / DEG);
+  };
+  const c11 = solve(1 / 3, false);
+  const c12 = solve(2 / 3, false);
+  const c2 = solve(2 / 3, true);
+  const c3 = solve(1 / 3, true);
+  if (c11 === null || c12 === null || c2 === null || c3 === null) return null;
+  const first = [asc, c2, c3, norm(mc + 180), norm(c11 + 180), norm(c12 + 180)];
+  return [...first, ...first.map((c) => norm(c + 180))];
+}
+
+/** Which house (1..12) a longitude falls in, given 12 cusps in order */
+export function houseOf(lon: number, cusps: number[]): number {
+  for (let i = 0; i < 12; i++) {
+    const start = cusps[i];
+    const span = norm(cusps[(i + 1) % 12] - start);
+    if (norm(lon - start) < span) return i + 1;
+  }
+  return 12;
 }
 
 export function separation(a: number, b: number): number {
@@ -97,10 +155,17 @@ export function computeChart(input: BirthInput): Chart {
   let asc: number | null = null;
   let mc: number | null = null;
   let houses: number[] | null = null;
+  let houseSystem: HouseSystem | null = null;
   if (timeKnown) {
     ({ asc, mc } = angles(utc, input.lat, input.lon));
-    const first = Math.floor(asc / 30) * 30;
-    houses = Array.from({ length: 12 }, (_, i) => norm(first + i * 30));
+    houses = placidusCusps(utc, input.lat, input.lon);
+    houseSystem = 'placidus';
+    if (!houses) {
+      // Placidus fails near the poles; whole sign houses always work.
+      const first = Math.floor(asc / 30) * 30;
+      houses = Array.from({ length: 12 }, (_, i) => norm(first + i * 30));
+      houseSystem = 'whole-sign';
+    }
   }
 
   const placements: Placement[] = raw.map(({ body, lon, retrograde }) => {
@@ -112,7 +177,7 @@ export function computeChart(input: BirthInput): Chart {
       degree += 1;
       minute = 0;
     }
-    const house = asc === null ? null : ((sign - Math.floor(asc / 30) + 12) % 12) + 1;
+    const house = houses ? houseOf(lon, houses) : null;
     return { body, lon, sign, degree, minute, house, retrograde };
   });
 
@@ -137,7 +202,7 @@ export function computeChart(input: BirthInput): Chart {
   }
   if (asc !== null) elements[SIGNS[Math.floor(asc / 30)].element] += 2;
 
-  return { utc, timeKnown, placements, asc, mc, houses, aspects, elements };
+  return { utc, timeKnown, placements, asc, mc, houses, houseSystem, aspects, elements };
 }
 
 export function moonPhase(date: Date): { angle: number; name: string; illumination: number } {

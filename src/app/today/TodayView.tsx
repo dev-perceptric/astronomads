@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { Glyph, type GlyphName, type SignKey } from '@/components/Glyph';
 import { useChart } from '@/components/useChart';
 import { findAspect, formatDegree, moonPhase, positionsAt, type PointKey } from '@/lib/astro/chart';
 import { SIGNS, bodyByKey, type AspectKind, type BodyKey } from '@/lib/astro/constants';
@@ -102,10 +103,10 @@ export default function TodayView() {
           <ul className={s.transits}>
             {transits.map((t) => (
               <li key={`${t.transit}-${t.natal}-${t.kind}`} className={s.transit}>
-                <span className={`glyph ${s.tGlyphs}`}>
-                  <span style={{ color: bodyByKey(t.transit).color }}>{bodyByKey(t.transit).glyph}</span>{' '}
-                  <span style={{ color: t.color }}>{t.glyph}</span>{' '}
-                  {t.natal === 'asc' || t.natal === 'mc' ? <span className={s.angleTag}>{t.natal === 'asc' ? 'AC' : 'MC'}</span> : bodyByKey(t.natal as BodyKey).glyph}
+                <span className={s.tGlyphs}>
+                  <Glyph name={t.transit} size={19} color={bodyByKey(t.transit).color} />
+                  <Glyph name={t.kind} size={15} color={t.color} />
+                  <Glyph name={t.natal as GlyphName} size={19} color={t.natal === 'asc' || t.natal === 'mc' ? 'var(--foreground)' : bodyByKey(t.natal as BodyKey).color} />
                 </span>
                 <span className={s.tMain}>
                   <span className={s.tTitle}>
@@ -128,12 +129,12 @@ export default function TodayView() {
             const sign = SIGNS[Math.floor(p.lon / 30)];
             return (
               <li key={p.body} className={s.skyItem}>
-                <span className={`glyph ${s.skyGlyph}`} style={{ color: b.color }}>
-                  {b.glyph}
+                <span className={s.skyGlyph}>
+                  <Glyph name={p.body} size={22} color={b.color} />
                 </span>
                 <span className={s.skyName}>{b.name}</span>
                 <span className={s.skySign}>
-                  <span className="glyph">{sign.glyph}</span> {sign.name}
+                  <Glyph name={sign.key as SignKey} size={15} color="var(--muted-foreground)" /> {sign.name}
                 </span>
                 <span className="mono">
                   {formatDegree(p.lon)}

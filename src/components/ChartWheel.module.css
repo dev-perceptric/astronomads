@@ -1,34 +1,54 @@
 .wheel {
   width: 100%;
   height: auto;
-  max-width: 620px;
+  max-width: 640px;
   aspect-ratio: 1;
   display: block;
   margin: 0 auto;
   overflow: visible;
-  animation: appear 0.6s var(--ease) both;
+  font-family: var(--mono);
+  animation: appear 0.6s var(--ease-emerge) both;
 }
-@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes appear { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
 
-.ringStrong { fill: none; stroke: var(--foreground); stroke-width: 1.2; }
-.core { fill: var(--secondary); stroke: var(--line-strong); stroke-width: 1; }
-.divider { stroke: var(--ink); stroke-width: 1; stroke-opacity: 0.55; }
-.signGlyph { font-size: 24px; }
-.ticks line { stroke: var(--ink); stroke-width: 0.7; stroke-opacity: 0.45; }
+/* Frame and rings */
+.frame { fill: none; stroke: var(--border); stroke-width: 1; }
+.ring { fill: none; stroke: var(--foreground); stroke-width: 1.2; }
+.ringThin { fill: none; stroke: color-mix(in oklch, var(--foreground) 35%, transparent); stroke-width: 0.8; }
 
-.houses line { stroke: var(--muted); stroke-width: 0.8; stroke-opacity: 0.55; }
-.houseNum { font-family: var(--mono); font-size: 11px; fill: var(--faint); }
+/* Zodiac band */
+.signSector { fill-opacity: 0.12; }
+.signDivider { stroke: var(--foreground); stroke-width: 1; stroke-opacity: 0.7; }
+.signMedal { stroke: var(--card); stroke-width: 2.5; }
 
-.angles line { stroke: var(--ink); }
-.angles text { font-family: var(--mono); font-size: 11.5px; font-weight: 500; fill: var(--muted-foreground); }
-.angles .angleMain { fill: var(--ink); font-size: 13px; }
+/* Degree scale */
+.scaleBand { fill: none; stroke: var(--secondary); }
+.ticks line { stroke: var(--foreground); stroke-width: 0.6; stroke-opacity: 0.5; }
+.ticks .tickMajor { stroke-width: 1; stroke-opacity: 0.85; }
 
+/* Houses */
+.cusp { stroke: color-mix(in oklch, var(--foreground) 45%, transparent); stroke-width: 0.8; }
+.houseNum { font-family: var(--mono); font-size: 11px; font-weight: 500; fill: var(--muted-foreground); letter-spacing: 0.02em; }
+
+/* Angles */
+.axis { stroke: var(--foreground); stroke-width: 2; }
+.axisSoft { stroke: var(--foreground); stroke-width: 1.2; stroke-opacity: 0.7; }
+.arrow { fill: var(--foreground); }
+.angleMain { font-size: 13px; font-weight: 600; fill: var(--foreground); }
+.angleSoft { font-size: 11px; font-weight: 500; fill: var(--muted-foreground); }
+
+/* Aspect disc */
+.core { fill: var(--card); stroke: var(--foreground); stroke-width: 1.1; }
+.center { fill: var(--foreground); }
 .aspect { transition: stroke-opacity 0.2s; }
 
+/* Planets */
 .planet { cursor: pointer; transition: opacity 0.2s; outline: none; }
-.planet:focus-visible .hit { stroke: var(--foreground); stroke-width: 2; }
-.hit { fill: var(--background); fill-opacity: 0; }
-.planet:hover .hit, .planet[aria-pressed='true'] .hit { fill: var(--secondary); fill-opacity: 1; }
-.leader { stroke: var(--line-strong); stroke-width: 0.8; }
-.planetGlyph { paint-order: stroke; stroke: var(--card); stroke-width: 4px; }
-.degree { font-family: var(--mono); font-size: 11px; fill: var(--text); paint-order: stroke; stroke: var(--card); stroke-width: 3px; }
+.planetDisc { fill: var(--card); stroke: transparent; stroke-width: 1.4; transition: fill 0.2s, stroke 0.2s; }
+.planet:hover .planetDisc, .planet[aria-pressed='true'] .planetDisc { fill: var(--secondary); stroke: var(--border-strong); }
+.planet:focus-visible .planetDisc { stroke: var(--foreground); stroke-width: 2; }
+.leader { stroke: color-mix(in oklch, var(--foreground) 30%, transparent); stroke-width: 0.8; }
+.anchor { stroke: var(--card); stroke-width: 1.4; }
+.degree { font-size: 12px; font-weight: 600; fill: var(--foreground); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; }
+.minute { font-size: 9.5px; font-weight: 500; fill: var(--muted-foreground); }
+.retro { font-size: 9.5px; font-weight: 700; fill: var(--destructive); }
