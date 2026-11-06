@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Stipple from './Stipple';
+import Stipple from '@/components/Stipple';
 import s from './brand.module.css';
 
 export const metadata: Metadata = { title: 'Brand' };

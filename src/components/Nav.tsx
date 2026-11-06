@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const LINKS = [
-  { href: '/', label: 'New chart' },
+  { href: '/#start', label: 'New chart' },
   { href: '/chart', label: 'My chart' },
   { href: '/today', label: 'Today' },
 ];

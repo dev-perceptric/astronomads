@@ -394,3 +394,6 @@ h1, h2, h3 { color: var(--foreground); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Logo in the app header */
+.topbar-logo svg { height: 26px; width: auto; display: block; }

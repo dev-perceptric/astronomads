@@ -2,7 +2,7 @@
 
 **Night and marble.** Astronomads looks like a classical inscription set against the night sky: black and white, a carved Roman wordmark, a calm book serif for what matters, a typewriter-like mono for everything else, and one astral blue that stands for the sky. Pictures are drawn in dots, like stars.
 
-The live reference is the `/brand` page in the app. Tokens live in `src/app/brand/brand.module.css` until the whole app moves over.
+The live reference is the `/brand` page in the app, and the homepage (`src/app/(site)/page.tsx`) is the first page built in it. Tokens live in `src/app/brand/brand.module.css` until the whole app moves over.
 
 ## 1. Principles
 
@@ -18,7 +18,11 @@ The live reference is the `/brand` page in the app. Tokens live in `src/app/bran
 - **Sizes:** 24px in navigation, 56 to 96px in a hero, full width (about 10.6vw) as a footer signature.
 - **Clear space:** the height of the letter O on every side.
 - **Grounds:** white on Void, black on Marble. Never on Astral, never on a photo.
-- **Symbol:** the eight-point star in a ring (current app header) stays as the small mark for favicons and avatars.
+- **Symbol:** a carved Roman "A" inside an orbit ring, with a four-point star traveling on the ring at the upper right (the nomad in the sky). The star may be Astral; everything else is one color.
+- **Lockup:** symbol left, wordmark right, symbol 1.55 times the wordmark's height, gap a quarter of the symbol.
+- **App icon:** the symbol on a black rounded square, heavier ring, no carved cut. Favicon is `src/app/icon.svg`.
+- **Small sizes:** below about 24px tall, drop the carved cut (`cut={false}`).
+- **Files:** `public/brand/` holds wordmark, symbol and lockup in white and black, plus `icon.svg`. All are vector paths made from Cinzel 500 (SIL Open Font License), so they need no font. Rebuild with `node scripts/build-logo.mjs <Cinzel-500.ttf>` then `node scripts/write-logo-files.ts`. In the app, use `Logo` from `src/components/Logo.tsx`.
 
 ## 3. Color
 
