@@ -10,8 +10,9 @@
 | Daily sky: Moon phase and sign, contacts with your chart | Built |
 | City search with historical time zones | Built |
 | Saved chart (on this device) | Built |
+| Accounts: email and password, up to 200 saved birth profiles | Built (needs the Hostinger database set up) |
+| Readings: points, signs, houses, AC/MC aspects, lunar nodes | Built |
 | Big three share card | Next |
-| Accounts and saved charts for friends (Supabase) | Next |
 | Compatibility | Next |
 | Astrocartography map | Next |
 | Sign and Learn pages for SEO | Next |
@@ -35,16 +36,15 @@
 
 ## Monthly running cost
 
-Hosting is Hostinger Business web hosting (Node.js web app), see `docs/deploy-hostinger.md`.
+Hosting is Hostinger Cloud Startup (Node.js web app), see `docs/deploy-hostinger.md`. Accounts use the MySQL database and the email mailbox that come with the plan, so they add nothing to the bill.
 
 | Item | Beta (50k visits a month) | Growth (2M visits a month) |
 |---|---|---|
 | Hostinger Business web hosting | ~$3.50 to $4 intro, ~$17 at renewal (check) | Move to Hostinger Cloud: ~$10 to $30 (check) |
-| Supabase (when accounts arrive) | $25 (check) | $135 (check) |
-| Resend email (when accounts arrive) | $20 (check) | $90 (check) |
+| Accounts database (Hostinger MySQL, included in the plan) | $0 (check) | $0 (check) |
+| Reset emails (Hostinger mailbox over SMTP, included in the plan) | $0 (check) | $0 (check; Hostinger caps daily sending per mailbox) |
 | Claude tokens | $0 (reading texts are written once, about $30 one-time) | $0 |
 | Chart engine (astronomy-engine, MIT), cities (GeoNames), fonts (Google Fonts) | $0 | $0 |
-| **Total today (hosting only)** | **~$4 to $17** | **~$10 to $30** |
-| **Total with accounts** | **~$49 to $62** | **~$235 to $255** |
+| **Total with accounts** | **~$4 to $17** | **~$10 to $30** |
 
 Optional: Astro-Databank SADBY5, about $16 a month spread over 5 years. Domain renewal about $10 to $15 a year.

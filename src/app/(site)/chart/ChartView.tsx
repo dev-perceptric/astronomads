@@ -14,6 +14,7 @@ import { pointColor, pointName } from '@/lib/astro/points';
 import { IN_SIGN, aspectReading, firstSentence } from '@/lib/astro/interpretations';
 import { HOUSE_REALM } from '@/lib/astro/readings';
 import { utcOffsetLabel } from '@/lib/astro/time';
+import { api, profileBody, useAccount } from '@/lib/account';
 import { saveProfile, type BirthProfile } from '@/lib/profile';
 import ReadingSheet from './ReadingSheet';
 import s from './chart.module.css';
@@ -27,6 +28,8 @@ export default function ChartView() {
   const chart = useChart(profile);
   const [open, setOpen] = useState<PointKey | null>(null);
   const [saved, setSaved] = useState<'idle' | 'saved' | 'failed'>('idle');
+  const account = useAccount();
+  const [stored, setStored] = useState<'idle' | 'saving' | 'saved' | string>('idle');
 
   if (!state) return <section className={`nm-section nm-void ${s.blank}`} />;
   if ('error' in state || !profile || !chart) {
@@ -62,12 +65,31 @@ export default function ChartView() {
                 </button>
               )}
               {saved === 'saved' && <span className={s.examplePill}>Saved as my chart</span>}
+              {!state.isExample && account.status === 'in' && (stored === 'saved' ? (
+                <Link href="/account" className={s.examplePill}>
+                  In my profiles
+                </Link>
+              ) : (
+                <button
+                  className="nm-btn nm-btn-glass"
+                  disabled={stored === 'saving'}
+                  onClick={async () => {
+                    setStored('saving');
+                    const r = await api('/api/profiles', 'POST', profileBody(profile));
+                    setStored(r.ok ? 'saved' : r.error);
+                    if (r.ok) account.refresh();
+                  }}
+                >
+                  {stored === 'saving' ? 'Saving…' : 'Save to my profiles'}
+                </button>
+              ))}
               <Link href="/#start" className={`nm-btn ${state.isExample ? 'nm-btn-primary' : 'nm-btn-glass'}`}>
                 {state.isExample ? 'Calculate yours' : 'New chart'}
               </Link>
             </div>
           </div>
           {saved === 'failed' && <p className={s.errorText}>This browser blocked saving. Allow site data and try again.</p>}
+          {!['idle', 'saving', 'saved'].includes(stored) && <p className={s.errorText}>{stored}</p>}
           <h1 className={`${s.name} fade-up`}>{profile.name}</h1>
           <p className={s.birth}>{birthLine(profile, chart)}</p>
 

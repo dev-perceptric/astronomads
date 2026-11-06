@@ -18,6 +18,9 @@ export default function FloatingNav() {
       <Link href="/today" aria-current={current('/today')}>
         Today
       </Link>
+      <Link href="/account" aria-current={current('/account')}>
+        Account
+      </Link>
       <Link href="/#start" className="nm-nav-cta">
         New chart
       </Link>

@@ -15,6 +15,7 @@ export default function SiteFooter() {
         <div className="nm-foot-links">
           <Link href="/chart">My chart</Link>
           <Link href="/today">Today</Link>
+          <Link href="/account">Account</Link>
           <Link href="/brand">Brand</Link>
           <span>
             City data © <a href="https://www.geonames.org" target="_blank" rel="noreferrer">GeoNames</a> (CC BY 4.0)
