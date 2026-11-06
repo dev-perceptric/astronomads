@@ -87,12 +87,12 @@ export default function ChartView() {
       </section>
 
       {/* Wheel and ledger */}
-      <section className={`nm-section nm-void ${s.wheelSection}`}>
+      <section className={`nm-section nm-marble ${s.wheelSection}`}>
         <p className="nm-label">01 The wheel</p>
         <h2 className="nm-title">Your sky at the minute you arrived</h2>
         <div className={s.wheelGrid}>
           <div className={s.wheelCol}>
-            <ChartWheel chart={chart} name={profile.name} selected={selected} onSelect={setSelected} />
+            <ChartWheel chart={chart} name={profile.name} selected={selected} onSelect={setSelected} ground="light" />
           </div>
           <div className={s.ledgerCol}>
             <div className={s.ledgerHead}>
@@ -106,7 +106,7 @@ export default function ChartView() {
                 return (
                   <li key={p.body}>
                     <button className={s.ledgerRow} onClick={() => select(p.body)} aria-pressed={selected === p.body}>
-                      <Glyph3D name={p.body} size={30} color={b.color} ground="dark" />
+                      <Glyph3D name={p.body} size={30} color={b.color} ground="light" />
                       <span className={s.ledgerName}>{b.name}</span>
                       <span className={s.ledgerSign}>
                         <Glyph name={sg.key as SignKey} size={16} color={ELEMENT_COLORS[sg.element]} weight={1.8} />
@@ -148,7 +148,7 @@ export default function ChartView() {
       </section>
 
       {/* Planets */}
-      <section className="nm-section nm-marble">
+      <section className={`nm-section nm-marble ${s.joined}`}>
         <p className="nm-label">02 Your planets</p>
         <h2 className="nm-title">What each planet says about you</h2>
         <div className={s.planetGrid}>
@@ -259,7 +259,7 @@ function Focus({ chart, body, onClose }: { chart: Chart; body: BodyKey; onClose:
   return (
     <div className={`nm-bracket ${s.focus}`}>
       <div className={s.focusHead}>
-        <Glyph3D name={body} size={52} color={b.color} ground="dark" />
+        <Glyph3D name={body} size={52} color={b.color} ground="light" />
         <div>
           <p className={s.focusTitle}>
             {b.name} in {SIGNS[p.sign].name}
